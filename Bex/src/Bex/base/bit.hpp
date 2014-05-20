@@ -1,7 +1,7 @@
 #ifndef __BEX_BIT__
 #define __BEX_BIT__
 
-#include "type_defines.hpp"
+#include "cstdtype.hpp"
 #include <boost/static_assert.hpp>
 
 //////////////////////////////////////////////////////////////////////////

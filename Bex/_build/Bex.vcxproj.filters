@@ -90,9 +90,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\Bex\base\type_defines.hpp">
-      <Filter>src\base</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Bex\base\bit.hpp">
       <Filter>src\base</Filter>
     </ClInclude>
@@ -386,6 +383,9 @@
     </ClInclude>
     <ClInclude Include="..\src\Bex\utility\range.hpp">
       <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\base\cstdtype.hpp">
+      <Filter>src\base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

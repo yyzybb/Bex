@@ -14,7 +14,7 @@
     <ClInclude Include="..\src\Bex\auto_link.h" />
     <ClInclude Include="..\src\Bex\base.hpp" />
     <ClInclude Include="..\src\Bex\base\bit.hpp" />
-    <ClInclude Include="..\src\Bex\base\type_defines.hpp" />
+    <ClInclude Include="..\src\Bex\base\cstdtype.hpp" />
     <ClInclude Include="..\src\Bex\bind.hpp" />
     <ClInclude Include="..\src\Bex\bind\callable.hpp" />
     <ClInclude Include="..\src\Bex\bind\forward_bind.hpp" />

@@ -2,7 +2,7 @@
 #define __BEX_BASE_HPP__
 
 
-#include "base/type_defines.hpp"
+#include "base/cstdtype.hpp"
 #include "base/bit.hpp"
 
 
