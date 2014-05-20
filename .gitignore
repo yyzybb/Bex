@@ -1,0 +1,10 @@
+Bex/_build/*.opensdf
+Bex/_build/*.sdf
+Bex/_build/*.suo
+Bex/_build/ipch
+_intermediate
+_output
+boost/include
+boost/lib
+boost/boost_1_*.7z
+q
