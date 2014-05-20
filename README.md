@@ -4,7 +4,26 @@ Bex
 通用程序库, 作为boost的补充库而存在, 依赖于boost并与boost搭配使用.
 
 ===
-Bex/src/Bex 目录结构(按字母顺序排列, 带^标记的是还不成熟的或以后可能会放弃维护的组件):
+
+库中很多组件是header only的, 但仍有一部分组件是需要编译才能使用的.
+
+* Windows平台:
+
+ * MSVC12.0编译方法:
+ * 1.打开Bex/_build/Bex.sln解决方案直接编译即可.
+ * 2.生成的lib文件在_output/Bex目录中.
+ * 
+ * 
+ * Mingw+GCC4.8编译方法:
+ * 1.安装cmake并将cmake.exe所在路径加入系统环境变量PATH中.
+ * 2.执行Bex/cmake/win32-mingw.bat批处理即可完成编译.
+  
+* 其他平台和编译器后续会慢慢支持, 如有需要请联系作者或pull request.
+
+
+===
+
+* Bex/src/Bex 目录结构(按字母顺序排列, 带^标记的是还不成熟的或以后可能会放弃维护的组件):
 
   base          -- 提供内置类型定义
   
@@ -42,7 +61,7 @@ Bex/src/Bex 目录结构(按字母顺序排列, 带^标记的是还不成熟的�
       |
       ---- static_streambuf -- 固定长度的streambuf, 主要用于处理定长或有上限的缓冲区.
       |
-      ---- ring_streambuf   -- 固定缓冲区大小的环形streambuf, 同一时刻只有一读一写可以无锁. , 自带读写者线程检测机制.
+      ---- ring_streambuf   -- 固定缓冲区大小的环形streambuf, 同一时刻只有一读一写可以无锁.
       |
       ---- ring_buf         -- 固定缓冲区大小的环形缓冲区, 同一时刻只有一读一写可以无锁, 自带读写者线程检测机制.
       |
