@@ -4,7 +4,7 @@ Bex
 通用程序库, 作为boost的补充库而存在, 依赖于boost并与boost搭配使用.
 
 ===
-Bex/src/Bex 目录结构(按字母顺序排列):
+Bex/src/Bex 目录结构(按字母顺序排列, 带^标记的是还不成熟的或以后可能会放弃维护的组件):
 
   base          -- 提供内置类型定义
   
@@ -19,9 +19,9 @@ Bex/src/Bex 目录结构(按字母顺序排列):
   network       -- 网络库.
   
       |
-      ---- ^ cobwebs  -- 基于asio封装的网络库, 追求简单易用且高效.
+      ---- cobwebs  -- 基于asio封装的网络库, 追求简单易用且高效.
       |
-      ---- http       -- 一个简易的同步读写的http客户端.
+      ---- ^ http       -- 一个简易的同步读写的http客户端.
       
   platform            -- 封装不得不用平台SDK实现的功能
   
@@ -32,7 +32,7 @@ Bex/src/Bex 目录结构(按字母顺序排列):
       
   signals     -- 基于boost.signals2封装的消息框架(可以作为项目框架使用).
   
-  ^ stream      -- 流处理库.
+  stream      -- 流处理库.
   
       |
       ---- serialization    -- 序列化库, 功能类似boost.serialization但更节省空间, 支持二进制和文本格式两种形式.
@@ -53,11 +53,11 @@ Bex/src/Bex 目录结构(按字母顺序排列):
       |
       ---- lock             -- 原子锁, 断言锁, 线程锁包装器
       |
-      ---- ^ thread_pool    -- 线程池
+      ---- thread_pool    -- 线程池
       
   timer         -- 功能类似boost.timer, 但精度是纳秒级的, 接口功能更加丰富. 基于C++11
   
-  ^ type_traits -- boost.type_traits的扩展
+  type_traits -- boost.type_traits的扩展
   
       |
       ---- class_info       -- C++中的反射! (未完善, 在C++11下可以发挥更强大的威力)
