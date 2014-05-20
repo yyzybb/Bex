@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Bex\auto_link.h" />
+    <ClInclude Include="..\src\Bex\base.hpp" />
+    <ClInclude Include="..\src\Bex\base\bit.hpp" />
+    <ClInclude Include="..\src\Bex\base\type_defines.hpp" />
+    <ClInclude Include="..\src\Bex\bind.hpp" />
+    <ClInclude Include="..\src\Bex\bind\callable.hpp" />
+    <ClInclude Include="..\src\Bex\bind\forward_bind.hpp" />
+    <ClInclude Include="..\src\Bex\bind\forward_bind_fwd.h" />
+    <ClInclude Include="..\src\Bex\bind\placeholder.hpp" />
+    <ClInclude Include="..\src\Bex\bind\select.hpp" />
+    <ClInclude Include="..\src\Bex\config.hpp" />
+    <ClInclude Include="..\src\Bex\config\config.hpp" />
+    <ClInclude Include="..\src\Bex\config\stl.hpp" />
+    <ClInclude Include="..\src\Bex\filesystem\filestream.hpp" />
+    <ClInclude Include="..\src\Bex\math.hpp" />
+    <ClInclude Include="..\src\Bex\math\compress_numeric.hpp" />
+    <ClInclude Include="..\src\Bex\math\uint_3.hpp" />
+    <ClInclude Include="..\src\Bex\math\utility.hpp" />
+    <ClInclude Include="..\src\Bex\network\cobwebs.h" />
+    <ClInclude Include="..\src\Bex\network\cobwebs\acceptor\acceptor_base.h" />
+    <ClInclude Include="..\src\Bex\network\cobwebs\acceptor\tcp_acceptor.h" />
+    <ClInclude Include="..\src\Bex\network\cobwebs\connector\connector_base.h" />
+    <ClInclude Include="..\src\Bex\network\cobwebs\connector\tcp_connector.h" />
+    <ClInclude Include="..\src\Bex\network\cobwebs\core\core.h" />
+    <ClInclude Include="..\src\Bex\network\cobwebs\core\error.hpp" />
+    <ClInclude Include="..\src\Bex\network\cobwebs\core\id.h" />
+    <ClInclude Include="..\src\Bex\network\cobwebs\core\options.h" />
+    <ClInclude Include="..\src\Bex\network\cobwebs\core\pool.hpp" />
+    <ClInclude Include="..\src\Bex\network\cobwebs\core\register.hpp" />
+    <ClInclude Include="..\src\Bex\network\cobwebs\core\deleter.hpp" />
+    <ClInclude Include="..\src\Bex\network\cobwebs\parser\packet_head_wrapper.hpp" />
+    <ClInclude Include="..\src\Bex\network\cobwebs\parser\tcp_packet_parser.h" />
+    <ClInclude Include="..\src\Bex\network\cobwebs\session\session_base.hpp" />
+    <ClInclude Include="..\src\Bex\network\cobwebs\session\session_factory.hpp" />
+    <ClInclude Include="..\src\Bex\network\cobwebs\session\tcp_session.h" />
+    <ClInclude Include="..\src\Bex\network\cobwebs\tcp_client.hpp" />
+    <ClInclude Include="..\src\Bex\network\cobwebs\udp\udp.h" />
+    <ClInclude Include="..\src\Bex\network\http\sync_client.h" />
+    <ClInclude Include="..\src\Bex\platform\charset_cvt.h" />
+    <ClInclude Include="..\src\Bex\platform\utility.h" />
+    <ClInclude Include="..\src\Bex\platform\win32\charset_cvt.h" />
+    <ClInclude Include="..\src\Bex\platform\win32\utility.h" />
+    <ClInclude Include="..\src\Bex\platform\win32\win32_service.h" />
+    <ClInclude Include="..\src\Bex\signals\combine_accumulate_value.hpp" />
+    <ClInclude Include="..\src\Bex\signals\combine_last_value.hpp" />
+    <ClInclude Include="..\src\Bex\signals\signal.hpp" />
+    <ClInclude Include="..\src\Bex\signals\signal_fwd.h" />
+    <ClInclude Include="..\src\Bex\stl_containers_fwd.h" />
+    <ClInclude Include="..\src\Bex\stream.hpp" />
+    <ClInclude Include="..\src\Bex\platform.hpp" />
+    <ClInclude Include="..\src\Bex\platform\cross_api.hpp" />
+    <ClInclude Include="..\src\Bex\stream\convert.hpp" />
+    <ClInclude Include="..\src\Bex\stream\convert\a2w_convert.hpp" />
+    <ClInclude Include="..\src\Bex\stream\convert\base_convert.hpp" />
+    <ClInclude Include="..\src\Bex\stream\convert\inc_convert.hpp" />
+    <ClInclude Include="..\src\Bex\stream\multi_ringbuf.hpp" />
+    <ClInclude Include="..\src\Bex\stream\ring_buf.hpp" />
+    <ClInclude Include="..\src\Bex\stream\ring_streambuf.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\array_adapter.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\base_serializer.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\binary_archive.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\binary_iarchive.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\binary_oarchive.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\concept.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\serialization_fwd.h" />
+    <ClInclude Include="..\src\Bex\stream\serialization\serialize_adl.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\stl_adapter.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\text_archive.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\text_iarchive.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\text_oarchive.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\utility.hpp" />
+    <ClInclude Include="..\src\Bex\stream\static_streambuf.hpp" />
+    <ClInclude Include="..\src\Bex\thread.hpp" />
+    <ClInclude Include="..\src\Bex\thread\lock\assert_lock.hpp" />
+    <ClInclude Include="..\src\Bex\thread\lock\generic_lock.hpp" />
+    <ClInclude Include="..\src\Bex\thread\lock\inter_lock.hpp" />
+    <ClInclude Include="..\src\Bex\thread\thread_pool\thread_pool.hpp" />
+    <ClInclude Include="..\src\Bex\timer\timer.hpp" />
+    <ClInclude Include="..\src\Bex\type_traits\class_info.hpp" />
+    <ClInclude Include="..\src\Bex\type_traits\class_info\has_const_int.hpp" />
+    <ClInclude Include="..\src\Bex\type_traits\class_info\has_member_data.hpp" />
+    <ClInclude Include="..\src\Bex\type_traits\class_info\has_member_function.hpp" />
+    <ClInclude Include="..\src\Bex\type_traits\class_info\has_operator.hpp" />
+    <ClInclude Include="..\src\Bex\type_traits\class_info\has_static_member_data.hpp" />
+    <ClInclude Include="..\src\Bex\type_traits\class_info\has_static_member_function.hpp" />
+    <ClInclude Include="..\src\Bex\type_traits\class_info\has_template_function.hpp" />
+    <ClInclude Include="..\src\Bex\type_traits\class_info\has_template_type.hpp" />
+    <ClInclude Include="..\src\Bex\type_traits\class_info\has_type.hpp" />
+    <ClInclude Include="..\src\Bex\type_traits\defines.hpp" />
+    <ClInclude Include="..\src\Bex\type_traits\remove_all.hpp" />
+    <ClInclude Include="..\src\Bex\type_traits\signature_traits.hpp" />
+    <ClInclude Include="..\src\Bex\type_traits\type_traits.hpp" />
+    <ClInclude Include="..\src\Bex\utility\exception.h" />
+    <ClInclude Include="..\src\Bex\utility\format.hpp" />
+    <ClInclude Include="..\src\Bex\utility\lexical_cast.hpp" />
+    <ClInclude Include="..\src\Bex\utility\lock_ptr.hpp" />
+    <ClInclude Include="..\src\Bex\utility\operators.h" />
+    <ClInclude Include="..\src\Bex\utility\range.hpp" />
+    <ClInclude Include="..\src\Bex\utility\singleton.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Bex\bind\forward_bind.cpp" />
+    <ClCompile Include="..\src\Bex\network\cobwebs\acceptor\acceptor_base.cpp" />
+    <ClCompile Include="..\src\Bex\network\cobwebs\acceptor\tcp_acceptor.cpp" />
+    <ClCompile Include="..\src\Bex\network\cobwebs\connector\tcp_connector.cpp" />
+    <ClCompile Include="..\src\Bex\network\cobwebs\core\core.cpp" />
+    <ClCompile Include="..\src\Bex\network\cobwebs\core\id.cpp" />
+    <ClCompile Include="..\src\Bex\network\cobwebs\parser\tcp_packet_parser.cpp" />
+    <ClCompile Include="..\src\Bex\network\cobwebs\session\tcp_session.cpp" />
+    <ClCompile Include="..\src\Bex\network\cobwebs\udp\udp.cpp" />
+    <ClCompile Include="..\src\Bex\network\http\sync_client.cpp" />
+    <ClCompile Include="..\src\Bex\platform\win32\charset_cvt.cpp" />
+    <ClCompile Include="..\src\Bex\platform\win32\utility.cpp" />
+    <ClCompile Include="..\src\Bex\platform\win32\win32_service.cpp" />
+    <ClCompile Include="..\src\Bex\thread\thread_pool\thread_pool.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1740DA12-0A80-4E1E-A2FD-263E1BEDA000}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Bex</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>CTP_Nov2013</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>CTP_Nov2013</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>lib$(ProjectName)-vc120-mt-sgd-1_00</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetName>lib$(ProjectName)-vc120-mt-s-1_00</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>..\src;..\..\..\library\Boost\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\..\..\library\Boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>..\src;..\..\..\library\Boost\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>..\..\..\library\Boost\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

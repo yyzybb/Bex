@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="main">
+      <UniqueIdentifier>{1deaae6d-9746-40c6-815c-7ab9ed8cc36f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pch">
+      <UniqueIdentifier>{cf0c68ab-5cb2-4a4b-8c22-869555a971d1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\test_cobwebs\main.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test_cobwebs\my_session.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test_cobwebs\stdafx.cpp">
+      <Filter>pch</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\test_cobwebs\packet_head.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\test_cobwebs\my_session.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\test_cobwebs\stdafx.h">
+      <Filter>pch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\test_cobwebs\options.h">
+      <Filter>main</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

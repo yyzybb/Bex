@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="main">
+      <UniqueIdentifier>{1e99377c-1bef-4c49-a2d4-3d8a18771c6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{fbaad045-d709-4a9e-b3a5-235d35b5888f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="stream">
+      <UniqueIdentifier>{6cc08658-778d-416c-8c3d-aa490bad4b72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thread">
+      <UniqueIdentifier>{aa7e7254-6670-4a2a-abe2-49c069892ed4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="signals">
+      <UniqueIdentifier>{baef51ff-0619-481e-88be-774870a77bee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{d447b85f-c546-4485-a425-aacd4ec220d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utility">
+      <UniqueIdentifier>{363464c7-e8d7-4eb7-9dee-9039b0386bbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="type_traits">
+      <UniqueIdentifier>{0abfee2a-888b-4ed6-b1b2-0adeabb6a4d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform">
+      <UniqueIdentifier>{5eb2f5fe-b4fa-4e68-b925-68dbbe159a65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bind">
+      <UniqueIdentifier>{c4df6532-58c1-41e8-b74e-3a0b6d82a962}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\test\main\TestMain.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\main\TestPCH.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\base\TestBit.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\stream\TestStream.cpp">
+      <Filter>stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\thread\TestThreadPool.cpp">
+      <Filter>thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\signals\TestSignals.cpp">
+      <Filter>signals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\math\TestCompressNumeric.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\utility\Test_lexical_cast.cpp">
+      <Filter>utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\thread\TestLock.cpp">
+      <Filter>thread</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\type_traits\Test_signature_traits.cpp">
+      <Filter>type_traits</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\type_traits\Test_class_info.cpp">
+      <Filter>type_traits</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\type_traits\Test_has_operator.cpp">
+      <Filter>type_traits</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\platform\TestCharsetConvert.cpp">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\utility\TestLockPtr.cpp">
+      <Filter>utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\utility\TestFormat.cpp">
+      <Filter>utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\type_traits\Test_remove_all.cpp">
+      <Filter>type_traits</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\stream\TestTextArchive.cpp">
+      <Filter>stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\bind\TestForwardBind.cpp">
+      <Filter>bind</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\utility\TestRange.cpp">
+      <Filter>utility</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\test\main\TestPCH.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\test\main\TestCommon.hpp">
+      <Filter>main</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

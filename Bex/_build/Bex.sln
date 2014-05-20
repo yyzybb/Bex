@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bex", "Bex.vcxproj", "{1740DA12-0A80-4E1E-A2FD-263E1BEDA000}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test.vcxproj", "{454A290B-7206-4FF2-BDC8-604FA72769FC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1740DA12-0A80-4E1E-A2FD-263E1BEDA000} = {1740DA12-0A80-4E1E-A2FD-263E1BEDA000}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_cobwebs", "test_cobwebs.vcxproj", "{CCB02D1D-CA25-4A38-987D-FD28E3381B8B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1740DA12-0A80-4E1E-A2FD-263E1BEDA000} = {1740DA12-0A80-4E1E-A2FD-263E1BEDA000}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1740DA12-0A80-4E1E-A2FD-263E1BEDA000}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1740DA12-0A80-4E1E-A2FD-263E1BEDA000}.Debug|Win32.Build.0 = Debug|Win32
+		{1740DA12-0A80-4E1E-A2FD-263E1BEDA000}.Release|Win32.ActiveCfg = Release|Win32
+		{1740DA12-0A80-4E1E-A2FD-263E1BEDA000}.Release|Win32.Build.0 = Release|Win32
+		{454A290B-7206-4FF2-BDC8-604FA72769FC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{454A290B-7206-4FF2-BDC8-604FA72769FC}.Debug|Win32.Build.0 = Debug|Win32
+		{454A290B-7206-4FF2-BDC8-604FA72769FC}.Release|Win32.ActiveCfg = Release|Win32
+		{454A290B-7206-4FF2-BDC8-604FA72769FC}.Release|Win32.Build.0 = Release|Win32
+		{CCB02D1D-CA25-4A38-987D-FD28E3381B8B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CCB02D1D-CA25-4A38-987D-FD28E3381B8B}.Debug|Win32.Build.0 = Debug|Win32
+		{CCB02D1D-CA25-4A38-987D-FD28E3381B8B}.Release|Win32.ActiveCfg = Release|Win32
+		{CCB02D1D-CA25-4A38-987D-FD28E3381B8B}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

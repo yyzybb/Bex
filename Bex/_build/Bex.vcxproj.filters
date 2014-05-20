@@ -1,0 +1,438 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{26eee99a-ef85-4756-976e-75b514ba1a6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\base">
+      <UniqueIdentifier>{62c95fad-8487-4fe3-9737-a1764ebef9a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\platform">
+      <UniqueIdentifier>{0792a3b1-5419-4e45-aa6c-04992308b1c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\stream">
+      <UniqueIdentifier>{9a4ea570-ee2b-4c35-b513-b64e790e7d66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\thread">
+      <UniqueIdentifier>{7c9056ba-1b46-4514-9b9f-58e3def3872d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\thread\thread_pool">
+      <UniqueIdentifier>{8ae0cada-01d8-4f59-98f0-b4cb5551ba72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\math">
+      <UniqueIdentifier>{15772deb-3b43-42e9-9f8f-305f486394c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\network">
+      <UniqueIdentifier>{96a528d6-4d0a-4ddb-b39e-9b6f314f02ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\network\http">
+      <UniqueIdentifier>{4e024861-4488-4966-8082-f6864ec38805}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\utility">
+      <UniqueIdentifier>{de7b32c1-93a5-4be2-97b5-d0d1a34db10b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\platform\win32">
+      <UniqueIdentifier>{c2af86e5-12ce-47b1-b6a4-1d5f510db4b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\signals">
+      <UniqueIdentifier>{02f42727-d715-479d-ab36-e1b851aa6f80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\thread\lock">
+      <UniqueIdentifier>{1988b930-ca7f-421c-a906-1dadb33befeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\type_traits">
+      <UniqueIdentifier>{6a6e0175-8b98-4108-958a-1ea2fc2da7de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\type_traits\class_info">
+      <UniqueIdentifier>{4ab3f5a3-dce5-46df-a04a-c3b9591b9c6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\stream\serialization">
+      <UniqueIdentifier>{7a2d933a-39fe-4a65-995f-4399a20121ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\stream\convert">
+      <UniqueIdentifier>{0b03d567-246b-4efd-b97a-7a9c8b921a72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\filesystem">
+      <UniqueIdentifier>{e21bf6f2-086d-4e67-baa2-bfee7b4d3c98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\network\cobwebs">
+      <UniqueIdentifier>{6de56de8-5162-4c92-81b1-677b4a8e5f2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\pool">
+      <UniqueIdentifier>{7fd8bd81-c317-43ce-87d3-598a9e1e5c56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\network\cobwebs\parser">
+      <UniqueIdentifier>{febdfac6-632c-40b9-a13e-d951fde6f8f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\network\cobwebs\acceptor">
+      <UniqueIdentifier>{69110f6f-44a3-4a62-917c-e6043cde1125}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\network\cobwebs\connector">
+      <UniqueIdentifier>{1c916615-5051-42dc-8af1-96064082df14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\network\cobwebs\session">
+      <UniqueIdentifier>{ef9d4a1e-da32-41e7-9bf1-24dd6c2b9974}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\network\cobwebs\core">
+      <UniqueIdentifier>{c6035e76-99d9-4cec-bf76-f8337ee1bf46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\network\cobwebs\udp">
+      <UniqueIdentifier>{09b40307-681e-458c-b0d8-8595faf4474a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\bind">
+      <UniqueIdentifier>{dd607f6a-42f8-47f2-9c7c-ab458026e1ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\config">
+      <UniqueIdentifier>{1a963564-37f1-4171-8f3e-014438b5eda8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\timer">
+      <UniqueIdentifier>{89fee62a-cc60-4689-ad36-ec81bf20e39e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Bex\base\type_defines.hpp">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\base\bit.hpp">
+      <Filter>src\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\base.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\platform.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stl_containers_fwd.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\thread.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\thread\thread_pool\thread_pool.hpp">
+      <Filter>src\thread\thread_pool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\math\utility.hpp">
+      <Filter>src\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\math.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\http\sync_client.h">
+      <Filter>src\network\http</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\utility\singleton.hpp">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\platform\win32\win32_service.h">
+      <Filter>src\platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\signals\signal.hpp">
+      <Filter>src\signals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\signals\signal_fwd.h">
+      <Filter>src\signals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\signals\combine_last_value.hpp">
+      <Filter>src\signals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\signals\combine_accumulate_value.hpp">
+      <Filter>src\signals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\math\compress_numeric.hpp">
+      <Filter>src\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\utility\lexical_cast.hpp">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\utility\exception.h">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\thread\lock\generic_lock.hpp">
+      <Filter>src\thread\lock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\thread\lock\assert_lock.hpp">
+      <Filter>src\thread\lock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\type_traits\defines.hpp">
+      <Filter>src\type_traits</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\type_traits\signature_traits.hpp">
+      <Filter>src\type_traits</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\type_traits\class_info\has_member_function.hpp">
+      <Filter>src\type_traits\class_info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\type_traits\class_info\has_member_data.hpp">
+      <Filter>src\type_traits\class_info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\type_traits\type_traits.hpp">
+      <Filter>src\type_traits</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\type_traits\class_info\has_static_member_data.hpp">
+      <Filter>src\type_traits\class_info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\type_traits\class_info\has_static_member_function.hpp">
+      <Filter>src\type_traits\class_info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\type_traits\class_info\has_type.hpp">
+      <Filter>src\type_traits\class_info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\type_traits\class_info\has_const_int.hpp">
+      <Filter>src\type_traits\class_info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\type_traits\class_info\has_template_function.hpp">
+      <Filter>src\type_traits\class_info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\type_traits\class_info\has_template_type.hpp">
+      <Filter>src\type_traits\class_info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\type_traits\class_info.hpp">
+      <Filter>src\type_traits</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\type_traits\remove_all.hpp">
+      <Filter>src\type_traits</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\math\uint_3.hpp">
+      <Filter>src\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\type_traits\class_info\has_operator.hpp">
+      <Filter>src\type_traits\class_info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\utility\operators.h">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\platform\cross_api.hpp">
+      <Filter>src\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\ring_buf.hpp">
+      <Filter>src\stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\ring_streambuf.hpp">
+      <Filter>src\stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\static_streambuf.hpp">
+      <Filter>src\stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization\array_adapter.hpp">
+      <Filter>src\stream\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization\base_serializer.hpp">
+      <Filter>src\stream\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization\binary_archive.hpp">
+      <Filter>src\stream\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization\binary_iarchive.hpp">
+      <Filter>src\stream\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization\binary_oarchive.hpp">
+      <Filter>src\stream\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization\serialize_adl.hpp">
+      <Filter>src\stream\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization\stl_adapter.hpp">
+      <Filter>src\stream\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization\utility.hpp">
+      <Filter>src\stream\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\convert\base_convert.hpp">
+      <Filter>src\stream\convert</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization.hpp">
+      <Filter>src\stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\convert.hpp">
+      <Filter>src\stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\convert\inc_convert.hpp">
+      <Filter>src\stream\convert</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\platform\charset_cvt.h">
+      <Filter>src\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\platform\win32\charset_cvt.h">
+      <Filter>src\platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\convert\a2w_convert.hpp">
+      <Filter>src\stream\convert</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\filesystem\filestream.hpp">
+      <Filter>src\filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\thread\lock\inter_lock.hpp">
+      <Filter>src\thread\lock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\utility\lock_ptr.hpp">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs.h">
+      <Filter>src\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\auto_link.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\multi_ringbuf.hpp">
+      <Filter>src\stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs\parser\tcp_packet_parser.h">
+      <Filter>src\network\cobwebs\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs\parser\packet_head_wrapper.hpp">
+      <Filter>src\network\cobwebs\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\utility\format.hpp">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs\acceptor\tcp_acceptor.h">
+      <Filter>src\network\cobwebs\acceptor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs\acceptor\acceptor_base.h">
+      <Filter>src\network\cobwebs\acceptor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs\connector\tcp_connector.h">
+      <Filter>src\network\cobwebs\connector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs\connector\connector_base.h">
+      <Filter>src\network\cobwebs\connector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs\session\tcp_session.h">
+      <Filter>src\network\cobwebs\session</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs\session\session_base.hpp">
+      <Filter>src\network\cobwebs\session</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs\session\session_factory.hpp">
+      <Filter>src\network\cobwebs\session</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs\tcp_client.hpp">
+      <Filter>src\network\cobwebs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs\core\core.h">
+      <Filter>src\network\cobwebs\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs\core\options.h">
+      <Filter>src\network\cobwebs\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs\core\register.hpp">
+      <Filter>src\network\cobwebs\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs\core\error.hpp">
+      <Filter>src\network\cobwebs\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs\core\id.h">
+      <Filter>src\network\cobwebs\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\platform\utility.h">
+      <Filter>src\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\platform\win32\utility.h">
+      <Filter>src\platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs\core\pool.hpp">
+      <Filter>src\network\cobwebs\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs\udp\udp.h">
+      <Filter>src\network\cobwebs\udp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization\text_iarchive.hpp">
+      <Filter>src\stream\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization\text_oarchive.hpp">
+      <Filter>src\stream\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization\text_archive.hpp">
+      <Filter>src\stream\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\network\cobwebs\core\deleter.hpp">
+      <Filter>src\network\cobwebs\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bind\forward_bind.hpp">
+      <Filter>src\bind</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bind\forward_bind_fwd.h">
+      <Filter>src\bind</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bind.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bind\select.hpp">
+      <Filter>src\bind</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bind\callable.hpp">
+      <Filter>src\bind</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bind\placeholder.hpp">
+      <Filter>src\bind</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\config\config.hpp">
+      <Filter>src\config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\config.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\config\stl.hpp">
+      <Filter>src\config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization\concept.hpp">
+      <Filter>src\stream\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization\serialization_fwd.h">
+      <Filter>src\stream\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\timer\timer.hpp">
+      <Filter>src\timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\utility\range.hpp">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Bex\thread\thread_pool\thread_pool.cpp">
+      <Filter>src\thread\thread_pool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Bex\network\http\sync_client.cpp">
+      <Filter>src\network\http</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Bex\platform\win32\win32_service.cpp">
+      <Filter>src\platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Bex\platform\win32\charset_cvt.cpp">
+      <Filter>src\platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Bex\network\cobwebs\parser\tcp_packet_parser.cpp">
+      <Filter>src\network\cobwebs\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Bex\network\cobwebs\acceptor\acceptor_base.cpp">
+      <Filter>src\network\cobwebs\acceptor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Bex\network\cobwebs\acceptor\tcp_acceptor.cpp">
+      <Filter>src\network\cobwebs\acceptor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Bex\network\cobwebs\connector\tcp_connector.cpp">
+      <Filter>src\network\cobwebs\connector</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Bex\network\cobwebs\session\tcp_session.cpp">
+      <Filter>src\network\cobwebs\session</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Bex\network\cobwebs\core\core.cpp">
+      <Filter>src\network\cobwebs\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Bex\network\cobwebs\core\id.cpp">
+      <Filter>src\network\cobwebs\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Bex\platform\win32\utility.cpp">
+      <Filter>src\platform\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Bex\network\cobwebs\udp\udp.cpp">
+      <Filter>src\network\cobwebs\udp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Bex\bind\forward_bind.cpp">
+      <Filter>src\bind</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
