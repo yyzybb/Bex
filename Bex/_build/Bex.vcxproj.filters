@@ -105,9 +105,6 @@
     <ClInclude Include="..\src\Bex\stream.hpp">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Bex\stl_containers_fwd.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Bex\thread.hpp">
       <Filter>src</Filter>
     </ClInclude>

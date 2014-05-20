@@ -58,7 +58,6 @@
     <ClInclude Include="..\src\Bex\signals\combine_last_value.hpp" />
     <ClInclude Include="..\src\Bex\signals\signal.hpp" />
     <ClInclude Include="..\src\Bex\signals\signal_fwd.h" />
-    <ClInclude Include="..\src\Bex\stl_containers_fwd.h" />
     <ClInclude Include="..\src\Bex\stream.hpp" />
     <ClInclude Include="..\src\Bex\platform.hpp" />
     <ClInclude Include="..\src\Bex\platform\cross_api.hpp" />

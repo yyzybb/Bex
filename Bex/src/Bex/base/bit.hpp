@@ -13,8 +13,20 @@ namespace Bex
     template <int Bit>
     struct least_bv
     {
-        typedef typename integer_type_b<Bit + 1>::unsigned_type type;
+        typedef typename boost::uint_t<Bit + 1>::least type;
         static const type value = (type)1 << Bit;
+    };
+
+    /// ------ get strong
+    template <typename L, typename R>
+    struct stronger_integer
+    {
+        BOOST_STATIC_ASSERT(std::is_integral<L>::value);
+        BOOST_STATIC_ASSERT(std::is_integral<R>::value);
+
+        typedef typename boost::mpl::if_c<
+            (sizeof(L) > sizeof(R)),
+            L, R > ::type type;
     };
 
     /// ------ make bit integer
