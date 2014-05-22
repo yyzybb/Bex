@@ -387,6 +387,9 @@
     <ClInclude Include="..\src\Bex\base\cstdtype.hpp">
       <Filter>src\base</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Bex\utility\type_name.hpp">
+      <Filter>src\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Bex\thread\thread_pool\thread_pool.cpp">

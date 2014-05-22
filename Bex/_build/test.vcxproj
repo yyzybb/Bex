@@ -33,6 +33,7 @@
     <ClCompile Include="..\test\utility\TestLockPtr.cpp" />
     <ClCompile Include="..\test\utility\TestRange.cpp" />
     <ClCompile Include="..\test\utility\Test_lexical_cast.cpp" />
+    <ClCompile Include="..\test\utility\Test_type_name.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\test\main\TestCommon.hpp" />

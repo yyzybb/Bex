@@ -90,6 +90,9 @@
     <ClCompile Include="..\test\utility\TestRange.cpp">
       <Filter>utility</Filter>
     </ClCompile>
+    <ClCompile Include="..\test\utility\Test_type_name.cpp">
+      <Filter>utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\test\main\TestPCH.h">

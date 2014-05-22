@@ -2,6 +2,7 @@ Bex/_build/*.opensdf
 Bex/_build/*.sdf
 Bex/_build/*.suo
 Bex/_build/ipch
+Bex/_build/*.vcxproj.user
 _intermediate
 _output
 boost/include

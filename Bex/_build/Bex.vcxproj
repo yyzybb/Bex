@@ -110,6 +110,7 @@
     <ClInclude Include="..\src\Bex\utility\operators.h" />
     <ClInclude Include="..\src\Bex\utility\range.hpp" />
     <ClInclude Include="..\src\Bex\utility\singleton.hpp" />
+    <ClInclude Include="..\src\Bex\utility\type_name.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Bex\bind\forward_bind.cpp" />
