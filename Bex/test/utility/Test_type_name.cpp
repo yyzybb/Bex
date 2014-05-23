@@ -18,6 +18,7 @@ BOOST_AUTO_TEST_CASE(t_type_name)
     std::string vf = real_typename<void()>();
     std::string vfp = real_typename<void(*)()>();
     std::string vfcp = real_typename<void(X::*)()>();
+    std::string ipa = real_typename<int * const[4]>();
 
 #if defined(__GNUC__)
     BOOST_CHECK(icr == "int const&");
