@@ -49,12 +49,15 @@ Bex/src/Bex (按字母顺序排列, 带^标记的是还不成熟的或以后可�
     > config        - Bex配置工具, 用于区分当前系统\编译器等环境信息.
     > filesystem    - 标准库fstream的扩展
     > math          - 提供了一个可以压缩存储的自定义整数类型
+    > mpl           - 模板元编程库
+        |---- while     -- 控制语句: while_
+    
     > network       - 网络库.
-        |---- cobwebs   - 基于asio封装的网络库, 追求简单易用且高效.
-        |---- ^ http    - 简易的同步读写的http客户端.
+        |---- cobwebs   -- 基于asio封装的网络库, 追求简单易用且高效.
+        |---- ^ http    -- 简易的同步读写的http客户端.
         
     > platform      - 封装不得不用平台SDK实现的功能
-        |---- win32     - 在Win32下的实现
+        |---- win32     -- 在Win32下的实现
         |-- TODO: 其他平台下的实现
         
     > signals       - 基于boost.signals2封装的消息框架(可以作为项目框架使用).
@@ -76,6 +79,7 @@ Bex/src/Bex (按字母顺序排列, 带^标记的是还不成熟的或以后可�
         |---- class_info       -- C++中的反射! (未完善, 在C++11下可以发挥更强大的威力)
         |---- remove_all       -- 迭代式剥掉类型的所有修饰
         |---- signature_traits -- 自由函数类型转换为成员函数类型的traits.
+        |---- static_debug     -- 编译期的调试工具, 目前仅实现了支持msvc12.0.
 
     > utility       -- 一些超轻量级的实用小工具
         |---- exception.h      -- 异常基类
@@ -85,6 +89,7 @@ Bex/src/Bex (按字母顺序排列, 带^标记的是还不成熟的或以后可�
         |---- operators.h      -- 各种C++运算符的宏定义
         |---- range.hpp        -- 转为C++11中的range for实现的辅助工具. 功能类似于Python中的range
         |---- singleton.hpp    -- 单件模式基类.
+        |---- type_name.hpp    -- 获取类型真实名字的工具
 
 
 
