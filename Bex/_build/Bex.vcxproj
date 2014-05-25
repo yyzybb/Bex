@@ -29,6 +29,7 @@
     <ClInclude Include="..\src\Bex\math\compress_numeric.hpp" />
     <ClInclude Include="..\src\Bex\math\uint_3.hpp" />
     <ClInclude Include="..\src\Bex\math\utility.hpp" />
+    <ClInclude Include="..\src\Bex\mpl\while.hpp" />
     <ClInclude Include="..\src\Bex\network\cobwebs.h" />
     <ClInclude Include="..\src\Bex\network\cobwebs\acceptor\acceptor_base.h" />
     <ClInclude Include="..\src\Bex\network\cobwebs\acceptor\tcp_acceptor.h" />
@@ -102,6 +103,7 @@
     <ClInclude Include="..\src\Bex\type_traits\defines.hpp" />
     <ClInclude Include="..\src\Bex\type_traits\remove_all.hpp" />
     <ClInclude Include="..\src\Bex\type_traits\signature_traits.hpp" />
+    <ClInclude Include="..\src\Bex\type_traits\static_debug.hpp" />
     <ClInclude Include="..\src\Bex\type_traits\type_traits.hpp" />
     <ClInclude Include="..\src\Bex\utility\exception.h" />
     <ClInclude Include="..\src\Bex\utility\format.hpp" />

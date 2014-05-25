@@ -19,6 +19,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\test\math\TestCompressNumeric.cpp" />
+    <ClCompile Include="..\test\mpl\test_while.cpp" />
     <ClCompile Include="..\test\platform\TestCharsetConvert.cpp" />
     <ClCompile Include="..\test\signals\TestSignals.cpp" />
     <ClCompile Include="..\test\stream\TestStream.cpp" />

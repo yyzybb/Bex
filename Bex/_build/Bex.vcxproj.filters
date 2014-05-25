@@ -88,6 +88,9 @@
     <Filter Include="src\timer">
       <UniqueIdentifier>{89fee62a-cc60-4689-ad36-ec81bf20e39e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\mpl">
+      <UniqueIdentifier>{02ecbbd9-af5f-4b2e-9114-12faec464b88}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Bex\base\bit.hpp">
@@ -389,6 +392,12 @@
     </ClInclude>
     <ClInclude Include="..\src\Bex\utility\type_name.hpp">
       <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\mpl\while.hpp">
+      <Filter>src\mpl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\type_traits\static_debug.hpp">
+      <Filter>src\type_traits</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

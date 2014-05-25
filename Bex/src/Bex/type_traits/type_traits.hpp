@@ -5,5 +5,6 @@
 #include <Bex/type_traits/remove_all.hpp>
 #include <Bex/type_traits/class_info.hpp>
 #include <Bex/type_traits/signature_traits.hpp>
+#include <Bex/type_traits/static_debug.hpp>
 
 #endif //__BEX_TYPE_TRAITS_TYPE_TRAITS_HPP__

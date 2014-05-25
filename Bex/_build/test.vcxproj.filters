@@ -31,6 +31,9 @@
     <Filter Include="bind">
       <UniqueIdentifier>{c4df6532-58c1-41e8-b74e-3a0b6d82a962}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mpl">
+      <UniqueIdentifier>{aeb58fc2-8c59-49b1-a2a4-58881c1c2d12}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\test\main\TestMain.cpp">
@@ -92,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="..\test\utility\Test_type_name.cpp">
       <Filter>utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\mpl\test_while.cpp">
+      <Filter>mpl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
