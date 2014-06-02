@@ -234,33 +234,50 @@ struct select<bind_bex>    // bex bind
 template <>
 struct select<bind_std>    // std bind
 {
+    template <typename PH, int I>
+    struct rebind;
+
+    template <template<int> class PH, int V, int I>
+    struct rebind<PH<V>, I>
+    {
+        typedef PH<I> type;
+    };
+
+    template <template<int> class PH, int V, int I>
+    struct rebind<PH<V> const, I>
+    {
+        typedef PH<I> const type;
+    };
+
+    template <int I>
+    using std_placeholder_t = rebind<decltype(std::placeholders::_1), I>;
+
+    template <int I>
+    inline static typename std_placeholder_t<I>::type invoke(Bex::forward_bind::placeholder<I>)
+    {
+        return typename std_placeholder_t<I>::type();
+    }
+
     template <typename Arg>
     inline static Arg && invoke(Arg && arg)
     {
         return std::forward<Arg>(arg);
-    }
-
-    template <int I>
-    inline static std::_Ph<I> invoke(Bex::forward_bind::placeholder<I>)
-    {
-        return std::_Ph<I>();
-        //std::placeholders::_1
     }
 };
 
 template <>
 struct select<bind_boost>    // boost bind
 {
-    template <typename Arg>
-    inline static Arg && invoke(Arg && arg)
-    {
-        return std::forward<Arg>(arg);
-    }
-
     template <int I>
     inline static boost::arg<I> invoke(Bex::forward_bind::placeholder<I>)
     {
         return boost::arg<I>();
+    }
+
+    template <typename Arg>
+    inline static Arg && invoke(Arg && arg)
+    {
+        return std::forward<Arg>(arg);
     }
 };
 

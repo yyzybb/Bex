@@ -34,7 +34,7 @@ namespace Bex { namespace forward_bind
         template <typename ... CArgs>
         result_type operator()(CArgs && ... cargs)
         {
-            return call_fun(call_type(), gen<f_traits::parameter_count>::type(), std::forward<CArgs>(cargs)...);
+            return call_fun(call_type(), typename gen<f_traits::parameter_count>::type(), std::forward<CArgs>(cargs)...);
         }
 
     private:
@@ -174,7 +174,7 @@ namespace Bex { namespace forward_bind
         template <typename ... CArgs>
         result_type operator()(CArgs && ... cargs)
         {
-            call_fun(call_type(), gen<f_traits::parameter_count>::type(), std::forward<CArgs>(cargs)...);
+            call_fun(call_type(), typename gen<f_traits::parameter_count>::type(), std::forward<CArgs>(cargs)...);
         }
 
     private:
