@@ -130,7 +130,9 @@ struct adapter<Ar, std::vector<bool, Alloc> >
 
     inline static char * get_base(Vector & vecT)
     {
+#if defined(_MSC_VER)
         return (char*)(vecT.begin()._Myptr);
+#endif //_MSC_VER
     }
 };
 
