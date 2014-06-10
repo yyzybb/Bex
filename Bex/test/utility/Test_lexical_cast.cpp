@@ -9,16 +9,16 @@ BOOST_AUTO_TEST_CASE(t_lexical_cast)
 {
     XDump("ø™ º≤‚ ‘ lexical_cast");
 
-    int x = lexical_cast<int>(std::string("abc"), 1);
+    int x = lexical_cast_noexcept<int>(std::string("abc"), 1);
     BOOST_CHECK_EQUAL(x, 1);
 
-    x = lexical_cast_def<int>(std::string("abc"));
+    x = lexical_cast_noexcept_d<int>(std::string("abc"));
     BOOST_CHECK_EQUAL(x, 0);
 
-    x = lexical_cast<int>("abc", 3, 2);
+    x = lexical_cast_noexcept<int>("abc", 3, 2);
     BOOST_CHECK_EQUAL(x, 2);
 
-    x = lexical_cast_def<int>("abc", 3);
+    x = lexical_cast_noexcept_d<int>("abc", 3);
     BOOST_CHECK_EQUAL(x, 0);
 
     XDump("Ω· ¯≤‚ ‘ lexical_cast");

@@ -25,7 +25,7 @@ namespace Bex { namespace cobwebs
         {
             // hostname不是IP, 当作域名解析
             ec.clear();
-            tcp::resolver::query query(hostname, lexical_cast_def<std::string>(port));
+            tcp::resolver::query query(hostname, lexical_cast_noexcept_d<std::string>(port));
             tcp::resolver rsl(m_ios);
             resolver_it = rsl.resolve(query, ec);
             if (ec || tcp::resolver::iterator() == resolver_it)
@@ -87,7 +87,7 @@ namespace Bex { namespace cobwebs
         {
             // hostname不是IP地址, 尝试当作域名解析
             ec.clear();
-            tcp::resolver::query query(hostname, lexical_cast_def<std::string>(port));
+            tcp::resolver::query query(hostname, lexical_cast_noexcept_d<std::string>(port));
             tcp::resolver rsl(m_ios);
             tcp::resolver::iterator resolver_it = rsl.resolve(query, ec);
             if (ec)

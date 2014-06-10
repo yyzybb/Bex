@@ -6,7 +6,7 @@
 namespace Bex
 {
     template <typename Target, typename Source>
-    Target lexical_cast(Source const& arg, Target const& def)
+    Target lexical_cast_noexcept(Source const& arg, Target const& def)
     {
         try
         {
@@ -19,13 +19,13 @@ namespace Bex
     }
 
     template <typename Target, typename Source>
-    inline Target lexical_cast_def(Source const& arg)
+    inline Target lexical_cast_noexcept_d(Source const& arg)
     {
-        return lexical_cast(arg, Target());
+        return lexical_cast_noexcept(arg, Target());
     }
 
     template <typename Target, typename CharType>
-    Target lexical_cast(CharType const* arg, std::size_t len, Target const& def)
+    Target lexical_cast_noexcept(CharType const* arg, std::size_t len, Target const& def)
     {
         try
         {
@@ -38,9 +38,9 @@ namespace Bex
     }
 
     template <typename Target, typename CharType>
-    inline Target lexical_cast_def(CharType const* arg, std::size_t len)
+    inline Target lexical_cast_noexcept_d(CharType const* arg, std::size_t len)
     {
-        return lexical_cast(arg, len, Target());
+        return lexical_cast_noexcept(arg, len, Target());
     }
 
 } //namespace Bex

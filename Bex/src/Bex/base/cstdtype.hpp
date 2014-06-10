@@ -10,24 +10,27 @@
 //////////////////////////////////////////////////////////////////////////
 /// ------ 类型定义
 
-namespace Bex
-{
-    /// ------ Define integer types
-    using boost::int8_t;
-    using boost::uint8_t;
+namespace Bex {
+    namespace cstdint
+    {
+        /// ------ Define integer types
+        using boost::int8_t;
+        using boost::uint8_t;
 
-    using boost::int16_t;
-    using boost::uint16_t;
+        using boost::int16_t;
+        using boost::uint16_t;
 
-    using boost::int32_t;
-    using boost::uint32_t;
+        using boost::int32_t;
+        using boost::uint32_t;
 
-    using boost::int64_t;
-    using boost::uint64_t;
+        using boost::int64_t;
+        using boost::uint64_t;
 
-    typedef float float32_t;
-    typedef double float64_t;
+        typedef float float32_t;
+        typedef double float64_t;
+    } //namespace cstdint
 
+    using namespace cstdint;
 } //namespace Bex
 
 #endif //__BEX_TYPE_DEFINES__
