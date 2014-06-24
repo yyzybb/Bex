@@ -34,6 +34,9 @@
     <Filter Include="mpl">
       <UniqueIdentifier>{aeb58fc2-8c59-49b1-a2a4-58881c1c2d12}</UniqueIdentifier>
     </Filter>
+    <Filter Include="bexio">
+      <UniqueIdentifier>{23b346c6-d5bc-42b0-9c24-30ad0699fe8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\test\main\TestMain.cpp">
@@ -98,6 +101,9 @@
     </ClCompile>
     <ClCompile Include="..\test\mpl\test_while.cpp">
       <Filter>mpl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\bexio\Test_noblocking_circle.cpp">
+      <Filter>bexio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\test\base\TestBit.cpp" />
+    <ClCompile Include="..\test\bexio\Test_noblocking_circle.cpp" />
     <ClCompile Include="..\test\bind\TestForwardBind.cpp" />
     <ClCompile Include="..\test\main\TestMain.cpp" />
     <ClCompile Include="..\test\main\TestPCH.cpp">

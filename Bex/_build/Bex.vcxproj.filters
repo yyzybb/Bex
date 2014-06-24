@@ -91,6 +91,12 @@
     <Filter Include="src\mpl">
       <UniqueIdentifier>{02ecbbd9-af5f-4b2e-9114-12faec464b88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\bexio">
+      <UniqueIdentifier>{2db821dc-81a6-433c-a841-37ca617f9206}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\bexio\detail">
+      <UniqueIdentifier>{aa79cd2b-228b-4a5b-b630-d3b75e0f23dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Bex\base\bit.hpp">
@@ -399,6 +405,30 @@
     <ClInclude Include="..\src\Bex\type_traits\static_debug.hpp">
       <Filter>src\type_traits</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\allocator.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\multithread_strand.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\multithread_strand_fwd.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\multithread_strand_service.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\stream_session.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\intrusive_list.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\bexio_fwd.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\nonblocking_circularbuffer.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Bex\thread\thread_pool\thread_pool.cpp">
@@ -443,5 +473,10 @@
     <ClCompile Include="..\src\Bex\bind\forward_bind.cpp">
       <Filter>src\bind</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\Bex\bexio\detail\multithread_strand.ipp">
+      <Filter>src\bexio\detail</Filter>
+    </None>
   </ItemGroup>
 </Project>

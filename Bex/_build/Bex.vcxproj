@@ -15,6 +15,14 @@
     <ClInclude Include="..\src\Bex\base.hpp" />
     <ClInclude Include="..\src\Bex\base\bit.hpp" />
     <ClInclude Include="..\src\Bex\base\cstdtype.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\allocator.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\bexio_fwd.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\intrusive_list.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\multithread_strand.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\multithread_strand_fwd.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\multithread_strand_service.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\nonblocking_circularbuffer.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\stream_session.hpp" />
     <ClInclude Include="..\src\Bex\bind.hpp" />
     <ClInclude Include="..\src\Bex\bind\callable.hpp" />
     <ClInclude Include="..\src\Bex\bind\forward_bind.hpp" />
@@ -129,6 +137,9 @@
     <ClCompile Include="..\src\Bex\platform\win32\utility.cpp" />
     <ClCompile Include="..\src\Bex\platform\win32\win32_service.cpp" />
     <ClCompile Include="..\src\Bex\thread\thread_pool\thread_pool.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\Bex\bexio\detail\multithread_strand.ipp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1740DA12-0A80-4E1E-A2FD-263E1BEDA000}</ProjectGuid>
