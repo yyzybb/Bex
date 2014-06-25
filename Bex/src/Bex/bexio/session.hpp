@@ -1,5 +1,5 @@
-#ifndef __BEX_IO_STREAM_SESSION_HPP__
-#define __BEX_IO_STREAM_SESSION_HPP__
+#ifndef __BEX_IO_SESSION_HPP__
+#define __BEX_IO_SESSION_HPP__
 
 #include "intrusive_list.hpp"
 #include <boost/shared_ptr.hpp>
@@ -10,18 +10,17 @@ namespace Bex { namespace bexio
     using namespace boost::asio;
     using boost::system::error_code;
 
-    template <typename ProtocolTraits>
-    class stream_session
-        : public intrusive_list<stream_session<ProtocolTraits> >::hook
+    template <typename Protocol, typename SocketPolicy, typename SessionMgr>
+    class session
+        : public SessionMgr::hook
+        , public SocketPolicy::storage
     {
     public:
-        typedef typename ProtocolTraits::implementataion_type::socket_type socket_t;
-        typedef typename ProtocolTraits::implementataion_type::context_type context_t;
-
+        typedef typename SocketPolicy::socket socket_t;
         typedef boost::shared_ptr<socket_t> socket_ptr;
 
     public:
-        explicit stream_session(socket_ptr socket);
+        explicit session(socket_ptr socket);
 
         // actor处理session的完成回调
         void run();
@@ -70,4 +69,4 @@ namespace Bex { namespace bexio
 } //namespace bexio
 } //namespace Bex
 
-#endif //__BEX_IO_STREAM_SESSION_HPP__
+#endif //__BEX_IO_SESSION_HPP__

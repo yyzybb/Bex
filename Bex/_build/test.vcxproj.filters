@@ -105,6 +105,9 @@
     <ClCompile Include="..\test\bexio\Test_noblocking_circle.cpp">
       <Filter>bexio</Filter>
     </ClCompile>
+    <ClCompile Include="..\test\bexio\TestLayerMetaFunctions.cpp">
+      <Filter>bexio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\test\main\TestPCH.h">

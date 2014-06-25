@@ -417,9 +417,6 @@
     <ClInclude Include="..\src\Bex\bexio\multithread_strand_service.hpp">
       <Filter>src\bexio</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Bex\bexio\stream_session.hpp">
-      <Filter>src\bexio</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Bex\bexio\intrusive_list.hpp">
       <Filter>src\bexio</Filter>
     </ClInclude>
@@ -427,6 +424,15 @@
       <Filter>src\bexio</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Bex\bexio\nonblocking_circularbuffer.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\session.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\tcp_socket.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\buffered_socket.hpp">
       <Filter>src\bexio</Filter>
     </ClInclude>
   </ItemGroup>

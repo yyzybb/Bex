@@ -17,12 +17,14 @@
     <ClInclude Include="..\src\Bex\base\cstdtype.hpp" />
     <ClInclude Include="..\src\Bex\bexio\allocator.hpp" />
     <ClInclude Include="..\src\Bex\bexio\bexio_fwd.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\buffered_socket.hpp" />
     <ClInclude Include="..\src\Bex\bexio\intrusive_list.hpp" />
     <ClInclude Include="..\src\Bex\bexio\multithread_strand.hpp" />
     <ClInclude Include="..\src\Bex\bexio\multithread_strand_fwd.hpp" />
     <ClInclude Include="..\src\Bex\bexio\multithread_strand_service.hpp" />
     <ClInclude Include="..\src\Bex\bexio\nonblocking_circularbuffer.hpp" />
-    <ClInclude Include="..\src\Bex\bexio\stream_session.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\session.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\tcp_socket.hpp" />
     <ClInclude Include="..\src\Bex\bind.hpp" />
     <ClInclude Include="..\src\Bex\bind\callable.hpp" />
     <ClInclude Include="..\src\Bex\bind\forward_bind.hpp" />
