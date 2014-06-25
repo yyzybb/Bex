@@ -9,6 +9,7 @@
 
 #include <cstdio>
 #include <boost/noncopyable.hpp>
+#include <boost/array.hpp>
 #include <algorithm>
 
 namespace Bex { namespace bexio
@@ -22,6 +23,7 @@ namespace Bex { namespace bexio
         typedef value_type const* const_pointer;
         typedef std::size_t size_type;
         typedef std::size_t difference_type;
+        typedef value_type& reference_type;
 
         nonblocking_circularbuffer(pointer buffer, size_type capacity)
         {
@@ -83,7 +85,7 @@ namespace Bex { namespace bexio
             pointer pb = pbegin(), pe = pend();
             return (pb > pe) ? distance(pb, end()) : distance(pb, pe);
         }
-        
+
         // 写指针向后移动offset个位置
         void pbump(difference_type offset)
         {
@@ -113,6 +115,19 @@ namespace Bex { namespace bexio
             }
 
             return (size - put_size);
+        }
+
+        // 可写缓冲区提取成MutableBufferSequence concept
+        template <typename MutableBuffer>
+        size_type put_buffers(boost::array<MutableBuffer, 2> & out) const
+        {
+            size_type ps = psize(), pc = pcount();
+            size_type c1 = pc; 
+            size_type c2 = (ps > pc) ? (ps - pc) : 0;
+
+            out[0] = MutableBuffer(pptr(), c1);
+            out[1] = MutableBuffer(buffer_, c2);
+            return c2 ? 2 : (c1 ? 1 : 0);
         }
 
         // @}
@@ -163,6 +178,20 @@ namespace Bex { namespace bexio
 
             return (size - get_size);
         }
+
+        // 可写缓冲区提取成ConstBufferSequence concept
+        template <typename ConstBuffer>
+        size_type get_buffers(boost::array<ConstBuffer, 2> & out) const
+        {
+            size_type gs = gsize(), gc = gcount();
+            size_type c1 = gc; 
+            size_type c2 = (gs > gc) ? (gs - gc) : 0;
+
+            out[0] = ConstBuffer(gptr(), c1);
+            out[1] = ConstBuffer(buffer_, c2);
+            return c2 ? 2 : (c1 ? 1 : 0);
+        }
+
         // @}
         //////////////////////////////////////////////////////////////////////////
 
@@ -189,7 +218,7 @@ namespace Bex { namespace bexio
         {
             return buffer_ + capacity_;
         }
-
+        
         difference_type distance(const_pointer const lhs, const_pointer const rhs) const
         {
             return (rhs >= lhs) ? (rhs - lhs) : (rhs + capacity_ - lhs);
