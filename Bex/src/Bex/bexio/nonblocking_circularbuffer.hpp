@@ -8,9 +8,8 @@
 */
 
 #include <cstdio>
-#include <boost/noncopyable.hpp>
-#include <boost/array.hpp>
 #include <algorithm>
+#include "bexio_fwd.hpp"
 
 namespace Bex { namespace bexio
 {
@@ -117,6 +116,23 @@ namespace Bex { namespace bexio
             return (size - put_size);
         }
 
+        // 写入数据
+        template <typename ConstBufferSequence>
+        size_type sputn_to_buffers(ConstBufferSequence const& buffers)
+        {
+            size_type count = 0;
+            typename ConstBufferSequence::iterator it = buffers.begin();
+            for (; it != buffers.end(); ++it)
+            {
+                size_type once = sputn(detail::buffer_cast_helper(*it),
+                    detail::buffer_size_helper(*it));
+                count += once;
+                if (once < detail::buffer_size_helper(*it))
+                    break;
+            }
+            return count;
+        }
+
         // 可写缓冲区提取成MutableBufferSequence concept
         template <typename MutableBuffer>
         size_type put_buffers(boost::array<MutableBuffer, 2> & out) const
@@ -177,6 +193,23 @@ namespace Bex { namespace bexio
             }
 
             return (size - get_size);
+        }
+
+        // 读取数据
+        template <typename MutableBufferSequence>
+        size_type sgetn_to_buffers(MutableBufferSequence & buffers)
+        {
+            size_type count = 0;
+            typename MutableBufferSequence::iterator it = buffers.begin();
+            for (; it != buffers.end(); ++it)
+            {
+                size_type once = sgetn(detail::buffer_cast_helper(*it),
+                    detail::buffer_size_helper(*it));
+                count += once;
+                if (once < detail::buffer_size_helper(*it))
+                    break;
+            }
+            return count;
         }
 
         // 可写缓冲区提取成ConstBufferSequence concept

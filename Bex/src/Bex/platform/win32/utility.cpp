@@ -1,3 +1,5 @@
+#if defined(_WIN32)
+
 #include "utility.h"
 #include <Windows.h>
 
@@ -15,3 +17,5 @@ namespace Bex
     }
 
 } //namespace Bex
+
+#endif //_WIN32

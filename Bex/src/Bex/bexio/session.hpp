@@ -1,33 +1,46 @@
 #ifndef __BEX_IO_SESSION_HPP__
 #define __BEX_IO_SESSION_HPP__
 
-#include "intrusive_list.hpp"
-#include <boost/shared_ptr.hpp>
-#include <boost/asio.hpp>
+#include "bexio_fwd.hpp"
 
 namespace Bex { namespace bexio
 {
     using namespace boost::asio;
     using boost::system::error_code;
 
-    template <typename Protocol, typename SocketPolicy, typename SessionMgr>
+    template <typename Protocol, typename SessionMgr>
     class session
         : public SessionMgr::hook
-        , public SocketPolicy::storage
+        , public Protocol
     {
     public:
-        typedef typename SocketPolicy::socket socket_t;
-        typedef boost::shared_ptr<socket_t> socket_ptr;
+        struct id {};
+
+        /// 根据Protocol::F添加id参数, 推导出F
+        typedef boost::function<void(error_code)> OnConnectF;
+        typedef boost::function<void(error_code)> OnDisconnectF;
+        typedef boost::function<void(char const*, std::size_t)> OnReceiveF;
 
     public:
-        explicit session(socket_ptr socket);
+        explicit session(socket_ptr socket)
+            : socket_(socket)
+        {
+        }
 
         // actor处理session的完成回调
         void run();
 
         // 发送数据
+        void send(char const* data, std::size_t size)
+        {
+            socket_->sputn(data, size);
+        }
+
         template <typename ConstBufferSequence>
-        void send(ConstBufferSequence const& const_buffer_sequence);
+        void send(ConstBufferSequence const& buffers)
+        {
+            socket_->sputn(buffers);
+        }
 
         // 优雅地关闭连接
         void shutdown();
@@ -50,17 +63,7 @@ namespace Bex { namespace bexio
 
     private:
         // 接收数据回调
-        void on_receive() BEX_FINAL;
-
-    protected:
-        // 连接回调
-        virtual void on_connect(error_code ec);
-
-        // 接收数据回调
-        virtual void on_receive(const_buffer data);
-        
-        // 断开连接回调
-        virtual void on_disconnect(error_code ec);
+        void on_receive();
 
     private:
         socket_ptr socket_;

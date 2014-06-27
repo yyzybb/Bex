@@ -1,6 +1,8 @@
 #ifndef __BEX_WIN32_SERVICE__
 #define __BEX_WIN32_SERVICE__
 
+#if defined(_WIN32)
+
 #include <boost/program_options.hpp>
 #include <boost/function.hpp>
 #include <boost/thread.hpp>
@@ -133,5 +135,6 @@ namespace Bex
     };
 }
 
+#endif //_WIN32
 
 #endif //__BEX_WIN32_SERVICE__

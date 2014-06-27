@@ -1,6 +1,8 @@
 #ifndef __BEX_PLATFORM_WIN32_CHARSET_CVT_H__
 #define __BEX_PLATFORM_WIN32_CHARSET_CVT_H__
 
+#if defined(_WIN32)
+
 #include <string>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_same.hpp>

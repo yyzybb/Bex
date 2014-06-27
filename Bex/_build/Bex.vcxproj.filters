@@ -258,9 +258,6 @@
     <ClInclude Include="..\src\Bex\platform\charset_cvt.h">
       <Filter>src\platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Bex\platform\win32\charset_cvt.h">
-      <Filter>src\platform\win32</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Bex\stream\convert\a2w_convert.hpp">
       <Filter>src\stream\convert</Filter>
     </ClInclude>
@@ -429,10 +426,10 @@
     <ClInclude Include="..\src\Bex\bexio\session.hpp">
       <Filter>src\bexio</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Bex\bexio\tcp_socket.hpp">
+    <ClInclude Include="..\src\Bex\bexio\buffered_socket.hpp">
       <Filter>src\bexio</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Bex\bexio\buffered_socket.hpp">
+    <ClInclude Include="..\src\Bex\bexio\tcp_protocol.hpp">
       <Filter>src\bexio</Filter>
     </ClInclude>
   </ItemGroup>
@@ -444,9 +441,6 @@
       <Filter>src\network\http</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Bex\platform\win32\win32_service.cpp">
-      <Filter>src\platform\win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Bex\platform\win32\charset_cvt.cpp">
       <Filter>src\platform\win32</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Bex\network\cobwebs\parser\tcp_packet_parser.cpp">

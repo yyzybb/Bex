@@ -1,3 +1,5 @@
+#if defined(_WIN32)
+
 #include "win32_service.h"
 #include <boost/filesystem.hpp>
 #include <boost/bind.hpp>
@@ -279,3 +281,5 @@ namespace Bex
     }
 
 }
+
+#endif //_WIN32

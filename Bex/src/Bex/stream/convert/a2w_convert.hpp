@@ -52,7 +52,7 @@ namespace Bex { namespace convert
         inline std::wstring& get(load_oper_tag) { return m_unicode; }
         inline std::wstring& get(save_oper_tag)
         {
-            m_unicode = a2w(m_ansi);
+            m_unicode = conv::a2w(m_ansi);
             return m_unicode;
         }
 
@@ -61,7 +61,7 @@ namespace Bex { namespace convert
         inline void deconstruct(save_oper_tag) {}
         inline void deconstruct(load_oper_tag)
         {
-            m_ansi = w2a(m_unicode);
+            m_ansi = conv::w2a(m_unicode);
         }
     };
 
@@ -116,7 +116,7 @@ namespace Bex { namespace convert
         inline std::wstring& get(load_oper_tag) { return m_unicode; }
         inline std::wstring& get(save_oper_tag)
         {
-            m_unicode = a2w(std::string(m_ansi, N));
+            m_unicode = conv::a2w(std::string(m_ansi, N));
             return m_unicode;
         }
 
@@ -125,7 +125,7 @@ namespace Bex { namespace convert
         inline void deconstruct(save_oper_tag) {}
         inline void deconstruct(load_oper_tag)
         {
-            std::string strAnsi = w2a(m_unicode);
+            std::string strAnsi = conv::w2a(m_unicode);
             std::size_t ls = (std::min<std::size_t>)(strAnsi.length(), N - 1);
             memcpy(&m_ansi[0], strAnsi.c_str(), ls);
             m_ansi[ls] = 0;

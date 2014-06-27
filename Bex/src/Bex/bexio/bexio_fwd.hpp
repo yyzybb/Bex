@@ -7,6 +7,7 @@
 #include <boost/thread.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
+#include <boost/function.hpp>
 #include <boost/array.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits.hpp>
@@ -43,6 +44,7 @@ namespace Bex { namespace bexio
 
         static const bool value = (sizeof(_check<T>(0)) == sizeof(short));
     };
+
     /// 分层类型中的下一层类型
     template <class T>
     typename T::next_layer_type& next_layer(T& object)
@@ -100,6 +102,7 @@ namespace Bex { namespace bexio
     struct lowest_layer_t
         : lowest_layer_t_helper<T, has_lowest_layer<T>::value >
     {};
+
     /// @}
     //////////////////////////////////////////////////////////////////////////
 

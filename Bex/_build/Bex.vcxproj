@@ -24,7 +24,7 @@
     <ClInclude Include="..\src\Bex\bexio\multithread_strand_service.hpp" />
     <ClInclude Include="..\src\Bex\bexio\nonblocking_circularbuffer.hpp" />
     <ClInclude Include="..\src\Bex\bexio\session.hpp" />
-    <ClInclude Include="..\src\Bex\bexio\tcp_socket.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\tcp_protocol.hpp" />
     <ClInclude Include="..\src\Bex\bind.hpp" />
     <ClInclude Include="..\src\Bex\bind\callable.hpp" />
     <ClInclude Include="..\src\Bex\bind\forward_bind.hpp" />
@@ -62,7 +62,6 @@
     <ClInclude Include="..\src\Bex\network\http\sync_client.h" />
     <ClInclude Include="..\src\Bex\platform\charset_cvt.h" />
     <ClInclude Include="..\src\Bex\platform\utility.h" />
-    <ClInclude Include="..\src\Bex\platform\win32\charset_cvt.h" />
     <ClInclude Include="..\src\Bex\platform\win32\utility.h" />
     <ClInclude Include="..\src\Bex\platform\win32\win32_service.h" />
     <ClInclude Include="..\src\Bex\signals\combine_accumulate_value.hpp" />
@@ -135,7 +134,6 @@
     <ClCompile Include="..\src\Bex\network\cobwebs\session\tcp_session.cpp" />
     <ClCompile Include="..\src\Bex\network\cobwebs\udp\udp.cpp" />
     <ClCompile Include="..\src\Bex\network\http\sync_client.cpp" />
-    <ClCompile Include="..\src\Bex\platform\win32\charset_cvt.cpp" />
     <ClCompile Include="..\src\Bex\platform\win32\utility.cpp" />
     <ClCompile Include="..\src\Bex\platform\win32\win32_service.cpp" />
     <ClCompile Include="..\src\Bex\thread\thread_pool\thread_pool.cpp" />
