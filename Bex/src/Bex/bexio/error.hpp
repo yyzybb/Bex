@@ -36,16 +36,16 @@ namespace Bex { namespace bexio
         {
             switch(ev)
             {
-            case initiative_terminate:
+            case bee::initiative_terminate:
                 return "initiative terminate";
 
-            case initiative_shutdown:
+            case bee::initiative_shutdown:
                 return "initiative shutdown";
 
-            case sendbuffer_overflow:
+            case bee::sendbuffer_overflow:
                 return "sendbuffer overflow";
 
-            case receivebuffer_overflow:
+            case bee::receivebuffer_overflow:
                 return "receivebuffer overflow";
 
             default:
@@ -65,7 +65,7 @@ namespace Bex { namespace bexio
     /// 生成bexio_error类型的error_code
     inline boost::system::error_code generate_error(bexio_error_em ev)
     {
-        return boost::system::error_code(ev, get_bexio_category());
+        return boost::system::error_code((int)ev, get_bexio_category());
     }
 
 } //namespace bexio

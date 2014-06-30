@@ -8,19 +8,19 @@
 */
 #include "bexio_fwd.hpp"
 #include "multithread_strand.hpp"
+#include "session_base.hpp"
 
 namespace Bex { namespace bexio
 {
-
     template <typename Protocol, typename SessionMgr>
-    class session
-        : public SessionMgr::hook
-        , public Protocol
-        , public boost::enable_shared_from_this<session<Protocol, SessionMgr> >
-        , boost::noncopyable
+    class basic_session
+        : public Protocol
+        , public session_base<SessionMgr>
     {
-        typedef session<Protocol, SessionMgr> this_type;
-        typedef multithread_strand<io_service> mstrand_service_type;
+        typedef basic_session<Protocol, SessionMgr> this_type;
+        typedef typename Protocol::allocator allocator;
+        typedef typename Protocol::socket_ptr socket_ptr;
+        typedef multithread_strand<io_service, allocator> mstrand_service_type;
         friend SessionMgr;
 
     public:
@@ -42,12 +42,12 @@ namespace Bex { namespace bexio
         /// 根据Protocol::F添加id参数, 推导出F
         typedef boost::function<void(id)> OnConnectF;
         typedef boost::function<void(id, error_code)> OnDisconnectF;
-        typedef typename function_addition<id, Protocol::OnReceiveF>::type OnReceiveF;
+        typedef typename function_addition<id, typename Protocol::OnReceiveF>::type OnReceiveF;
 
         typedef boost::tuple<OnConnectF, OnDisconnectF, OnReceiveF> callback_type;
 
     public:
-        explicit session(socket_ptr socket
+        explicit basic_session(socket_ptr socket
             , shared_ptr<options> const& opts
             , shared_ptr<callback_type> const& callbacks)
 
@@ -134,14 +134,14 @@ namespace Bex { namespace bexio
         }
 
         // 优雅地关闭连接
-        void shutdown()
+        virtual void shutdown()
         {
             on_error(generate_error(bee::initiative_shutdown));
             shutdowning_.set();
         }
 
         // 强制地关闭连接
-        void terminate()
+        virtual void terminate()
         {
             on_error(generate_error(bee::initiative_terminate));
             error_code ec;
@@ -149,12 +149,6 @@ namespace Bex { namespace bexio
             socket_->lowest_layer().shutdown(socket_base::shutdown_both, ec);
             socket_->close(ec);
             notify_ondisconnect();
-        }
-
-        // 获取id
-        id get_id() const
-        {
-            return session_mgr_type::create_id(shared_from_this());
         }
 
         // 连接是否已断开
@@ -422,10 +416,6 @@ namespace Bex { namespace bexio
         /// 连接是否断开
         sentry<bool> disconencted_;
 
-        /// session id
-        long id_;
-        static volatile long svlid;
-
         /// 选项
         shared_ptr<options> opts_;
 
@@ -439,9 +429,6 @@ namespace Bex { namespace bexio
         bool notify_connect_;
         bool notify_disconnect_;
     };
-
-    template <typename Protocol, typename SessionMgr>
-    volatile long session<Protocol, SessionMgr>::svlid = 1;
 
 } //namespace bexio
 } //namespace Bex

@@ -4,27 +4,14 @@
 namespace Bex { namespace bexio 
 {
     template <class Strand, class Allocator>
-    multithread_strand<Strand, Allocator>::multithread_strand()
-    {
-    }
-
-
-    template <class Strand, class Allocator>
-    multithread_strand<Strand, Allocator>::~multithread_strand()
-    {
-        terminate();
-    }
-
-
-    template <class Strand, class Allocator>
-    multithread_strand<Strand, Allocator>::next_layer_type & multithread_strand<Strand, Allocator>::next_layer()
+    typename multithread_strand<Strand, Allocator>::next_layer_type & multithread_strand<Strand, Allocator>::next_layer()
     {
         return next_layer_;
     }
 
 
     template <class Strand, class Allocator>
-    multithread_strand<Strand, Allocator>::lowest_layer_type & multithread_strand<Strand, Allocator>::lowest_layer()
+    typename multithread_strand<Strand, Allocator>::lowest_layer_type & multithread_strand<Strand, Allocator>::lowest_layer()
     {
         return ::Bex::bexio::lowest_layer(next_layer_);
     }

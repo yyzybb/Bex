@@ -5,10 +5,13 @@
 /// tcp socket policy
 #include "bexio_fwd.hpp"
 #include "buffered_socket.hpp"
+#include "nonblocking_circularbuffer.hpp"
+#include "allocator.hpp"
 
 namespace Bex { namespace bexio
 {
-    template <typename Buffer, typename Allocator>
+    template <typename Buffer = nonblocking_circularbuffer,
+        typename Allocator = allocator<int> >
     struct tcp_protocol
         : ip::tcp
     {

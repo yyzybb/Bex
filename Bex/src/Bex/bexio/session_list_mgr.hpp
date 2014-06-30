@@ -8,14 +8,16 @@
 */
 #include "bexio_fwd.hpp"
 #include "intrusive_list.hpp"
+#include "session_base.hpp"
 
 namespace Bex { namespace bexio
 {
-    template <class Session, typename LockType = inter_lock>
+    template <typename LockType = inter_lock>
     class session_list_mgr
     {
     public:
-        typedef Session session_type;
+        typedef session_list_mgr<LockType> this_type;
+        typedef session_base<this_type> session_type;
         typedef shared_ptr<session_type> session_ptr;
         typedef intrusive_list<session_type> list_type;
         typedef typename list_type::hook hook;
@@ -24,22 +26,22 @@ namespace Bex { namespace bexio
         class session_id
             : boost::totally_ordered<session_id>
         {
-            explicit session_id(shared_ptr<this_type> const& spointer)
+            explicit session_id(shared_ptr<session_type> const& spointer)
                 : id_(spointer ? spointer->id_ : 0), wpointer_(spointer)
             {}
 
-            friend bool operator<(id const& lhs, id const& rhs)
+            friend bool operator<(session_id const& lhs, session_id const& rhs)
             {
                 return lhs.id_ < rhs.id_;
             }
 
-            shared_ptr<this_type> get()
+            shared_ptr<session_type> get()
             {
                 return wpointer_.lock();
             }
 
             long id_;
-            weak_ptr<this_type> wpointer_;
+            weak_ptr<session_type> wpointer_;
         };
 
         session_list_mgr() : size_(0) {}

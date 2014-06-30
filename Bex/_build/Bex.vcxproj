@@ -16,6 +16,7 @@
     <ClInclude Include="..\src\Bex\base\bit.hpp" />
     <ClInclude Include="..\src\Bex\base\cstdtype.hpp" />
     <ClInclude Include="..\src\Bex\bexio\allocator.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\bexio.hpp" />
     <ClInclude Include="..\src\Bex\bexio\bexio_fwd.hpp" />
     <ClInclude Include="..\src\Bex\bexio\buffered_socket.hpp" />
     <ClInclude Include="..\src\Bex\bexio\client.hpp" />
@@ -29,6 +30,7 @@
     <ClInclude Include="..\src\Bex\bexio\sentry.hpp" />
     <ClInclude Include="..\src\Bex\bexio\server.hpp" />
     <ClInclude Include="..\src\Bex\bexio\session.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\session_base.hpp" />
     <ClInclude Include="..\src\Bex\bexio\session_list_mgr.hpp" />
     <ClInclude Include="..\src\Bex\bexio\tcp_protocol.hpp" />
     <ClInclude Include="..\src\Bex\bind.hpp" />

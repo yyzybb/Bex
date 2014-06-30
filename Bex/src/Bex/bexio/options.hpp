@@ -46,7 +46,7 @@ namespace Bex { namespace bexio
     /// @}
     //////////////////////////////////////////////////////////////////////////
 
-    class options
+    struct options
     {
         // 连接成功\断开连接\收到数据 三种消息通知逻辑线程的方式
         notify_logic_thread_em nlte_;
@@ -61,7 +61,7 @@ namespace Bex { namespace bexio
         message_logic_process_em mlpe_;
 
         /// 测试配置方案(Test)
-        static options multi_session_server()
+        static options test()
         {
             static options const opts = {
                 nlte::nlt_reactor,

@@ -8,11 +8,11 @@
 namespace Bex { namespace bexio 
 {
     template <class Session>
-    class server
+    class basic_server
         : boost::noncopyable
     {
     public:
-        typedef server<Session> this_type;
+        typedef basic_server<Session> this_type;
 
         typedef Session session_type;
         typedef shared_ptr<session_type> session_ptr;
@@ -23,7 +23,7 @@ namespace Bex { namespace bexio
 
         typedef typename protocol_type::socket socket;
         typedef typename protocol_type::socket_ptr socket_ptr;
-        typedef typename protocol_type::accpetor acceptor;
+        typedef typename protocol_type::acceptor acceptor;
         typedef typename protocol_type::endpoint endpoint;
         typedef typename protocol_type::allocator allocator;
         typedef typename allocator::template rebind<session_type>::other alloc_session_t;
@@ -31,14 +31,14 @@ namespace Bex { namespace bexio
         typedef typename allocator::template rebind<callback_type>::other alloc_callback_t;
 
     public:
-        server(io_service & ios, options const& opts)
+        basic_server(io_service & ios, options const& opts)
             : ios_(ios), acceptor_(ios)
         {
             opts_ = make_shared_ptr<options, alloc_options_t>(opts);
             callback_ = make_shared_ptr<callback_type, alloc_callback_t>();
         }
 
-        ~server()
+        ~basic_server()
         {
             terminate();
             while (session_mgr_.size())
@@ -108,7 +108,7 @@ namespace Bex { namespace bexio
         }
 
         // …Ë÷√ªÿµ˜
-        template <session_type::callback_em CallbackType, typename F>
+        template <typename session_type::callback_em CallbackType, typename F>
         void set_callback(F const& f)
         {
             session_type::set_callback(*callback_, f);

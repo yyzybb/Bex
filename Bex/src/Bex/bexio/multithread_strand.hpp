@@ -23,7 +23,7 @@ namespace Bex { namespace bexio
         typedef typename boost::remove_reference<Strand>::type next_layer_type;
 
         // lowest layer type
-        typedef typename lowest_layer_type<Strand>::type lowest_layer_type;
+        typedef typename next_layer_t<Strand>::type lowest_layer_type;
 
     public: 
         // 获取下层strand引用
