@@ -4,14 +4,6 @@
 #include <boost/locale.hpp>
 #include <Bex/utility/singleton.hpp>
 
-#if defined(_WIN32) || defined(_WIN64)
-# define _WINSOCK2API_
-# define _WINSOCKAPI_
-#  include <Windows.h>
-# undef _WINSOCK2API_
-# undef _WINSOCKAPI_
-#endif 
-
 //////////////////////////////////////////////////////////////////////////
 /// ×Ö·û±àÂë×ª»»
 namespace Bex { namespace conv
@@ -110,17 +102,14 @@ namespace Bex { namespace conv
         }
 
         std::string generate_id(std::string const& lc)
-        {
 #if defined(_WIN32) || defined(_WIN64)
-            int cp = ::GetACP();
-            for (int i = 0; i < sizeof(all_windows_encodings) / sizeof(windows_encoding); ++i)
-                if (all_windows_encodings[i].codepage == cp)
-                {
-                    return lc + all_windows_encodings[i].name;
-                }
-#endif 
+            ;   ///< defined in cpp
+#else
+        {
             return lc + "utf8";
         }
+
+#endif
     };
 
     // ansi -> unicode

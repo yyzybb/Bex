@@ -18,12 +18,18 @@
     <ClInclude Include="..\src\Bex\bexio\allocator.hpp" />
     <ClInclude Include="..\src\Bex\bexio\bexio_fwd.hpp" />
     <ClInclude Include="..\src\Bex\bexio\buffered_socket.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\client.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\error.hpp" />
     <ClInclude Include="..\src\Bex\bexio\intrusive_list.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\options.hpp" />
     <ClInclude Include="..\src\Bex\bexio\multithread_strand.hpp" />
     <ClInclude Include="..\src\Bex\bexio\multithread_strand_fwd.hpp" />
     <ClInclude Include="..\src\Bex\bexio\multithread_strand_service.hpp" />
     <ClInclude Include="..\src\Bex\bexio\nonblocking_circularbuffer.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\sentry.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\server.hpp" />
     <ClInclude Include="..\src\Bex\bexio\session.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\session_list_mgr.hpp" />
     <ClInclude Include="..\src\Bex\bexio\tcp_protocol.hpp" />
     <ClInclude Include="..\src\Bex\bind.hpp" />
     <ClInclude Include="..\src\Bex\bind\callable.hpp" />
@@ -134,6 +140,7 @@
     <ClCompile Include="..\src\Bex\network\cobwebs\session\tcp_session.cpp" />
     <ClCompile Include="..\src\Bex\network\cobwebs\udp\udp.cpp" />
     <ClCompile Include="..\src\Bex\network\http\sync_client.cpp" />
+    <ClCompile Include="..\src\Bex\platform\win32\charset_cvt.cpp" />
     <ClCompile Include="..\src\Bex\platform\win32\utility.cpp" />
     <ClCompile Include="..\src\Bex\platform\win32\win32_service.cpp" />
     <ClCompile Include="..\src\Bex\thread\thread_pool\thread_pool.cpp" />

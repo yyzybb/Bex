@@ -57,6 +57,35 @@ namespace Bex
                     lock_.unlock();
             }
         };
+
+        class scoped_lock
+        {
+            inter_lock & lock_;
+            bool locked_;
+
+        public:
+            explicit scoped_lock(inter_lock& lock)
+                : lock_(lock), locked_(true)
+            {
+                while (!lock.try_lock()) ;
+            }
+
+            inline bool is_locked() const
+            {
+                return locked_;
+            }
+
+            inline void detach()
+            {
+                locked_ = false;
+            }
+
+            ~scoped_lock()
+            {
+                if (locked_)
+                    lock_.unlock();
+            }
+        };
     };
 
 } //namespace Bex

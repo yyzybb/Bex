@@ -1,0 +1,74 @@
+#ifndef __BEX_IO_ERROR_HPP__
+#define __BEX_IO_ERROR_HPP__
+
+//////////////////////////////////////////////////////////////////////////
+/// 自定义errorcode
+#include <Bex/config.hpp>
+#include <boost/system/error_code.hpp>
+
+namespace Bex { namespace bexio
+{
+    enum BEX_ENUM_CLASS bexio_error_em
+    {
+        initiative_terminate,   ///< 强制主动断开连接
+        initiative_shutdown,    ///< 优雅地主动断开连接
+        sendbuffer_overflow,    ///< 发送缓冲区溢出
+        receivebuffer_overflow, ///< 接收缓冲区溢出
+    };
+    typedef bexio_error_em bee;
+
+    class bexio_error
+        : public boost::system::error_category
+    {
+#if defined(BOOST_NO_CXX11_DEFAULTED_FUNCTIONS)
+        bexio_error() {}
+#else  // defined(BOOST_NO_CXX11_DEFAULTED_FUNCTIONS)
+        bexio_error() = default;
+#endif // defined(BOOST_NO_CXX11_DEFAULTED_FUNCTIONS)
+
+    public:
+        virtual char const* name() const BOOST_SYSTEM_NOEXCEPT
+        {
+            return "bexio_error";
+        }
+
+        virtual std::string message(int ev) const BOOST_SYSTEM_NOEXCEPT
+        {
+            switch(ev)
+            {
+            case initiative_terminate:
+                return "initiative terminate";
+
+            case initiative_shutdown:
+                return "initiative shutdown";
+
+            case sendbuffer_overflow:
+                return "sendbuffer overflow";
+
+            case receivebuffer_overflow:
+                return "receivebuffer overflow";
+
+            default:
+                return "undefined bexio error";
+            }
+        }
+
+        friend bexio_error const& get_bexio_category();
+    };
+
+    inline bexio_error const& get_bexio_category()
+    {
+        static bexio_error err;
+        return err;
+    }
+
+    /// 生成bexio_error类型的error_code
+    inline boost::system::error_code generate_error(bexio_error_em ev)
+    {
+        return boost::system::error_code(ev, get_bexio_category());
+    }
+
+} //namespace bexio
+} //namespace Bex
+
+#endif //__BEX_IO_ERROR_HPP__

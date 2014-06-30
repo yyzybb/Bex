@@ -128,6 +128,16 @@ namespace Bex { namespace bexio
         return pointer;
     }
 
+    template <typename T, class Allocator, typename Arg1, typename Arg2, typename Arg3>
+    T * allocate(Arg1 & arg1, Arg2 & arg2, Arg3 & arg3)
+    {
+        typedef typename Allocator::template rebind<T>::type alloc_t;
+        alloc_t alloc;
+        T * pointer = alloc.allocate(sizeof(T));
+        alloc.construct(pointer, arg1, arg2, arg3);
+        return pointer;
+    }
+
     template <class Allocator, typename T>
     void deallocate(T * pointer)
     {
@@ -164,6 +174,13 @@ namespace Bex { namespace bexio
     boost::shared_ptr<T> make_shared_ptr(Arg & arg)
     {
         return boost::shared_ptr<T>(allocate<T, Allocator>(arg),
+            deallocator<T, Allocator>(), Allocator());
+    }
+
+    template <typename T, class Allocator, typename Arg1, typename Arg2, typename Arg3>
+    boost::shared_ptr<T> make_shared_ptr(Arg1 & arg1, Arg2 & arg2, Arg3 & arg3)
+    {
+        return boost::shared_ptr<T>(allocate<T, Allocator>(arg1, arg2, arg3),
             deallocator<T, Allocator>(), Allocator());
     }
 

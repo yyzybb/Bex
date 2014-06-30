@@ -432,6 +432,24 @@
     <ClInclude Include="..\src\Bex\bexio\tcp_protocol.hpp">
       <Filter>src\bexio</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\options.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\error.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\sentry.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\session_list_mgr.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\server.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\client.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Bex\thread\thread_pool\thread_pool.cpp">
@@ -472,6 +490,9 @@
     </ClCompile>
     <ClCompile Include="..\src\Bex\bind\forward_bind.cpp">
       <Filter>src\bind</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Bex\platform\win32\charset_cvt.cpp">
+      <Filter>src\platform\win32</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -95,6 +95,11 @@ namespace Bex { namespace bexio
             return iterator(&back_);
         }
 
+        iterator find(pointer ptr)
+        {
+            return iterator(ptr);
+        }
+
         void swap(this_type & other)
         {
             boost::swap(front_, other.front_);
@@ -141,6 +146,13 @@ namespace Bex { namespace bexio
                 where.pointer_->prev.next = where.pointer_->next;
                 where.pointer_->next = where.pointer_->prev = 0;
             }
+        }
+
+        static void erase(pointer ptr)
+        {
+            ptr->next.prev = ptr->prev;
+            ptr->prev.next = ptr->next;
+            ptr->next = ptr->prev = 0;
         }
 
         bool empty() const

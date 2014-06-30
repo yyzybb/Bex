@@ -83,16 +83,18 @@ namespace Bex { namespace bexio
         }
 
         // 异步写入(发送)数据
+        // @WriteHandler : void(boost::system::error_code, std::size_t))
         template <typename WriteHandler>
-        BOOST_ASIO_INITFN_RESULT_TYPE(WriteHandler,
-            void(boost::system::error_code, std::size_t))
-            async_write_some(BOOST_ASIO_MOVE_ARG(WriteHandler) handler)
+        bool async_write_some(BOOST_ASIO_MOVE_ARG(WriteHandler) handler)
         {
             boost::array<const_buffer, 2> buffers;
-            write_buffer_.get_buffers(buffers);
-            return socket_.async_write_some(buffers,
+            if (!write_buffer_.get_buffers(buffers))
+                return false;
+
+            socket_.async_write_some(buffers,
                 boost::bind(&this_type::on_async_write<WriteHandler>, this
                     , placeholders::error, placeholders::bytes_transferred, handler));
+            return true;
         }
 
         // 同步读取(接收)数据
@@ -111,16 +113,18 @@ namespace Bex { namespace bexio
         }
 
         // 异步读取(接收)数据
+        // @ReadHandler : void(boost::system::error_code, std::size_t)
         template <typename ReadHandler>
-        BOOST_ASIO_INITFN_RESULT_TYPE(ReadHandler,
-            void(boost::system::error_code, std::size_t))
-            async_read_some(BOOST_ASIO_MOVE_ARG(ReadHandler) handler)
+        bool async_read_some(BOOST_ASIO_MOVE_ARG(ReadHandler) handler)
         {
             boost::array<mutable_buffer, 2> buffers;
-            read_buffer_.put_buffers(buffers);
-            return socket_.async_read_some(buffers,
+            if (!read_buffer_.put_buffers(buffers))
+                return false;
+
+            socket_.async_read_some(buffers,
                 boost::bind(&this_type::on_async_read<ReadHandler>, this
                     , placeholders::error, placeholders::bytes_transferred, handler));
+            return true;
         }
 
         // 提取接收缓冲区中的已收到的数据
@@ -136,6 +140,18 @@ namespace Bex { namespace bexio
             read_buffer_.gbump(size);
         }
 
+        // 接收缓冲区可读数据长度
+        std::size_t getable_read() const
+        {
+            return read_buffer_.gsize();
+        }
+
+        // 接收缓冲区可写数据长度
+        std::size_t putable_read() const
+        {
+            return read_buffer_.psize();
+        }
+
         // 提取发送缓冲区中的可写数据段
         template <typename MutableBufferSequence>
         std::size_t put_buffers(MutableBufferSequence & buffers) const
@@ -147,6 +163,18 @@ namespace Bex { namespace bexio
         void write_done(std::size_t size)
         {
             write_buffer_.pbump(size);
+        }
+
+        // 发送缓冲区可读数据长度
+        std::size_t getable_write() const
+        {
+            return write_buffer_.gsize();
+        }
+
+        // 发送缓冲区可写数据长度
+        std::size_t putable_write() const
+        {
+            return write_buffer_.psize();
         }
 
         // 将要发送的数据写入发送缓冲区中
@@ -170,7 +198,7 @@ namespace Bex { namespace bexio
         template <typename MutableBufferSequence>
         std::size_t sgetn(MutableBufferSequence & buffers)
         {
-            return write_buffer_.sgetn_to_buffers(buffers);
+            return read_buffer_.sgetn_to_buffers(buffers);
         }
 
     private:
