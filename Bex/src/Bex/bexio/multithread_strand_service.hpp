@@ -17,19 +17,20 @@ namespace Bex { namespace bexio
         : public detail::service_base<multithread_strand_service<Allocator> >
         , public multithread_strand<io_service&, Allocator>
     {
-        typedef detail::service_base<multithread_strand_service<Allocator> > base_type;
+        typedef detail::service_base<multithread_strand_service<Allocator> > srv_type;
+        typedef multithread_strand<io_service&, Allocator> base_type;
 
     public:
         explicit multithread_strand_service(io_service& owner)
-            : base_type(owner), multithread_strand<io_service&, Allocator>(owner)
+            : srv_type(owner), base_type(owner)
         {
         }
 
     private:
         // ¹Ø±Õ·þÎñ
-        virtual void shutdown_service()
+        virtual void shutdown_service() BEX_OVERRIDE
         {
-            shutdown();
+            base_type::shutdown();
         }
     };
 

@@ -41,7 +41,7 @@ namespace Bex { namespace bexio
             if (!sp) return ;
 
             BOOST_INTERLOCKED_INCREMENT(&size_);
-            lock_type::scoped_lock lock(lock_);
+            typename lock_type::scoped_lock lock(lock_);
             list_.push_back(sp.get());
         }
 
@@ -58,7 +58,7 @@ namespace Bex { namespace bexio
         void erase(session_type * sp)
         {
             BOOST_INTERLOCKED_DECREMENT(&size_);
-            lock_type::scoped_lock lock(lock_);
+            typename lock_type::scoped_lock lock(lock_);
             list_.erase(sp);
         }
 
@@ -77,7 +77,7 @@ namespace Bex { namespace bexio
         template <typename F>
         void for_each(F f)
         {
-            lock_type::scoped_lock lock(lock_);
+            typename lock_type::scoped_lock lock(lock_);
             typename list_type::iterator it = list_.begin();
             for (; it != list_.end(); ++it)
                 f(*it);

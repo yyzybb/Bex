@@ -28,8 +28,8 @@ namespace Bex { namespace bexio
 
     public:
         template <typename Arg>
-        explicit multithread_strand(BEX_IO_MOVE_ARG(Arg) arg)
-            : next_layer_(BEX_IO_MOVE_CAST(Arg)(arg))
+        explicit multithread_strand(BEX_MOVE_ARG(Arg) arg)
+            : next_layer_(BEX_MOVE_CAST(Arg)(arg))
         {
         }
 
@@ -44,7 +44,7 @@ namespace Bex { namespace bexio
 
         // post完成回调
         template <typename Handler>
-        void post(BEX_IO_MOVE_ARG(Handler) handler);
+        void post(BEX_MOVE_ARG(Handler) handler);
 
         // 处理完成回调
         std::size_t run(error_code & ec);

@@ -24,8 +24,8 @@ namespace Bex { namespace bexio
         // @rbsize : 接收缓冲区大小
         // @wbsize : 发送缓冲区大小
         template <typename Arg /*= io_service*/>
-        buffered_socket(Arg & a, std::size_t rbsize, std::size_t wbsize)
-            : socket_(a)
+        buffered_socket(BEX_MOVE_ARG(Arg) arg, std::size_t rbsize, std::size_t wbsize)
+            : socket_(BEX_MOVE_CAST(Arg)(arg))
             , read_storage_(alloc_t().allocate(rbsize))
             , read_buffer_(read_storage_, rbsize)
             , write_storage_(alloc_t().allocate(wbsize))
@@ -85,7 +85,7 @@ namespace Bex { namespace bexio
         // 异步写入(发送)数据
         // @WriteHandler : void(boost::system::error_code, std::size_t))
         template <typename WriteHandler>
-        bool async_write_some(BEX_IO_MOVE_ARG(WriteHandler) handler)
+        bool async_write_some(BEX_MOVE_ARG(WriteHandler) handler)
         {
             boost::array<const_buffer, 2> buffers;
             if (!write_buffer_.get_buffers(buffers))
@@ -115,7 +115,7 @@ namespace Bex { namespace bexio
         // 异步读取(接收)数据
         // @ReadHandler : void(boost::system::error_code, std::size_t)
         template <typename ReadHandler>
-        bool async_read_some(BEX_IO_MOVE_ARG(ReadHandler) handler)
+        bool async_read_some(BEX_MOVE_ARG(ReadHandler) handler)
         {
             boost::array<mutable_buffer, 2> buffers;
             if (!read_buffer_.put_buffers(buffers))
@@ -204,7 +204,7 @@ namespace Bex { namespace bexio
     private:
         template <typename WriteHandler>
         void on_async_write(error_code ec, std::size_t bytes_transferred,
-            BEX_IO_MOVE_ARG(WriteHandler) handler)
+            BEX_MOVE_ARG(WriteHandler) handler)
         {
             if (!ec)
                 write_buffer_.gbump(bytes_transferred);
@@ -213,7 +213,7 @@ namespace Bex { namespace bexio
 
         template <typename ReadHandler>
         void on_async_read(error_code ec, std::size_t bytes_transferred,
-            BEX_IO_MOVE_ARG(ReadHandler) handler)
+            BEX_MOVE_ARG(ReadHandler) handler)
         {
             if (!ec)
                 read_buffer_.pbump(bytes_transferred);

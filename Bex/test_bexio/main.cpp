@@ -1,5 +1,5 @@
 #pragma warning(disable:4996)
-
+#define _WIN32_WINNT 0x501
 #include <Bex/bexio/bexio.hpp>
 #include <Bex/auto_link.h>
 #include <iostream>

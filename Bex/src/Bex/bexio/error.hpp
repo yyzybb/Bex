@@ -36,16 +36,16 @@ namespace Bex { namespace bexio
         {
             switch(ev)
             {
-            case bee::initiative_terminate:
+            case (int)bee::initiative_terminate:
                 return "initiative terminate";
 
-            case bee::initiative_shutdown:
+            case (int)bee::initiative_shutdown:
                 return "initiative shutdown";
 
-            case bee::sendbuffer_overflow:
+            case (int)bee::sendbuffer_overflow:
                 return "sendbuffer overflow";
 
-            case bee::receivebuffer_overflow:
+            case (int)bee::receivebuffer_overflow:
                 return "receivebuffer overflow";
 
             default:

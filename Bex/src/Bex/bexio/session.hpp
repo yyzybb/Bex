@@ -34,6 +34,8 @@ namespace Bex { namespace bexio
         typedef typename Protocol::socket_ptr socket_ptr;
         typedef multithread_strand_service<allocator> mstrand_service_type;
 
+        using boost::enable_shared_from_this<basic_session<Protocol, Hook> >::shared_from_this;
+
         // Á¬½Óid
         class id
             : boost::totally_ordered<id>
