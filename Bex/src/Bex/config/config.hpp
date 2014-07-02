@@ -5,6 +5,7 @@
 
 #include <boost/config.hpp>
 #include <Bex/config/stl.hpp>
+#include <boost/asio/detail/config.hpp>
 
 #if !defined(BOOST_NO_CXX11_DECLTYPE) && !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS) \
     && !defined(BOOST_NO_CXX11_NULLPTR) && !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) \
@@ -29,5 +30,8 @@
 #else
 # define BEX_ENUM_CLASS class
 #endif
+
+# define BEX_MOVE_ARG BOOST_ASIO_MOVE_ARG
+# define BEX_MOVE_CAST BOOST_ASIO_MOVE_CAST
 
 #endif //__BEX_CONFIG_CONFIG_HPP__

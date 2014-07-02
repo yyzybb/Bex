@@ -10,7 +10,7 @@ namespace Bex { namespace bexio
     class sentry
     {
     public:
-        explicit sentry(bool bset)
+        explicit sentry(bool bset = false)
         {
             if (bset) set();
         }
@@ -41,7 +41,7 @@ namespace Bex { namespace bexio
     class sentry<bool>
     {
     public:
-        explicit sentry(bool bset)
+        explicit sentry(bool bset = false)
             : native_(bset)
         {
         }

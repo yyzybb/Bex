@@ -453,9 +453,6 @@
     <ClInclude Include="..\src\Bex\bexio\bexio.hpp">
       <Filter>src\bexio</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Bex\bexio\session_base.hpp">
-      <Filter>src\bexio</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Bex\thread\thread_pool\thread_pool.cpp">

@@ -8,41 +8,19 @@
 */
 #include "bexio_fwd.hpp"
 #include "intrusive_list.hpp"
-#include "session_base.hpp"
 
 namespace Bex { namespace bexio
 {
-    template <typename LockType = inter_lock>
+    template <class Session, typename LockType = inter_lock>
     class session_list_mgr
     {
     public:
-        typedef session_list_mgr<LockType> this_type;
-        typedef session_base<this_type> session_type;
+        typedef session_list_mgr<Session, LockType> this_type;
+        typedef Session session_type;
+        typedef typename session_type::id session_id;
         typedef shared_ptr<session_type> session_ptr;
         typedef intrusive_list<session_type> list_type;
-        typedef typename list_type::hook hook;
         typedef LockType lock_type;
-
-        class session_id
-            : boost::totally_ordered<session_id>
-        {
-            explicit session_id(shared_ptr<session_type> const& spointer)
-                : id_(spointer ? spointer->id_ : 0), wpointer_(spointer)
-            {}
-
-            friend bool operator<(session_id const& lhs, session_id const& rhs)
-            {
-                return lhs.id_ < rhs.id_;
-            }
-
-            shared_ptr<session_type> get()
-            {
-                return wpointer_.lock();
-            }
-
-            long id_;
-            weak_ptr<session_type> wpointer_;
-        };
 
         session_list_mgr() : size_(0) {}
         ~session_list_mgr()
@@ -62,7 +40,7 @@ namespace Bex { namespace bexio
         {
             if (!sp) return ;
 
-            BOOST_INTERLOCKED_INCREMENT(size_);
+            BOOST_INTERLOCKED_INCREMENT(&size_);
             lock_type::scoped_lock lock(lock_);
             list_.push_back(sp.get());
         }
@@ -79,7 +57,7 @@ namespace Bex { namespace bexio
         /// É¾³ý
         void erase(session_type * sp)
         {
-            BOOST_INTERLOCKED_DECREMENT(size_);
+            BOOST_INTERLOCKED_DECREMENT(&size_);
             lock_type::scoped_lock lock(lock_);
             list_.erase(sp);
         }

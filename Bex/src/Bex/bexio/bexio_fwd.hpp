@@ -17,6 +17,15 @@
 #include <boost/tuple/tuple.hpp>
 #include <numeric>
 #include <list>
+
+#if defined(BEX_DEBUGGER)
+# define BEX_IO_MOVE_ARG BEX_MOVE_ARG
+# define BEX_IO_MOVE_CAST BEX_MOVE_CAST
+#else
+# define BEX_IO_MOVE_ARG(type) type &
+# define BEX_IO_MOVE_CAST(type) static_cast<type&>
+#endif
+
 #include "options.hpp"
 #include "error.hpp"
 #include "sentry.hpp"
@@ -162,9 +171,9 @@ namespace Bex { namespace bexio
     struct post_strand_helper
     {
         typedef detail::wrapped_handler<io_service::strand, Handler, detail::is_continuation_if_running> const& result_type;
-        result_type operator()(Protocol & proto, BOOST_ASIO_MOVE_ARG(Handler) handler)
+        result_type operator()(Protocol & proto, BEX_IO_MOVE_ARG(Handler) handler)
         {
-            return proto.post_strand(BOOST_ASIO_MOVE_CAST(Handler)(handler));
+            return proto.post_strand(BEX_IO_MOVE_CAST(Handler)(handler));
         }
     };
 
@@ -172,9 +181,9 @@ namespace Bex { namespace bexio
     struct post_strand_helper<Protocol, Handler, false>
     {
         typedef Handler const& result_type;
-        result_type operator()(Protocol &, BOOST_ASIO_MOVE_ARG(Handler) handler)
+        result_type operator()(Protocol &, BEX_IO_MOVE_ARG(Handler) handler)
         {
-            return BOOST_ASIO_MOVE_CAST(Handler)(handler);
+            return BEX_IO_MOVE_CAST(Handler)(handler);
         }
     };
 
@@ -184,9 +193,9 @@ namespace Bex { namespace bexio
     {};
 
     template <typename Protocol, typename Handler>
-    typename post_strand_c<Protocol, Handler>::result_type post_strand(Protocol & proto, BOOST_ASIO_MOVE_ARG(Handler) handler)
+    typename post_strand_c<Protocol, Handler>::result_type post_strand(Protocol & proto, BEX_IO_MOVE_ARG(Handler) handler)
     {
-        return post_strand_c<Protocol, Handler>()(proto, BOOST_ASIO_MOVE_CAST(Handler)(handler));
+        return post_strand_c<Protocol, Handler>()(proto, BEX_IO_MOVE_CAST(Handler)(handler));
     }
     /// @}
     //////////////////////////////////////////////////////////////////////////

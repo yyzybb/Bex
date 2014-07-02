@@ -12,15 +12,16 @@
 
 namespace Bex { namespace bexio
 {
+    template <class Allocator = ::Bex::bexio::allocator<int> >
     class multithread_strand_service
-        : public detail::service_base<multithread_strand_service>
-        , public multithread_strand<io_service&>
+        : public detail::service_base<multithread_strand_service<Allocator> >
+        , public multithread_strand<io_service&, Allocator>
     {
-        typedef detail::service_base<multithread_strand_service> base_type;
+        typedef detail::service_base<multithread_strand_service<Allocator> > base_type;
 
     public:
         explicit multithread_strand_service(io_service& owner)
-            : base_type(owner)
+            : base_type(owner), multithread_strand<io_service&, Allocator>(owner)
         {
         }
 

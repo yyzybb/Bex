@@ -11,7 +11,7 @@
 namespace Bex { namespace bexio
 {
     template <typename Buffer = nonblocking_circularbuffer,
-        typename Allocator = allocator<int> >
+        typename Allocator = ::Bex::bexio::allocator<int> >
     struct tcp_protocol
         : ip::tcp
     {
@@ -21,7 +21,7 @@ namespace Bex { namespace bexio
         typedef typename allocator::template rebind<socket>::other alloc_socket_t;
 
         // callback functions
-        typedef boost::function<void(socket_ptr)> HandleSocketF;
+        //typedef boost::function<void(socket_ptr)> HandleSocketF;
         typedef boost::function<void(char const*, std::size_t)> OnReceiveF;
 
         static socket_ptr alloc_socket(io_service & ios)

@@ -4,10 +4,11 @@
 //////////////////////////////////////////////////////////////////////////
 /// 有连接协议的服务端
 #include "bexio_fwd.hpp"
+#include "session_list_mgr.hpp"
 
 namespace Bex { namespace bexio 
 {
-    template <class Session>
+    template <class Session, class SessionMgr = session_list_mgr<Session> >
     class basic_server
         : boost::noncopyable
     {
@@ -15,9 +16,10 @@ namespace Bex { namespace bexio
         typedef basic_server<Session> this_type;
 
         typedef Session session_type;
+        typedef SessionMgr session_mgr_type;
+
         typedef shared_ptr<session_type> session_ptr;
         typedef typename session_type::id session_id;
-        typedef typename session_type::session_mgr_type session_mgr_type;
         typedef typename session_type::protocol_type protocol_type;
         typedef typename session_type::callback_type callback_type;
 
@@ -42,7 +44,7 @@ namespace Bex { namespace bexio
         {
             terminate();
             while (session_mgr_.size())
-                boost::thread::sleep(boost::posix_time::millisec(1));
+                boost::this_thread::sleep( boost::posix_time::milliseconds(1) );
         }
 
         // 启动
@@ -107,6 +109,12 @@ namespace Bex { namespace bexio
             return session_mgr_.size();
         }
 
+        // 提取错误信息
+        error_code get_error_code() const
+        {
+            return ec_;
+        }
+
         // 设置回调
         template <typename session_type::callback_em CallbackType, typename F>
         void set_callback(F const& f)
@@ -120,12 +128,12 @@ namespace Bex { namespace bexio
         {
             if (!reply)
             {
-                BOOST_INTERLOCKED_INCREMENT(accept_count_);
+                BOOST_INTERLOCKED_INCREMENT(&accept_count_);
             }
 
             socket_ptr sp = protocol_type::alloc_socket(ios_);
-            acceptor_.async_accept(*sp, 
-                boost::bind(&this_type::on_async_accept, placeholders::error, sp));
+            acceptor_.async_accept(sp->lowest_layer(), 
+                boost::bind(&this_type::on_async_accept, this, placeholders::error, sp));
         }
 
         // 接受连接请求回调
@@ -133,7 +141,7 @@ namespace Bex { namespace bexio
         {
             if (ec)
             {
-                if (BOOST_INTERLOCKED_DECREMENT(accept_count_) == 1 && shutdowning_.is_set())
+                if (BOOST_INTERLOCKED_DECREMENT(&accept_count_) == 1 && shutdowning_.is_set())
                     shutdown_sessions();
 
                 return ;
@@ -142,9 +150,9 @@ namespace Bex { namespace bexio
             async_accept(true);
 
             /// create session
-            session_type * session_p = allocate<session_type, alloc_session_t>(sp, opts_, callback_);
+            session_type * session_p = allocate<session_type, alloc_session_t>();
             session_ptr session(session_p, boost::bind(&this_type::session_deleter, this, _1), alloc_session_t());
-            session->initialize();
+            session_p->initialize(sp, opts_, callback_);
             session_mgr_.insert(session);
         }
 

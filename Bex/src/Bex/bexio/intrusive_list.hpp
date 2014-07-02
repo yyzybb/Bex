@@ -11,34 +11,32 @@
 
 namespace Bex { namespace bexio
 {
-    struct default_tag {};
+    struct intrusive_list_hook
+    {
+        intrusive_list_hook * prev;
+        intrusive_list_hook * next;
 
-    template <typename T, typename Tag = default_tag>
+        intrusive_list_hook()
+            : prev(0), next(0)
+        {}
+    };
+
+    template <typename T>
     class intrusive_list
     {
     public:
-        typedef intrusive_list<T, Tag> this_type;
+        typedef intrusive_list<T> this_type;
         typedef T value_type;
         typedef T* pointer;
 
-        struct hook
-        {
-            hook * prev;
-            hook * next;
-
-            hook()
-                : prev(0), next(0)
-            {}
-        };
-
-        BOOST_STATIC_ASSERT((boost::is_base_of<hook, T>::value));
+        BOOST_STATIC_ASSERT((boost::is_base_of<intrusive_list_hook, T>::value));
 
         struct iterator
             : boost::bidirectional_iteratable<iterator, pointer>
         {
-            hook * pointer_;
+            intrusive_list_hook * pointer_;
 
-            explicit iterator(hook * ptr)
+            explicit iterator(intrusive_list_hook * ptr)
                 : pointer_(ptr)
             {
             }
@@ -108,7 +106,7 @@ namespace Bex { namespace bexio
 
         void push_back(pointer ptr)
         {
-            hook * hook_ptr = static_cast<hook*>(ptr);
+            intrusive_list_hook * hook_ptr = static_cast<intrusive_list_hook*>(ptr);
             hook_ptr->prev = back_.prev;
             hook_ptr->next = &back_;
             back_.prev->next = hook_ptr;
@@ -124,7 +122,7 @@ namespace Bex { namespace bexio
 
         void push_front(pointer ptr)
         {
-            hook * hook_ptr = static_cast<hook*>(ptr);
+            intrusive_list_hook * hook_ptr = static_cast<intrusive_list_hook*>(ptr);
             hook_ptr->prev = &front_;
             hook_ptr->next = front_.next;
             front_.next->prev = hook_ptr;
@@ -142,16 +140,16 @@ namespace Bex { namespace bexio
         {
             if (!where.invalid())
             {
-                where.pointer_->next.prev = where.pointer_->prev;
-                where.pointer_->prev.next = where.pointer_->next;
+                where.pointer_->next->prev = where.pointer_->prev;
+                where.pointer_->prev->next = where.pointer_->next;
                 where.pointer_->next = where.pointer_->prev = 0;
             }
         }
 
         static void erase(pointer ptr)
         {
-            ptr->next.prev = ptr->prev;
-            ptr->prev.next = ptr->next;
+            ptr->next->prev = ptr->prev;
+            ptr->prev->next = ptr->next;
             ptr->next = ptr->prev = 0;
         }
 
@@ -163,7 +161,7 @@ namespace Bex { namespace bexio
         std::size_t size() const
         {
             std::size_t result = 0;
-            for (hook * pos = front_.next; pos->next; pos = pos->next, ++result)
+            for (intrusive_list_hook * pos = front_.next; pos->next; pos = pos->next, ++result)
                 ;
             return result;
         }
@@ -182,8 +180,8 @@ namespace Bex { namespace bexio
         }
 
     private:
-        hook front_;
-        hook back_;
+        intrusive_list_hook front_;
+        intrusive_list_hook back_;
     };
 
 } //namespace bexio

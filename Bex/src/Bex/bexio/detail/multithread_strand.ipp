@@ -25,9 +25,9 @@ namespace Bex { namespace bexio
 
     template <class Strand, class Allocator>
     template <typename Handler>
-    void multithread_strand<Strand, Allocator>::post(BOOST_ASIO_MOVE_ARG(Handler) handler)
+    void multithread_strand<Strand, Allocator>::post(BEX_IO_MOVE_ARG(Handler) handler)
     {
-        actor_.post(handler);
+        actor_.post(BEX_IO_MOVE_CAST(Handler)(handler));
     }
 
 
@@ -69,7 +69,8 @@ namespace Bex { namespace bexio
     {
         boost::recursive_mutex::scoped_lock lock(threads_mutex_);
         worker_.reset();
-        if (thread_list::iterator it = threads_.begin(); it != threads_.end(); ++it)
+        for (thread_list::iterator it = threads_.begin(); 
+            it != threads_.end(); ++it)
         {
             boost::thread & bthread = **it;
             bthread.join();

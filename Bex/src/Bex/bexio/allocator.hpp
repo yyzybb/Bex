@@ -62,7 +62,7 @@ namespace Bex { namespace bexio
 
         pointer allocate(size_type size) const throw()
         {
-            ::operator new(size);
+            return (pointer)(::operator new(size));
         }
 
         pointer allocate(size_type size, const void *) const throw()
@@ -101,7 +101,7 @@ namespace Bex { namespace bexio
     template <typename T, class Allocator>
     T * allocate()
     {
-        typedef typename Allocator::template rebind<T>::type alloc_t;
+        typedef typename Allocator::template rebind<T>::other alloc_t;
         alloc_t alloc;
         T * pointer = alloc.allocate(sizeof(T));
         alloc.construct(pointer);
@@ -111,7 +111,7 @@ namespace Bex { namespace bexio
     template <typename T, class Allocator, typename Arg>
     T * allocate(Arg const& arg)
     {
-        typedef typename Allocator::template rebind<T>::type alloc_t;
+        typedef typename Allocator::template rebind<T>::other alloc_t;
         alloc_t alloc;
         T * pointer = alloc.allocate(sizeof(T));
         alloc.construct(pointer, arg);
@@ -121,7 +121,7 @@ namespace Bex { namespace bexio
     template <typename T, class Allocator, typename Arg>
     T * allocate(Arg & arg)
     {
-        typedef typename Allocator::template rebind<T>::type alloc_t;
+        typedef typename Allocator::template rebind<T>::other alloc_t;
         alloc_t alloc;
         T * pointer = alloc.allocate(sizeof(T));
         alloc.construct(pointer, arg);
@@ -131,7 +131,7 @@ namespace Bex { namespace bexio
     template <typename T, class Allocator, typename Arg1, typename Arg2, typename Arg3>
     T * allocate(Arg1 & arg1, Arg2 & arg2, Arg3 & arg3)
     {
-        typedef typename Allocator::template rebind<T>::type alloc_t;
+        typedef typename Allocator::template rebind<T>::other alloc_t;
         alloc_t alloc;
         T * pointer = alloc.allocate(sizeof(T));
         alloc.construct(pointer, arg1, arg2, arg3);
@@ -141,7 +141,7 @@ namespace Bex { namespace bexio
     template <class Allocator, typename T>
     void deallocate(T * pointer)
     {
-        typedef typename Allocator::template rebind<T>::type alloc_t;
+        typedef typename Allocator::template rebind<T>::other alloc_t;
         alloc_t alloc;
         alloc.destroy(pointer);
         alloc.deallocate(pointer);

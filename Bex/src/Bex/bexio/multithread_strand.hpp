@@ -10,6 +10,7 @@
 
 #include "bexio_fwd.hpp"
 #include "multithread_strand_fwd.hpp"
+#include "allocator.hpp"
 
 namespace Bex { namespace bexio 
 {
@@ -25,7 +26,13 @@ namespace Bex { namespace bexio
         // lowest layer type
         typedef typename next_layer_t<Strand>::type lowest_layer_type;
 
-    public: 
+    public:
+        template <typename Arg>
+        explicit multithread_strand(BEX_IO_MOVE_ARG(Arg) arg)
+            : next_layer_(BEX_IO_MOVE_CAST(Arg)(arg))
+        {
+        }
+
         // 获取下层strand引用
         next_layer_type & next_layer();
 
@@ -37,7 +44,7 @@ namespace Bex { namespace bexio
 
         // post完成回调
         template <typename Handler>
-        void post(BOOST_ASIO_MOVE_ARG(Handler) handler);
+        void post(BEX_IO_MOVE_ARG(Handler) handler);
 
         // 处理完成回调
         std::size_t run(error_code & ec);

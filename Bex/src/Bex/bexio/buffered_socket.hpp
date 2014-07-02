@@ -85,7 +85,7 @@ namespace Bex { namespace bexio
         // 异步写入(发送)数据
         // @WriteHandler : void(boost::system::error_code, std::size_t))
         template <typename WriteHandler>
-        bool async_write_some(BOOST_ASIO_MOVE_ARG(WriteHandler) handler)
+        bool async_write_some(BEX_IO_MOVE_ARG(WriteHandler) handler)
         {
             boost::array<const_buffer, 2> buffers;
             if (!write_buffer_.get_buffers(buffers))
@@ -115,7 +115,7 @@ namespace Bex { namespace bexio
         // 异步读取(接收)数据
         // @ReadHandler : void(boost::system::error_code, std::size_t)
         template <typename ReadHandler>
-        bool async_read_some(BOOST_ASIO_MOVE_ARG(ReadHandler) handler)
+        bool async_read_some(BEX_IO_MOVE_ARG(ReadHandler) handler)
         {
             boost::array<mutable_buffer, 2> buffers;
             if (!read_buffer_.put_buffers(buffers))
@@ -204,7 +204,7 @@ namespace Bex { namespace bexio
     private:
         template <typename WriteHandler>
         void on_async_write(error_code ec, std::size_t bytes_transferred,
-            BOOST_ASIO_MOVE_ARG(WriteHandler) handler)
+            BEX_IO_MOVE_ARG(WriteHandler) handler)
         {
             if (!ec)
                 write_buffer_.gbump(bytes_transferred);
@@ -213,7 +213,7 @@ namespace Bex { namespace bexio
 
         template <typename ReadHandler>
         void on_async_read(error_code ec, std::size_t bytes_transferred,
-            BOOST_ASIO_MOVE_ARG(ReadHandler) handler)
+            BEX_IO_MOVE_ARG(ReadHandler) handler)
         {
             if (!ec)
                 read_buffer_.pbump(bytes_transferred);

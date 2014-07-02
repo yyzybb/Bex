@@ -40,7 +40,7 @@ namespace Bex { namespace bexio
         {
             terminate();
             while (session_)
-                boost::thread::sleep(boost::posix_time::millisec(1));
+                boost::this_thread::sleep( boost::posix_time::milliseconds(1) );
         }
 
         // ×èÈûÊ½Á¬½Ó
@@ -54,8 +54,8 @@ namespace Bex { namespace bexio
             if (ec_) 
                 return false;
 
-            session_ = make_shared_ptr<session_type, alloc_session_t>(sp, opts_, callback_);
-            session_->initialize();
+            session_ = make_shared_ptr<session_type, alloc_session_t>();
+            session_->initialize(sp, opts_, callback_);
             running_.set();
             return true;
         }

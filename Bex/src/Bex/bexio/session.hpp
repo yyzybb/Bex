@@ -7,28 +7,58 @@
 * @仅用于有连接协议
 */
 #include "bexio_fwd.hpp"
-#include "multithread_strand.hpp"
-#include "session_base.hpp"
+#include "multithread_strand_service.hpp"
+#include "intrusive_list.hpp"
 
 namespace Bex { namespace bexio
 {
-    template <typename Protocol, typename SessionMgr>
+    template <class Session>
+    struct hook
+        : intrusive_list_hook
+    {};
+
+    template <typename Protocol,
+        template <typename> class Hook = hook
+    >
     class basic_session
         : public Protocol
-        , public session_base<SessionMgr>
+        , public Hook<basic_session<Protocol, Hook> >
+        , public boost::enable_shared_from_this<basic_session<Protocol, Hook> >
+        , boost::noncopyable
     {
-        typedef basic_session<Protocol, SessionMgr> this_type;
-        typedef typename Protocol::allocator allocator;
-        typedef typename Protocol::socket_ptr socket_ptr;
-        typedef multithread_strand<io_service, allocator> mstrand_service_type;
-        friend SessionMgr;
+        typedef basic_session<Protocol, Hook> this_type;
 
     public:
         typedef Protocol protocol_type;
-        typedef SessionMgr session_mgr_type;
+        typedef typename Protocol::allocator allocator;
+        typedef typename Protocol::socket_ptr socket_ptr;
+        typedef multithread_strand_service<allocator> mstrand_service_type;
 
         // 连接id
-        typedef typename session_mgr_type::session_id id;
+        class id
+            : boost::totally_ordered<id>
+        {
+            typedef this_type session_type;
+            friend session_type;
+
+            explicit id(shared_ptr<session_type> const& spointer)
+                : id_(spointer ? spointer->id_ : 0), wpointer_(spointer)
+            {}
+
+            friend bool operator<(id const& lhs, id const& rhs)
+            {
+                return lhs.id_ < rhs.id_;
+            }
+
+            shared_ptr<session_type> get()
+            {
+                return wpointer_.lock();
+            }
+
+            long id_;
+            weak_ptr<session_type> wpointer_;
+        };
+        friend class id;
 
         /// 回调类型
         enum BEX_ENUM_CLASS callback_em
@@ -41,24 +71,28 @@ namespace Bex { namespace bexio
 
         /// 根据Protocol::F添加id参数, 推导出F
         typedef boost::function<void(id)> OnConnectF;
-        typedef boost::function<void(id, error_code)> OnDisconnectF;
+        typedef boost::function<void(id, error_code const&)> OnDisconnectF;
         typedef typename function_addition<id, typename Protocol::OnReceiveF>::type OnReceiveF;
 
         typedef boost::tuple<OnConnectF, OnDisconnectF, OnReceiveF> callback_type;
 
-    public:
-        explicit basic_session(socket_ptr socket
-            , shared_ptr<options> const& opts
-            , shared_ptr<callback_type> const& callbacks)
+        typedef shared_ptr<options> options_ptr;
+        typedef shared_ptr<callback_type> callback_ptr;
 
-            : opts_(opts), callbacks_(callbacks), socket_(socket), id_(BOOST_INTERLOCKED_INCREMENT(&svlid))
+    public:
+        // @remarks: 为用户自定义的子类书写方便, 将本该构造时传入的参数延迟至initialize中。
+        //           在initialize之前session是不安全的, 千万不要使用!
+        basic_session()
+            : id_(BOOST_INTERLOCKED_INCREMENT(&svlid))
         {
             // initialize sentries
             notify_connect_ = notify_disconnect_ = false;
         }
 
-        void initialize()
+        void initialize(socket_ptr socket, options_ptr const& opts, callback_ptr const& callbacks)
         {
+            opts_ = opts, callbacks_ = callbacks, socket_ = socket;
+
             if (opts_->nlte_ == nlte::nlt_reactor)
                 mstrand_service()->post(boost::bind(&this_type::notify_onconnect, shared_from_this()));
             else
@@ -157,6 +191,12 @@ namespace Bex { namespace bexio
             return disconencted_.is_set();
         }
 
+        // 获取id
+        id get_id()
+        {
+            return id(shared_from_this());
+        }
+
         // 设置回调
         template <callback_em CallbackType, typename F>
         static void set_callback(callback_type & cb, F const& f)
@@ -165,13 +205,20 @@ namespace Bex { namespace bexio
         }
 
     protected:
+        // 连接回调(mlp_derived || mlp_both 生效)
+        virtual void on_connect() {}
+        
+        // 断开连接回调(mlp_derived || mlp_both 生效)
+        virtual void on_disconnect(error_code const& ec) {}
+
+    protected:
         // 发起异步发送请求
         void post_send(bool reply = false)
         {
             if (!reply && !sending_.set())
                 return ;
 
-            bool sendok = socket_->async_write_some( post_strand<Protocol>(
+            bool sendok = socket_->async_write_some( post_strand<Protocol>(*this,
                 boost::bind(&this_type::on_async_send, shared_from_this(), placeholders::error, placeholders::bytes_transferred)
                 ));
 
@@ -195,7 +242,7 @@ namespace Bex { namespace bexio
             if (!reply && !receiving_.set())
                 return;
 
-            bool receiveok = socket_->async_read_some( post_strand<Protocol>(
+            bool receiveok = socket_->async_read_some( post_strand<Protocol>(*this,
                 boost::bind(&this_type::on_async_receive, shared_from_this(), placeholders::error, placeholders::bytes_transferred)
                 ));
 
@@ -305,8 +352,8 @@ namespace Bex { namespace bexio
                 on_connect();
 
             if (opts_->mlpe_ == mlpe::mlp_callback || opts_->mlpe_ == mlpe::mlp_both)
-                if (callbacks_ && boost::get<cbe::cb_connect>(callbacks_))
-                    boost::get<cbe::cb_connect>(callbacks_)(id(shared_from_this()));
+                if (callbacks_ && boost::get<(int)cbe::cb_connect>(*callbacks_))
+                    boost::get<(int)cbe::cb_connect>(*callbacks_)(get_id());
         }
 
         template <typename ConstBuffer>
@@ -316,8 +363,8 @@ namespace Bex { namespace bexio
                 on_receive(arg);
             
             if (opts_->mlpe_ == mlpe::mlp_callback || opts_->mlpe_ == mlpe::mlp_both)
-                if (callbacks_ && boost::get<cbe::cb_receive>(callbacks_))
-                    boost::get<cbe::cb_receive>(callbacks_)(id(shared_from_this()), arg);
+                if (callbacks_ && boost::get<(int)cbe::cb_receive>(*callbacks_))
+                    boost::get<(int)cbe::cb_receive>(*callbacks_)(get_id(), arg);
         }
 
         void notify_ondisconnect()
@@ -328,8 +375,8 @@ namespace Bex { namespace bexio
                 on_disconnect(ec_);
 
             if (opts_->mlpe_ == mlpe::mlp_callback || opts_->mlpe_ == mlpe::mlp_both)
-                if (callbacks_ && boost::get<cbe::cb_disconnect>(callbacks_))
-                    boost::get<cbe::cb_disconnect>(callbacks_)(id(shared_from_this()), ec_);
+                if (callbacks_ && boost::get<(int)cbe::cb_disconnect>(*callbacks_))
+                    boost::get<(int)cbe::cb_disconnect>(*callbacks_)(get_id(), ec_);
         }
 
         /// 缓冲区溢出处理
@@ -417,10 +464,10 @@ namespace Bex { namespace bexio
         sentry<bool> disconencted_;
 
         /// 选项
-        shared_ptr<options> opts_;
+        options_ptr opts_;
 
         /// 回调
-        shared_ptr<callback_type> callbacks_;
+        callback_ptr callbacks_;
 
         /// reactor方式, 通知逻辑层receive消息
         sentry<inter_lock> notify_receive_;
@@ -428,7 +475,16 @@ namespace Bex { namespace bexio
         /// loop方式, 通知connect/disconnect消息
         bool notify_connect_;
         bool notify_disconnect_;
+
+        /// session id
+        long id_;
+        static volatile long svlid;
     };
+
+    template <typename Protocol,
+        template <typename> class Hook
+    >
+    volatile long basic_session<Protocol, Hook>::svlid = 1;
 
 } //namespace bexio
 } //namespace Bex
