@@ -174,6 +174,8 @@ namespace Bex { namespace bexio
                 running_.reset();
                 shutdowning_.reset();
             }
+
+            deallocate<allocator>(sp);
         }
 
         // 优雅地关闭所有连接

@@ -86,7 +86,7 @@ namespace Bex { namespace bexio
         // @remarks: 为用户自定义的子类书写方便, 将本该构造时传入的参数延迟至initialize中。
         //           在initialize之前session是不安全的, 千万不要使用!
         basic_session()
-            : id_(BOOST_INTERLOCKED_INCREMENT(&svlid))
+            : id_(BOOST_INTERLOCKED_INCREMENT(&svlid)), service_(0)
         {
         }
 

@@ -2,6 +2,7 @@
 #define _WIN32_WINNT 0x501
 #include <Bex/bexio/bexio.hpp>
 #include <Bex/auto_link.h>
+#include <Bex/utility/format.hpp>
 #include <string>
 #include <iostream>
 using namespace Bex::bexio;
@@ -56,14 +57,48 @@ public:
     }
 };
 
+class multi_session
+    : public basic_session<tcp_protocol<> >
+{
+public:
+    static volatile long s_count;
+    static volatile long s_obj_count;
+
+    multi_session()
+    {
+        ::BOOST_INTERLOCKED_INCREMENT(&s_obj_count);
+    }
+
+    ~multi_session()
+    {
+        ::BOOST_INTERLOCKED_DECREMENT(&s_obj_count);
+    }
+
+    virtual void on_connect() BEX_OVERRIDE
+    {
+        ::BOOST_INTERLOCKED_INCREMENT(&s_count);
+    }
+
+    virtual void on_disconnect(error_code const& ec) BEX_OVERRIDE
+    {
+        ::BOOST_INTERLOCKED_DECREMENT(&s_count);
+    }
+};
+
+volatile long multi_session::s_count = 0;
+volatile long multi_session::s_obj_count = 0;
+
 template <class Session>
 void start_server()
 {
     io_service ios;
     typedef basic_server<Session> server;
     options opt = options::test();
+    if (boost::is_same<Session, multi_session>::value)
+        opt.send_buffer_size = opt.receive_buffer_size = 64;
+
     server s(ios, opt);
-    bool ok = s.startup(server::endpoint(ip::address::from_string("0.0.0.0"), 28087));
+    bool ok = s.startup(server::endpoint(ip::address::from_string("0.0.0.0"), 28087), 10);
     if (!ok)
         Dump("server startup error: " << s.get_error_code().message());
 
@@ -78,6 +113,7 @@ void start_client()
     io_service ios;
     typedef basic_client<Session> client;
     options opt = options::test();
+
     client c(ios, opt);
     bool ok = c.connect(client::endpoint(ip::address::from_string("127.0.0.1"), 28087));
     if (!ok)
@@ -99,6 +135,8 @@ void start_multi_client(int count = 100)
     io_service ios;
     typedef basic_client<Session> client;
     options opt = options::test();
+    if (boost::is_same<Session, multi_session>::value)
+        opt.send_buffer_size = opt.receive_buffer_size = 64;
 
     std::list<boost::shared_ptr<client> > clients;
 
@@ -144,14 +182,27 @@ int main()
             break;
 
         case t_multiconn:
-            if (point == 0)
-                start_server<simple_session>();
-            else
             {
-                int count = 1;
-                std::cout << "请输入客户端数量:" << std::endl;
-                std::cin >> count;
-                start_multi_client<simple_session>(count);
+#if defined(_MSC_VER) && (_MSC_VER >= 1800)
+                boost::thread th([point] {
+                    for (;;)
+                    {
+                        long c = multi_session::s_count;
+                        long oc = multi_session::s_obj_count;
+                        ::SetConsoleTitleA(Bex::format("%s (%d)(%d)", ((point == 0) ? "server" : "client"), oc, c).c_str());
+                        boost::this_thread::sleep(boost::posix_time::millisec(100));
+                    }
+                });
+#endif
+                if (point == 0)
+                    start_server<multi_session>();
+                else
+                {
+                    int count = 1;
+                    std::cout << "请输入客户端数量:" << std::endl;
+                    std::cin >> count;
+                    start_multi_client<multi_session>(count);
+                }
             }
             break;
 
