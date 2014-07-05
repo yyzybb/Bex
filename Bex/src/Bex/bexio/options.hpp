@@ -60,6 +60,9 @@ namespace Bex { namespace bexio
         // 连接成功\断开连接\收到数据 三种消息逻辑线程的响应方式
         message_logic_process_em mlpe_;
 
+        // 工作线程数量(0表示处理器核心线程数)
+        std::size_t workthread_count;
+
         // 发送缓冲区
         std::size_t send_buffer_size;
         static const std::size_t default_sbsize = 1024 * 8;
@@ -78,6 +81,7 @@ namespace Bex { namespace bexio
                 sboe::sbo_wait,
                 rboe::rbo_wait,
                 mlpe::mlp_derived,
+                0,
                 default_sbsize,
                 default_rbsize
                 };
@@ -92,6 +96,7 @@ namespace Bex { namespace bexio
                 sboe::sbo_interrupt,
                 rboe::rbo_interrupt,
                 mlpe::mlp_derived,
+                0,
                 default_sbsize,
                 default_rbsize
                 };
@@ -106,6 +111,7 @@ namespace Bex { namespace bexio
                 sboe::sbo_extend,
                 rboe::rbo_extend,
                 mlpe::mlp_derived,
+                0,
                 default_sbsize,
                 default_rbsize
                 };
@@ -120,6 +126,7 @@ namespace Bex { namespace bexio
                 sboe::sbo_extend,
                 rboe::rbo_extend,
                 mlpe::mlp_derived,
+                0,
                 large_sbsize,
                 large_rbsize
                 };

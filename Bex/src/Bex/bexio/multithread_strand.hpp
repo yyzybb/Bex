@@ -26,6 +26,8 @@ namespace Bex { namespace bexio
         // lowest layer type
         typedef typename next_layer_t<Strand>::type lowest_layer_type;
 
+        typedef Allocator allocator;
+
     public:
         template <typename Arg>
         explicit multithread_strand(Arg & arg)

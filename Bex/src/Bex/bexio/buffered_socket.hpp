@@ -27,16 +27,17 @@ namespace Bex { namespace bexio
         template <typename Arg /*= io_service*/>
         buffered_socket(Arg & arg, std::size_t rbsize, std::size_t wbsize)
             : socket_(arg)
-            , read_storage_(alloc_t().allocate(rbsize))
-            , read_buffer_(read_storage_, rbsize)
-            , write_storage_(alloc_t().allocate(wbsize))
-            , write_buffer_(write_storage_, wbsize)
-        {}
+            , read_buffer_(alloc_t().allocate(rbsize), rbsize)
+            , write_buffer_(alloc_t().allocate(wbsize), wbsize)
+        {
+            read_storage_ = read_buffer_.address();
+            write_storage_ = write_buffer_.address();
+        }
 
         ~buffered_socket()
         {
-            alloc_t().deallocate(read_storage_);
-            alloc_t().deallocate(write_storage_);
+            alloc_t().deallocate((void*)read_storage_);
+            alloc_t().deallocate((void*)write_storage_);
         } 
         
         // 获取下一层
@@ -221,10 +222,10 @@ namespace Bex { namespace bexio
 
     private:
         Socket socket_;
+        const char * read_storage_;
+        const char * write_storage_;
         Buffer read_buffer_;
         Buffer write_buffer_;
-        char * read_storage_;
-        char * write_storage_;
     };
     
 } //namespace bexio

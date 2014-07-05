@@ -58,7 +58,7 @@ namespace Bex { namespace bexio
         {
             unsigned int add_count = (thread_count_ > threads_.size()) ? (thread_count_ - threads_.size()) : 0;
             for (unsigned int ui = 0; ui < add_count; ++ui)
-                threads_.push_back(make_shared_ptr<boost::thread>(
+                threads_.push_back(make_shared_ptr<boost::thread, allocator>(
                     BEX_IO_BIND(&next_layer_type::run, &next_layer())));
         }
     }
@@ -85,9 +85,9 @@ namespace Bex { namespace bexio
     {
         boost::recursive_mutex::scoped_lock lock(threads_mutex_);
         stop();
-        worker_ = make_shared_ptr<io_service::work, Allocator>(Bex::bexio::actor(next_layer()));
+        worker_ = make_shared_ptr<io_service::work, allocator>(Bex::bexio::actor(next_layer()));
         for (unsigned int ui = 0; ui < thread_count_; ++ui)
-            threads_.push_back(make_shared_ptr<boost::thread>(
+            threads_.push_back(make_shared_ptr<boost::thread, allocator>(
                 BEX_IO_BIND(&next_layer_type::run, &next_layer())));
     }
 

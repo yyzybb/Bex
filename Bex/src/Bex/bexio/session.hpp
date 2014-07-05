@@ -5,6 +5,8 @@
 /// 连接
 /*
 * @仅用于有连接协议
+*
+* @functions: 带有_cb和_l后缀的接口必须在逻辑线程执行。
 */
 #include "bexio_fwd.hpp"
 #include "multithread_strand_service.hpp"
@@ -30,8 +32,9 @@ namespace Bex { namespace bexio
 
     public:
         typedef Protocol protocol_type;
-        typedef typename Protocol::allocator allocator;
-        typedef typename Protocol::socket_ptr socket_ptr;
+        typedef typename protocol_type::allocator allocator;
+        typedef typename protocol_type::socket_ptr socket_ptr;
+        typedef typename protocol_type::endpoint endpoint;
         typedef multithread_strand_service<allocator> mstrand_service_type;
 
         // 连接id
@@ -85,8 +88,6 @@ namespace Bex { namespace bexio
         basic_session()
             : id_(BOOST_INTERLOCKED_INCREMENT(&svlid))
         {
-            // initialize sentries
-            notify_connect_ = notify_disconnect_ = false;
         }
 
         void initialize(socket_ptr socket, options_ptr const& opts, callback_ptr const& callbacks)
@@ -96,7 +97,7 @@ namespace Bex { namespace bexio
             if (opts_->nlte_ == nlte::nlt_reactor)
                 mstrand_service()->post(BEX_IO_BIND(&this_type::notify_onconnect_cb, this, shared_this()));
             else
-                notify_connect_ = true;
+                notify_connect_.set();
 
             post_receive();
         }
@@ -107,22 +108,22 @@ namespace Bex { namespace bexio
             if (opts_->nlte_ != nlte::nlt_loop)
                 return ;
 
-            if (notify_connect_)
+            if (notify_connect_.is_set())
             {
-                notify_onconnect();
-                notify_connect_ = false;
+                notify_onconnect_l();
+                notify_connect_.reset();
             }
             
             // 查看接收到的数据
-            on_receive_run();
+            on_receive_l();
 
-            if (!receiving_.is_set())
+            if (!notify_receiving_.is_set())
                 post_receive();
 
-            if (notify_disconnect_)
+            if (notify_disconnect_.is_set())
             {
-                notify_ondisconnect();
-                notify_disconnect_ = false;
+                notify_ondisconnect_l();
+                notify_disconnect_.reset();
             }
         }
 
@@ -170,25 +171,46 @@ namespace Bex { namespace bexio
         // 优雅地关闭连接
         virtual void shutdown()
         {
-            on_error(generate_error(bee::initiative_shutdown));
             shutdowning_.set();
+            on_error(generate_error(bee::initiative_shutdown));
         }
 
         // 强制地关闭连接
         virtual void terminate()
         {
+            if (!terminating_.set())
+                return ;
+
             on_error(generate_error(bee::initiative_terminate));
             error_code ec;
             socket_->lowest_layer().cancel(ec);
             socket_->lowest_layer().shutdown(socket_base::shutdown_both, ec);
             socket_->close(ec);
-            notify_ondisconnect();
+            generate_notify_ondisconnect();
         }
 
         // 连接是否已断开
         bool is_disconnected() const
         {
             return disconencted_.is_set();
+        }
+
+        // 本地网络地址
+        endpoint local_endpoint() const
+        {
+            return socket_->lowest_layer().local_endpoint();
+        }
+
+        // 远端网络地址
+        endpoint remote_endpoint() const
+        {
+            return socket_->lowest_layer().remote_endpoint();
+        }
+
+        // 获取配置信息
+        shared_ptr<options const> get_options() const
+        {
+            return opts_;
         }
 
         // 获取id
@@ -240,7 +262,7 @@ namespace Bex { namespace bexio
         // 发起异步接收请求
         void post_receive(bool reply = false)
         {
-            if (!reply && !receiving_.set())
+            if (!reply && !notify_receiving_.set())
                 return;
 
             bool receiveok = socket_->async_read_some( //post_strand<protocol_type>(*this,
@@ -250,7 +272,7 @@ namespace Bex { namespace bexio
 
             if (!receiveok)
             {
-                receiving_.reset();
+                notify_receiving_.reset();
 
                 /// 接收缓冲区已满
                 if (on_receivebuffer_overflow())
@@ -274,7 +296,6 @@ namespace Bex { namespace bexio
                 return ;
             }
 
-            socket_->write_done(bytes);
             post_send(true);
         }
 
@@ -288,18 +309,16 @@ namespace Bex { namespace bexio
                 return ;
             }
 
-            socket_->read_done(bytes);
-
             // on_receive_run回调要在post_receive前面, 才能确保wait模式下不浪费资源.
             if (opts_->nlte_ == nlte::nlt_reactor)
                 if (notify_receive_.set())
-                    mstrand_service()->post(BEX_IO_BIND(&this_type::on_receive_run_cb, this, shared_this()));
+                    mstrand_service()->post(BEX_IO_BIND(&this_type::on_receive_cb, this, shared_this()));
             post_receive(true);
         }
 
     private:
         // 接收数据回调(仅在逻辑线程执行!)
-        void on_receive_run()
+        void on_receive_l()
         {
             notify_receive_.reset();
 
@@ -307,16 +326,16 @@ namespace Bex { namespace bexio
             std::size_t sections = socket_->get_buffers(buffers);
             for (std::size_t i = 0; i < sections; ++i)
             {
-                notify_onreceive(buffers[i]);
+                notify_onreceive_l(buffers[i]);
                 socket_->read_done(buffer_size_helper(buffers[i]));
             }
 
             // 检测是否需要关闭
             on_error(error_code());
         }
-        void on_receive_run_cb(shared_ptr<this_type>)
+        void on_receive_cb(shared_ptr<this_type>)
         {
-            on_receive_run();
+            on_receive_l();
         }
 
         // 错误处理
@@ -333,8 +352,12 @@ namespace Bex { namespace bexio
                     /// 可以关闭了
                     error_code ec;
                     socket_->close(ec);
-                    notify_ondisconnect();
+                    generate_notify_ondisconnect();
                 }
+            }
+            else if (ec && !terminating_.is_set())
+            {
+                terminate();
             }
         }
 
@@ -357,7 +380,7 @@ namespace Bex { namespace bexio
 
     private:
         /// 通知逻辑线程(在逻辑线程执行, 内部根据通知方案做路由)
-        void notify_onconnect()
+        void notify_onconnect_l()
         {
             if (opts_->mlpe_ == mlpe::mlp_derived || opts_->mlpe_ == mlpe::mlp_both)
                 on_connect();
@@ -368,11 +391,11 @@ namespace Bex { namespace bexio
         }
         void notify_onconnect_cb(shared_ptr<this_type>)
         {
-            notify_onconnect();
+            notify_onconnect_l();
         }
 
         template <typename ConstBuffer>
-        void notify_onreceive(ConstBuffer const& arg)
+        void notify_onreceive_l(ConstBuffer const& arg)
         {
             if (opts_->mlpe_ == mlpe::mlp_derived || opts_->mlpe_ == mlpe::mlp_both)
                 protocol_type::on_receive(arg);
@@ -382,7 +405,7 @@ namespace Bex { namespace bexio
                     protocol_type::parse(boost::get<(int)cbe::cb_receive>(*callbacks_), get_id(), arg);
         }
 
-        void notify_ondisconnect()
+        void notify_ondisconnect_l()
         {
             disconencted_.set();
 
@@ -395,7 +418,14 @@ namespace Bex { namespace bexio
         }
         void notify_ondisconnect_cb(shared_ptr<this_type> )
         {
-            notify_ondisconnect();
+            notify_ondisconnect_l();
+        }
+        void generate_notify_ondisconnect()
+        {
+            if (opts_->nlte_ == nlte::nlt_loop)
+                notify_disconnect_.set();
+            else if (opts_->nlte_ == nlte::nlt_reactor)
+                mstrand_service()->post(BEX_IO_BIND(&this_type::notify_ondisconnect_cb, this, shared_this()));
         }
 
         /// 缓冲区溢出处理
@@ -405,7 +435,6 @@ namespace Bex { namespace bexio
             if (opts_->sboe_ == sboe::sbo_interrupt)
             {
                 on_error(generate_error(bee::sendbuffer_overflow));
-                terminate();
                 return false;
             }
             else if (opts_->sboe_ == sboe::sbo_wait)
@@ -426,7 +455,6 @@ namespace Bex { namespace bexio
             if (opts_->rboe_ == rboe::rbo_interrupt)
             {
                 on_error(generate_error(bee::receivebuffer_overflow));
-                terminate();
                 return false;
             }
             else if (opts_->rboe_ == rboe::rbo_wait)
@@ -468,7 +496,7 @@ namespace Bex { namespace bexio
         sentry<inter_lock> sending_;
         
         /// 接收请求是否已投递
-        sentry<inter_lock> receiving_;
+        sentry<inter_lock> notify_receiving_;
 
         /// 发送通道是否关闭
         sentry<bool> sendclosed_;
@@ -479,6 +507,9 @@ namespace Bex { namespace bexio
         /// 是否优雅地关闭中
         // 状态标志效果: 1.禁用send 2.发送缓冲区中的数据发送完毕后关闭socket发送通道
         sentry<bool> shutdowning_;
+
+        /// 是否强制关闭中
+        sentry<inter_lock> terminating_;
 
         /// 错误码
         // 只记录第一个错误原因
@@ -497,8 +528,8 @@ namespace Bex { namespace bexio
         sentry<inter_lock> notify_receive_;
 
         /// loop方式, 通知connect/disconnect消息
-        bool notify_connect_;
-        bool notify_disconnect_;
+        sentry<bool> notify_connect_;
+        sentry<bool> notify_disconnect_;
 
         /// session id
         long id_;

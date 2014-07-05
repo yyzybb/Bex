@@ -22,22 +22,20 @@ namespace Bex { namespace bexio
         typedef typename session_type::id session_id;
         typedef typename session_type::protocol_type protocol_type;
         typedef typename session_type::callback_type callback_type;
+        typedef typename session_type::mstrand_service_type mstrand_service_type;
 
         typedef typename protocol_type::socket socket;
         typedef typename protocol_type::socket_ptr socket_ptr;
         typedef typename protocol_type::acceptor acceptor;
         typedef typename protocol_type::endpoint endpoint;
         typedef typename protocol_type::allocator allocator;
-        typedef typename allocator::template rebind<session_type>::other alloc_session_t;
-        typedef typename allocator::template rebind<options>::other alloc_options_t;
-        typedef typename allocator::template rebind<callback_type>::other alloc_callback_t;
 
     public:
         basic_server(io_service & ios, options const& opts)
             : ios_(ios), acceptor_(ios)
         {
-            opts_ = make_shared_ptr<options, alloc_options_t>(opts);
-            callback_ = make_shared_ptr<callback_type, alloc_callback_t>();
+            opts_ = make_shared_ptr<options, allocator>(opts);
+            callback_ = make_shared_ptr<callback_type, allocator>();
         }
 
         ~basic_server()
@@ -66,8 +64,11 @@ namespace Bex { namespace bexio
             if (ec_) return false;
 
             accept_count_ = listen_count;
-            for (std::size_t i = 0; i < listen_count; ++listen_count)
+            for (std::size_t i = 0; i < listen_count; ++i)
                 async_accept();
+
+            // 启动工作线程
+            use_service<mstrand_service_type>(ios_).startup(opts_->workthread_count);
 
             running_.set();
             return true;
@@ -150,8 +151,8 @@ namespace Bex { namespace bexio
             async_accept(true);
 
             /// create session
-            session_type * session_p = allocate<session_type, alloc_session_t>();
-            session_ptr session(session_p, BEX_IO_BIND(&this_type::session_deleter, this, _1), alloc_session_t());
+            session_type * session_p = allocate<session_type, allocator>();
+            session_ptr session(session_p, BEX_IO_BIND(&this_type::session_deleter, this, _1), allocator());
             session_p->initialize(sp, opts_, callback_);
             session_mgr_.insert(session);
         }

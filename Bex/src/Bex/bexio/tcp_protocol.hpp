@@ -20,7 +20,6 @@ namespace Bex { namespace bexio
         typedef buffered_socket<ip::tcp::socket, Buffer, Allocator> socket;
         typedef boost::shared_ptr<socket> socket_ptr;
         typedef Allocator allocator;
-        typedef typename allocator::template rebind<socket>::other alloc_socket_t;
 
         // callback functions
         //typedef boost::function<void(socket_ptr)> HandleSocketF;
@@ -28,7 +27,7 @@ namespace Bex { namespace bexio
 
         static socket_ptr alloc_socket(io_service & ios, std::size_t rbsize, std::size_t wbsize)
         {
-            return make_shared_ptr<socket, alloc_socket_t>(ios, rbsize, wbsize);
+            return make_shared_ptr<socket, allocator>(ios, rbsize, wbsize);
         }
 
     protected: 
