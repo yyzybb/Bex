@@ -14,6 +14,8 @@ public:
     virtual void on_connect() BEX_OVERRIDE
     {
         Dump("on connect!");
+        char buf[] = "Hello, I'm bexio!";
+        send(buf, sizeof(buf));
     }
 
     virtual void on_disconnect(error_code const& ec) BEX_OVERRIDE

@@ -131,9 +131,9 @@ namespace Bex { namespace bexio
                 BOOST_INTERLOCKED_INCREMENT(&accept_count_);
             }
 
-            socket_ptr sp = protocol_type::alloc_socket(ios_);
+            socket_ptr sp = protocol_type::alloc_socket(ios_, opts_->receive_buffer_size, opts_->send_buffer_size);
             acceptor_.async_accept(sp->lowest_layer(), 
-                boost::bind(&this_type::on_async_accept, this, placeholders::error, sp));
+                BEX_IO_BIND(&this_type::on_async_accept, this, BEX_IO_PH_ERROR, sp));
         }
 
         // 接受连接请求回调
@@ -151,7 +151,7 @@ namespace Bex { namespace bexio
 
             /// create session
             session_type * session_p = allocate<session_type, alloc_session_t>();
-            session_ptr session(session_p, boost::bind(&this_type::session_deleter, this, _1), alloc_session_t());
+            session_ptr session(session_p, BEX_IO_BIND(&this_type::session_deleter, this, _1), alloc_session_t());
             session_p->initialize(sp, opts_, callback_);
             session_mgr_.insert(session);
         }
@@ -178,13 +178,13 @@ namespace Bex { namespace bexio
         // 优雅地关闭所有连接
         void shutdown_sessions()
         {
-            session_mgr_.for_each(boost::bind(&session_type::shutdown, _1));
+            session_mgr_.for_each(BEX_IO_BIND(&session_type::shutdown, _1));
         }
 
         // 强制地关闭所有连接
         void terminate_sessions()
         {
-            session_mgr_.for_each(boost::bind(&session_type::terminate, _1));
+            session_mgr_.for_each(BEX_IO_BIND(&session_type::terminate, _1));
         }
 
     private:

@@ -19,13 +19,14 @@ namespace Bex { namespace bexio
     public:
         typedef typename next_layer_t<Socket>::type next_layer_type;
         typedef typename lowest_layer_t<Socket>::type lowest_layer_type;
+        typedef boost::function<void(error_code, std::size_t)> callback_t;
 
     public:
         // @rbsize : 接收缓冲区大小
         // @wbsize : 发送缓冲区大小
         template <typename Arg /*= io_service*/>
-        buffered_socket(BEX_MOVE_ARG(Arg) arg, std::size_t rbsize, std::size_t wbsize)
-            : socket_(BEX_MOVE_CAST(Arg)(arg))
+        buffered_socket(Arg & arg, std::size_t rbsize, std::size_t wbsize)
+            : socket_(arg)
             , read_storage_(alloc_t().allocate(rbsize))
             , read_buffer_(read_storage_, rbsize)
             , write_storage_(alloc_t().allocate(wbsize))
@@ -85,15 +86,15 @@ namespace Bex { namespace bexio
         // 异步写入(发送)数据
         // @WriteHandler : void(boost::system::error_code, std::size_t))
         template <typename WriteHandler>
-        bool async_write_some(BEX_MOVE_ARG(WriteHandler) handler)
+        bool async_write_some(WriteHandler const& handler)
         {
             boost::array<const_buffer, 2> buffers;
             if (!write_buffer_.get_buffers(buffers))
                 return false;
 
             socket_.async_write_some(buffers,
-                boost::bind(&this_type::on_async_write<WriteHandler>, this
-                    , placeholders::error, placeholders::bytes_transferred, handler));
+                BEX_IO_BIND(&this_type::on_async_write, this
+                    , BEX_IO_PH_ERROR, BEX_IO_PH_BYTES_TRANSFERRED, callback_t(handler)));
             return true;
         }
 
@@ -115,15 +116,15 @@ namespace Bex { namespace bexio
         // 异步读取(接收)数据
         // @ReadHandler : void(boost::system::error_code, std::size_t)
         template <typename ReadHandler>
-        bool async_read_some(BEX_MOVE_ARG(ReadHandler) handler)
+        bool async_read_some(ReadHandler const& handler)
         {
             boost::array<mutable_buffer, 2> buffers;
             if (!read_buffer_.put_buffers(buffers))
                 return false;
 
             socket_.async_read_some(buffers,
-                boost::bind(&this_type::on_async_read<ReadHandler>, this
-                    , placeholders::error, placeholders::bytes_transferred, handler));
+                BEX_IO_BIND(&this_type::on_async_read, this
+                        , BEX_IO_PH_ERROR, BEX_IO_PH_BYTES_TRANSFERRED, callback_t(handler)));
             return true;
         }
 
@@ -202,18 +203,16 @@ namespace Bex { namespace bexio
         }
 
     private:
-        template <typename WriteHandler>
-        void on_async_write(error_code ec, std::size_t bytes_transferred,
-            BEX_MOVE_ARG(WriteHandler) handler)
+        void on_async_write(error_code ec, std::size_t bytes_transferred
+            , callback_t const& handler)
         {
             if (!ec)
                 write_buffer_.gbump(bytes_transferred);
             handler(ec, bytes_transferred);
         }
 
-        template <typename ReadHandler>
-        void on_async_read(error_code ec, std::size_t bytes_transferred,
-            BEX_MOVE_ARG(ReadHandler) handler)
+        void on_async_read(error_code ec, std::size_t bytes_transferred
+            , callback_t const& handler)
         {
             if (!ec)
                 read_buffer_.pbump(bytes_transferred);

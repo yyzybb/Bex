@@ -86,12 +86,6 @@ namespace Bex { namespace bexio
             ::new ((void*)ptr) T();
         }
 
-        template <typename Arg>
-        void construct(T * ptr, BEX_MOVE_ARG(Arg) arg) const throw()
-        {
-            ::new ((void*)ptr) T(BEX_MOVE_CAST(Arg)(arg));
-        }
-
         template <class U>
         void destroy(U * ptr) const throw()
         {
@@ -110,34 +104,35 @@ namespace Bex { namespace bexio
     }
 
     template <typename T, class Allocator, typename Arg>
-    T * allocate(BEX_MOVE_ARG(Arg) arg)
+    T * allocate(Arg const& arg)
     {
         typedef typename Allocator::template rebind<T>::other alloc_t;
         alloc_t alloc;
         T * pointer = alloc.allocate(sizeof(T));
-        alloc.construct(pointer, BEX_MOVE_CAST(Arg)(arg));
+        ::new ((void*)pointer) T(arg);
         return pointer;
     }
 
     template <typename T, class Allocator, typename Arg1, typename Arg2>
-    T * allocate(BEX_MOVE_ARG(Arg1) arg1, BEX_MOVE_ARG(Arg2) arg2)
+    T * allocate(Arg1 const& arg1, Arg2 const& arg2)
     {
         typedef typename Allocator::template rebind<T>::other alloc_t;
         alloc_t alloc;
         T * pointer = alloc.allocate(sizeof(T));
-        alloc.construct(pointer, BEX_MOVE_CAST(Arg1)(arg1), BEX_MOVE_CAST(Arg2)(arg2));
+        ::new ((void*)pointer) T(arg1, arg2);
         return pointer;
     }
 
     template <typename T, class Allocator, typename Arg1, typename Arg2, typename Arg3>
-    T * allocate(BEX_MOVE_ARG(Arg1) arg1, BEX_MOVE_ARG(Arg2) arg2, BEX_MOVE_ARG(Arg3) arg3)
+    T * allocate(Arg1 & arg1, Arg2 const& arg2, Arg3 const& arg3)
     {
         typedef typename Allocator::template rebind<T>::other alloc_t;
         alloc_t alloc;
         T * pointer = alloc.allocate(sizeof(T));
-        alloc.construct(pointer, BEX_MOVE_CAST(Arg1)(arg1), BEX_MOVE_CAST(Arg2)(arg2), BEX_MOVE_CAST(Arg3)(arg3));
+        ::new ((void*)pointer) T(arg1, arg2, arg3);
         return pointer;
     }
+
 
     template <class Allocator, typename T>
     void deallocate(T * pointer)
@@ -165,16 +160,16 @@ namespace Bex { namespace bexio
     }
 
     template <typename T, class Allocator, typename Arg>
-    boost::shared_ptr<T> make_shared_ptr(BEX_MOVE_ARG(Arg) arg)
+    boost::shared_ptr<T> make_shared_ptr(Arg const& arg)
     {
-        return boost::shared_ptr<T>(allocate<T, Allocator>(BEX_MOVE_CAST(Arg)(arg)),
+        return boost::shared_ptr<T>(allocate<T, Allocator>(arg),
             deallocator<T, Allocator>(), Allocator());
     }
 
     template <typename T, class Allocator, typename Arg1, typename Arg2, typename Arg3>
-    boost::shared_ptr<T> make_shared_ptr(BEX_MOVE_ARG(Arg1) arg1, BEX_MOVE_ARG(Arg2) arg2, BEX_MOVE_ARG(Arg3) arg3)
+    boost::shared_ptr<T> make_shared_ptr(Arg1 & arg1, Arg2 const& arg2, Arg3 const& arg3)
     {
-        return boost::shared_ptr<T>(allocate<T, Allocator>(BEX_MOVE_CAST(Arg1)(arg1), BEX_MOVE_CAST(Arg2)(arg2), BEX_MOVE_CAST(Arg3)(arg3)),
+        return boost::shared_ptr<T>(allocate<T, Allocator>(arg1, arg2, arg3),
             deallocator<T, Allocator>(), Allocator());
     }
 

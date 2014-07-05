@@ -5,21 +5,38 @@
 #include <Bex/thread/lock/inter_lock.hpp>
 #include <Bex/type_traits/class_info.hpp>
 #include <boost/asio.hpp>
+#include <boost/system/system_error.hpp>
+#include <boost/bind.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/thread.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/bind.hpp>
 #include <boost/function.hpp>
 #include <boost/array.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/operators.hpp>
 #include <boost/tuple/tuple.hpp>
+#include <boost/mpl/print.hpp>
 #include <numeric>
 #include <list>
 #include "options.hpp"
 #include "error.hpp"
 #include "sentry.hpp"
+
+#if defined(BEX_USE_FORWARDBIND)
+#include <Bex/bind.hpp>
+# define BEX_IO_BIND ::Bex::forward_bind::BEX_BIND
+# define BEX_IO_PH_ERROR ::Bex::_1
+# define BEX_IO_PH_BYTES_TRANSFERRED ::Bex::_2
+using ::Bex::_1;
+using ::Bex::_2;
+using ::Bex::_3;
+using ::Bex::_4;
+#else
+# define BEX_IO_BIND ::boost::BOOST_BIND
+# define BEX_IO_PH_ERROR ::boost::asio::placeholders::error
+# define BEX_IO_PH_BYTES_TRANSFERRED ::boost::asio::placeholders::bytes_transferred
+#endif 
 
 namespace Bex { namespace bexio
 {
@@ -162,9 +179,9 @@ namespace Bex { namespace bexio
     struct post_strand_helper
     {
         typedef detail::wrapped_handler<io_service::strand, Handler, detail::is_continuation_if_running> const& result_type;
-        result_type operator()(Protocol & proto, BEX_MOVE_ARG(Handler) handler)
+        result_type operator()(Protocol & proto, Handler const& handler)
         {
-            return proto.post_strand(BEX_MOVE_CAST(Handler)(handler));
+            return proto.post_strand(handler);
         }
     };
 
@@ -172,9 +189,9 @@ namespace Bex { namespace bexio
     struct post_strand_helper<Protocol, Handler, false>
     {
         typedef Handler const& result_type;
-        result_type operator()(Protocol &, BEX_MOVE_ARG(Handler) handler)
+        result_type operator()(Protocol &, Handler const& handler)
         {
-            return BEX_MOVE_CAST(Handler)(handler);
+            return handler;
         }
     };
 
@@ -184,9 +201,9 @@ namespace Bex { namespace bexio
     {};
 
     template <typename Protocol, typename Handler>
-    typename post_strand_c<Protocol, Handler>::result_type post_strand(Protocol & proto, BEX_MOVE_ARG(Handler) handler)
+    typename post_strand_c<Protocol, Handler>::result_type post_strand(Protocol & proto, Handler const& handler)
     {
-        return post_strand_c<Protocol, Handler>()(proto, BEX_MOVE_CAST(Handler)(handler));
+        return post_strand_c<Protocol, Handler>()(proto, handler);
     }
     /// @}
     //////////////////////////////////////////////////////////////////////////

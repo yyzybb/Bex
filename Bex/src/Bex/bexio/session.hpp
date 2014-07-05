@@ -34,8 +34,6 @@ namespace Bex { namespace bexio
         typedef typename Protocol::socket_ptr socket_ptr;
         typedef multithread_strand_service<allocator> mstrand_service_type;
 
-        using boost::enable_shared_from_this<basic_session<Protocol, Hook> >::shared_from_this;
-
         // 连接id
         class id
             : boost::totally_ordered<id>
@@ -96,7 +94,7 @@ namespace Bex { namespace bexio
             opts_ = opts, callbacks_ = callbacks, socket_ = socket;
 
             if (opts_->nlte_ == nlte::nlt_reactor)
-                mstrand_service()->post(boost::bind(&this_type::notify_onconnect, shared_from_this()));
+                mstrand_service()->post(BEX_IO_BIND(&this_type::notify_onconnect_cb, this, shared_this()));
             else
                 notify_connect_ = true;
 
@@ -196,7 +194,7 @@ namespace Bex { namespace bexio
         // 获取id
         id get_id()
         {
-            return id(shared_from_this());
+            return id(shared_this());
         }
 
         // 设置回调
@@ -220,9 +218,10 @@ namespace Bex { namespace bexio
             if (!reply && !sending_.set())
                 return ;
 
-            bool sendok = socket_->async_write_some( post_strand<Protocol>(*this,
-                boost::bind(&this_type::on_async_send, shared_from_this(), placeholders::error, placeholders::bytes_transferred)
-                ));
+            bool sendok = socket_->async_write_some( //post_strand<protocol_type>(*this,
+                BEX_IO_BIND(&this_type::on_async_send, this, BEX_IO_PH_ERROR, BEX_IO_PH_BYTES_TRANSFERRED, shared_this())
+                //)
+                );
 
             if (!sendok)    ///< 发送缓冲区已空
             {
@@ -244,9 +243,10 @@ namespace Bex { namespace bexio
             if (!reply && !receiving_.set())
                 return;
 
-            bool receiveok = socket_->async_read_some( post_strand<Protocol>(*this,
-                boost::bind(&this_type::on_async_receive, shared_from_this(), placeholders::error, placeholders::bytes_transferred)
-                ));
+            bool receiveok = socket_->async_read_some( //post_strand<protocol_type>(*this,
+                BEX_IO_BIND(&this_type::on_async_receive, this, BEX_IO_PH_ERROR, BEX_IO_PH_BYTES_TRANSFERRED, shared_this())
+                //)
+                );
 
             if (!receiveok)
             {
@@ -257,10 +257,15 @@ namespace Bex { namespace bexio
                     post_receive();
             }
         }
+        // 通知逻辑线程发起异步接收请求的接口
+        void post_receive_cb(shared_ptr<this_type>)
+        {
+            post_receive();
+        }
 
     private:
         // 异步发送回调
-        void on_async_send(error_code ec, std::size_t bytes)
+        void on_async_send(error_code ec, std::size_t bytes, shared_ptr<this_type>)
         {
             if (ec)
             {
@@ -274,7 +279,7 @@ namespace Bex { namespace bexio
         }
 
         // 异步接收回调
-        void on_async_receive(error_code ec, std::size_t bytes)
+        void on_async_receive(error_code ec, std::size_t bytes, shared_ptr<this_type>)
         {
             if (ec) 
             {
@@ -288,7 +293,7 @@ namespace Bex { namespace bexio
             // on_receive_run回调要在post_receive前面, 才能确保wait模式下不浪费资源.
             if (opts_->nlte_ == nlte::nlt_reactor)
                 if (notify_receive_.set())
-                    mstrand_service()->post(boost::bind(&this_type::on_receive_run, shared_from_this()));
+                    mstrand_service()->post(BEX_IO_BIND(&this_type::on_receive_run_cb, this, shared_this()));
             post_receive(true);
         }
 
@@ -308,6 +313,10 @@ namespace Bex { namespace bexio
 
             // 检测是否需要关闭
             on_error(error_code());
+        }
+        void on_receive_run_cb(shared_ptr<this_type>)
+        {
+            on_receive_run();
         }
 
         // 错误处理
@@ -357,16 +366,20 @@ namespace Bex { namespace bexio
                 if (callbacks_ && boost::get<(int)cbe::cb_connect>(*callbacks_))
                     boost::get<(int)cbe::cb_connect>(*callbacks_)(get_id());
         }
+        void notify_onconnect_cb(shared_ptr<this_type>)
+        {
+            notify_onconnect();
+        }
 
         template <typename ConstBuffer>
         void notify_onreceive(ConstBuffer const& arg)
         {
             if (opts_->mlpe_ == mlpe::mlp_derived || opts_->mlpe_ == mlpe::mlp_both)
-                on_receive(arg);
+                protocol_type::on_receive(arg);
             
             if (opts_->mlpe_ == mlpe::mlp_callback || opts_->mlpe_ == mlpe::mlp_both)
                 if (callbacks_ && boost::get<(int)cbe::cb_receive>(*callbacks_))
-                    boost::get<(int)cbe::cb_receive>(*callbacks_)(get_id(), arg);
+                    protocol_type::parse(boost::get<(int)cbe::cb_receive>(*callbacks_), get_id(), arg);
         }
 
         void notify_ondisconnect()
@@ -379,6 +392,10 @@ namespace Bex { namespace bexio
             if (opts_->mlpe_ == mlpe::mlp_callback || opts_->mlpe_ == mlpe::mlp_both)
                 if (callbacks_ && boost::get<(int)cbe::cb_disconnect>(*callbacks_))
                     boost::get<(int)cbe::cb_disconnect>(*callbacks_)(get_id(), ec_);
+        }
+        void notify_ondisconnect_cb(shared_ptr<this_type> )
+        {
+            notify_ondisconnect();
         }
 
         /// 缓冲区溢出处理
@@ -415,7 +432,7 @@ namespace Bex { namespace bexio
             else if (opts_->rboe_ == rboe::rbo_wait)
             {
                 if (opts_->nlte_ == nlte::nlt_reactor)
-                    mstrand_service()->post(boost::bind(&this_type::post_receive, shared_from_this()));
+                    mstrand_service()->post(BEX_IO_BIND(&this_type::post_receive_cb, this, shared_this()));
                 return false;
             }
             else if (opts_->rboe_ == rboe::rbo_extend)
@@ -433,6 +450,11 @@ namespace Bex { namespace bexio
                 service_ = &(use_service<mstrand_service_type>(socket_->get_io_service()));
 
             return service_;
+        }
+
+        shared_ptr<this_type> shared_this()
+        {
+            return boost::enable_shared_from_this<basic_session<Protocol, Hook> >::shared_from_this();
         }
 
     private:

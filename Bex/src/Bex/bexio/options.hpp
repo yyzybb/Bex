@@ -60,6 +60,16 @@ namespace Bex { namespace bexio
         // 连接成功\断开连接\收到数据 三种消息逻辑线程的响应方式
         message_logic_process_em mlpe_;
 
+        // 发送缓冲区
+        std::size_t send_buffer_size;
+        static const std::size_t default_sbsize = 1024 * 8;
+        static const std::size_t large_sbsize = 1024 * 1024 * 8;
+
+        // 发送缓冲区
+        std::size_t receive_buffer_size;
+        static const std::size_t default_rbsize = 1024 * 8;
+        static const std::size_t large_rbsize = 1024 * 8;
+
         /// 测试配置方案(Test)
         static options test()
         {
@@ -67,7 +77,9 @@ namespace Bex { namespace bexio
                 nlte::nlt_reactor,
                 sboe::sbo_wait,
                 rboe::rbo_wait,
-                mlpe::mlp_derived
+                mlpe::mlp_derived,
+                default_sbsize,
+                default_rbsize
                 };
             return opts;
         }
@@ -79,7 +91,9 @@ namespace Bex { namespace bexio
                 nlte::nlt_reactor,
                 sboe::sbo_interrupt,
                 rboe::rbo_interrupt,
-                mlpe::mlp_derived
+                mlpe::mlp_derived,
+                default_sbsize,
+                default_rbsize
                 };
             return opts;
         }
@@ -91,7 +105,9 @@ namespace Bex { namespace bexio
                 nlte::nlt_reactor,
                 sboe::sbo_extend,
                 rboe::rbo_extend,
-                mlpe::mlp_derived
+                mlpe::mlp_derived,
+                default_sbsize,
+                default_rbsize
                 };
             return opts;
         }
@@ -103,7 +119,9 @@ namespace Bex { namespace bexio
                 nlte::nlt_loop,
                 sboe::sbo_extend,
                 rboe::rbo_extend,
-                mlpe::mlp_derived
+                mlpe::mlp_derived,
+                large_sbsize,
+                large_rbsize
                 };
             return opts;
         }

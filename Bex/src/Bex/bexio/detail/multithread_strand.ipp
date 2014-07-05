@@ -25,9 +25,9 @@ namespace Bex { namespace bexio
 
     template <class Strand, class Allocator>
     template <typename Handler>
-    void multithread_strand<Strand, Allocator>::post(BEX_MOVE_ARG(Handler) handler)
+    void multithread_strand<Strand, Allocator>::post(Handler const& handler)
     {
-        actor_.post(BEX_MOVE_CAST(Handler)(handler));
+        actor_.post(handler);
     }
 
 
@@ -59,7 +59,7 @@ namespace Bex { namespace bexio
             unsigned int add_count = (thread_count_ > threads_.size()) ? (thread_count_ - threads_.size()) : 0;
             for (unsigned int ui = 0; ui < add_count; ++ui)
                 threads_.push_back(make_shared_ptr<boost::thread>(
-                    boost::bind(&next_layer_type::run, &next_layer())));
+                    BEX_IO_BIND(&next_layer_type::run, &next_layer())));
         }
     }
 
@@ -88,7 +88,7 @@ namespace Bex { namespace bexio
         worker_ = make_shared_ptr<io_service::work, Allocator>(Bex::bexio::actor(next_layer()));
         for (unsigned int ui = 0; ui < thread_count_; ++ui)
             threads_.push_back(make_shared_ptr<boost::thread>(
-                boost::bind(&next_layer_type::run, &next_layer())));
+                BEX_IO_BIND(&next_layer_type::run, &next_layer())));
     }
 
     template <class Strand, class Allocator>
