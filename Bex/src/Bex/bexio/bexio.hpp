@@ -10,5 +10,6 @@
 #include "server.hpp"
 #include "client.hpp"
 #include "tcp_protocol.hpp"
+#include "tcp_packet_protocol.hpp"
 
 #endif //__BEX_IO_BEXIO_HPP__

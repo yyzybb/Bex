@@ -11,6 +11,7 @@
 #include "bexio_fwd.hpp"
 #include "multithread_strand_service.hpp"
 #include "intrusive_list.hpp"
+#include "protocol_traits.hpp"
 
 namespace Bex { namespace bexio
 {
@@ -35,6 +36,7 @@ namespace Bex { namespace bexio
         typedef typename protocol_type::allocator allocator;
         typedef typename protocol_type::socket_ptr socket_ptr;
         typedef typename protocol_type::endpoint endpoint;
+        typedef typename protocol_traits<protocol_type> protocol_traits_type;
         typedef multithread_strand_service<allocator> mstrand_service_type;
 
         // 连接id
@@ -93,6 +95,7 @@ namespace Bex { namespace bexio
         void initialize(socket_ptr socket, options_ptr const& opts, callback_ptr const& callbacks)
         {
             opts_ = opts, callbacks_ = callbacks, socket_ = socket;
+            protocol_traits_type::initialize(*this, opts_, boost::get<(int)cbe::cb_receive>(*callbacks_), get_id());
 
             if (opts_->nlte_ == nlte::nlt_reactor)
                 mstrand_service()->post(BEX_IO_BIND(&this_type::notify_onconnect_cb, this, shared_this()));
@@ -240,10 +243,9 @@ namespace Bex { namespace bexio
             if (!reply && !sending_.set())
                 return ;
 
-            bool sendok = socket_->async_write_some( //post_strand<protocol_type>(*this,
+            bool sendok = socket_->async_write_some( protocol_traits_type::post_strand(*this,
                 BEX_IO_BIND(&this_type::on_async_send, this, BEX_IO_PH_ERROR, BEX_IO_PH_BYTES_TRANSFERRED, shared_this())
-                //)
-                );
+                ));
 
             if (!sendok)    ///< 发送缓冲区已空
             {
@@ -265,10 +267,9 @@ namespace Bex { namespace bexio
             if (!reply && !notify_receiving_.set())
                 return;
 
-            bool receiveok = socket_->async_read_some( //post_strand<protocol_type>(*this,
+            bool receiveok = socket_->async_read_some( protocol_traits_type::post_strand(*this,
                 BEX_IO_BIND(&this_type::on_async_receive, this, BEX_IO_PH_ERROR, BEX_IO_PH_BYTES_TRANSFERRED, shared_this())
-                //)
-                );
+                ));
 
             if (!receiveok)
             {
@@ -397,12 +398,7 @@ namespace Bex { namespace bexio
         template <typename ConstBuffer>
         void notify_onreceive_l(ConstBuffer const& arg)
         {
-            if (opts_->mlpe_ == mlpe::mlp_derived || opts_->mlpe_ == mlpe::mlp_both)
-                protocol_type::on_receive(arg);
-            
-            if (opts_->mlpe_ == mlpe::mlp_callback || opts_->mlpe_ == mlpe::mlp_both)
-                if (callbacks_ && boost::get<(int)cbe::cb_receive>(*callbacks_))
-                    protocol_type::parse(boost::get<(int)cbe::cb_receive>(*callbacks_), get_id(), arg);
+            protocol_type::parse(arg);
         }
 
         void notify_ondisconnect_l()

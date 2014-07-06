@@ -453,6 +453,15 @@
     <ClInclude Include="..\src\Bex\bexio\bexio.hpp">
       <Filter>src\bexio</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\packet_parser.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\tcp_packet_protocol.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\protocol_traits.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Bex\thread\thread_pool\thread_pool.cpp">

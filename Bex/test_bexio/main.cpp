@@ -13,7 +13,11 @@ enum {
     t_simple = 0,       // 简单测试
     t_pingpong = 1,     // pingpong测试吞吐量
     t_multiconn = 2,    // 大量并发连接
+    t_packet = 3,       // 解包测试
 };
+
+volatile long s_count = 0;
+volatile long s_obj_count = 0;
 
 class simple_session
     : public basic_session<tcp_protocol<> >
@@ -61,9 +65,6 @@ class multi_session
     : public basic_session<tcp_protocol<> >
 {
 public:
-    static volatile long s_count;
-    static volatile long s_obj_count;
-
     multi_session()
     {
         ::BOOST_INTERLOCKED_INCREMENT(&s_obj_count);
@@ -85,8 +86,50 @@ public:
     }
 };
 
-volatile long multi_session::s_count = 0;
-volatile long multi_session::s_obj_count = 0;
+
+class packet_session
+    : public basic_session<tcp_packet_protocol<> >
+{
+public:
+    virtual void on_connect() BEX_OVERRIDE
+    {
+        Dump(boost::this_thread::get_id() << " on connect " << remote_endpoint());
+        ::BOOST_INTERLOCKED_INCREMENT(&s_count);
+
+        char p1[4] = {};
+        char p2[8] = {};
+        char p3[138] = {};
+        char p4[4099] = {};
+        *(boost::uint32_t*)p2 = 4;
+        *(boost::uint32_t*)p3 = 134;
+        *(boost::uint32_t*)p4 = 4095;
+
+        send(p1, sizeof(p1));
+        send(p2, sizeof(p2));
+        send(p3, sizeof(p3));
+        send(p4, sizeof(p4));
+    }
+
+    virtual void on_disconnect(error_code const& ec) BEX_OVERRIDE
+    {
+        Dump(boost::this_thread::get_id() << " on disconnect");
+        ::BOOST_INTERLOCKED_DECREMENT(&s_count);
+    }
+
+    virtual void on_receive(error_code const& ec, boost::uint32_t * ph
+        , char const* data, std::size_t size) BEX_OVERRIDE
+    {
+        //Dump(boost::this_thread::get_id() << " size = " << size << " data:" << std::string(data, size));
+        if (ec)
+        {
+            Dump("error: " << ec.message());
+            terminate();
+            return ;
+        }
+
+        send((char const*)ph, size + sizeof(boost::uint32_t));
+    }
+};
 
 template <class Session>
 void start_server()
@@ -160,11 +203,24 @@ int main()
     int input = 0;
     do 
     {
-        std::cout << "请输入端类型(0:simple, 1:pingpong, 2:multiconn) / (0:server, 1:client):" << std::endl;
+        std::cout << "请输入端类型(0:simple, 1:pingpong, 2:multiconn, 3:packet) / (0:server, 1:client):" << std::endl;
         std::cin >> input;
 
         int type = input / 10;
         int point = input % 10;
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1800)
+        boost::thread th([point] {
+            for (;;)
+            {
+                long c = s_count;
+                long oc = s_obj_count;
+                ::SetConsoleTitleA(Bex::format("%s (%d)(%d)", ((point == 0) ? "server" : "client"), oc, c).c_str());
+                boost::this_thread::sleep(boost::posix_time::millisec(100));
+            }
+        });
+#endif
+
         switch (type)
         {
         case t_simple:
@@ -183,17 +239,6 @@ int main()
 
         case t_multiconn:
             {
-#if defined(_MSC_VER) && (_MSC_VER >= 1800)
-                boost::thread th([point] {
-                    for (;;)
-                    {
-                        long c = multi_session::s_count;
-                        long oc = multi_session::s_obj_count;
-                        ::SetConsoleTitleA(Bex::format("%s (%d)(%d)", ((point == 0) ? "server" : "client"), oc, c).c_str());
-                        boost::this_thread::sleep(boost::posix_time::millisec(100));
-                    }
-                });
-#endif
                 if (point == 0)
                     start_server<multi_session>();
                 else
@@ -202,6 +247,20 @@ int main()
                     std::cout << "请输入客户端数量:" << std::endl;
                     std::cin >> count;
                     start_multi_client<multi_session>(count);
+                }
+            }
+            break;
+
+        case t_packet:
+            {
+                if (point == 0)
+                    start_server<packet_session>();
+                else
+                {
+                    int count = 1;
+                    std::cout << "请输入客户端数量:" << std::endl;
+                    std::cin >> count;
+                    start_multi_client<packet_session>(count);
                 }
             }
             break;

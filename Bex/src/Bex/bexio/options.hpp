@@ -73,6 +73,10 @@ namespace Bex { namespace bexio
         static const std::size_t default_rbsize = 1024 * 8;
         static const std::size_t large_rbsize = 1024 * 8;
 
+        // 每个封包最大长度(目前仅tcp packet/ssl packet协议有效)
+        std::size_t max_packet_size;
+        static const std::size_t default_max_packet_size = 1024 * 8;
+
         /// 测试配置方案(Test)
         static options test()
         {
@@ -83,7 +87,8 @@ namespace Bex { namespace bexio
                 mlpe::mlp_derived,
                 0,
                 default_sbsize,
-                default_rbsize
+                default_rbsize,
+                default_max_packet_size
                 };
             return opts;
         }
@@ -98,7 +103,8 @@ namespace Bex { namespace bexio
                 mlpe::mlp_derived,
                 0,
                 default_sbsize,
-                default_rbsize
+                default_rbsize,
+                default_max_packet_size
                 };
             return opts;
         }
@@ -113,7 +119,8 @@ namespace Bex { namespace bexio
                 mlpe::mlp_derived,
                 0,
                 default_sbsize,
-                default_rbsize
+                default_rbsize,
+                default_max_packet_size
                 };
             return opts;
         }
@@ -128,7 +135,8 @@ namespace Bex { namespace bexio
                 mlpe::mlp_derived,
                 0,
                 large_sbsize,
-                large_rbsize
+                large_rbsize,
+                default_max_packet_size
                 };
             return opts;
         }

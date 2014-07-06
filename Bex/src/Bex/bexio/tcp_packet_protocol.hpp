@@ -1,28 +1,31 @@
-#ifndef __BEX_IO_TCP_PROTOCOL_HPP__
-#define __BEX_IO_TCP_PROTOCOL_HPP__
+#ifndef __BEX_IO_TCP_PACKET_PROTOCOL_HPP__
+#define __BEX_IO_TCP_PACKET_PROTOCOL_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// tcp socket policy
+/// tcp packeted socket policy
 #include "bexio_fwd.hpp"
 #include "buffered_socket.hpp"
 #include "nonblocking_circularbuffer.hpp"
 #include "allocator.hpp"
+#include "packet_parser.hpp"
 
 namespace Bex { namespace bexio
 {
-    template <typename Buffer = nonblocking_circularbuffer,
-        typename Allocator = ::Bex::bexio::allocator<int> >
-    struct tcp_protocol
+    template <typename Parser = packet_parser<>,
+        typename Buffer = nonblocking_circularbuffer>
+    struct tcp_packet_protocol
     {
         typedef ip::tcp::endpoint endpoint;
         typedef ip::tcp::acceptor acceptor;
         typedef ip::tcp::resolver resolver;
-        typedef buffered_socket<ip::tcp::socket, Buffer, Allocator> socket;
+        typedef Parser parser_type;
+        typedef typename parser_type::allocator allocator;
+        typedef typename parser_type::packet_head_type packet_head_type;
+        typedef buffered_socket<ip::tcp::socket, Buffer, allocator> socket;
         typedef boost::shared_ptr<socket> socket_ptr;
-        typedef Allocator allocator;
 
         // callback functions
-        typedef boost::function<void(char const*, std::size_t)> OnReceiveF;
+        typedef boost::function<void(error_code const&, packet_head_type*, char const*, std::size_t)> OnReceiveF;
 
         static socket_ptr alloc_socket(io_service & ios, std::size_t rbsize, std::size_t wbsize)
         {
@@ -31,8 +34,7 @@ namespace Bex { namespace bexio
 
     protected:
         /// 用于让用户自定义session重写的接收数据函数
-        virtual void on_receive(char const* /*data*/, std::size_t /*size*/) {}
-
+        virtual void on_receive(error_code const&, packet_head_type*, char const*, std::size_t) {}
 
         //////////////////////////////////////////////////////////////////////////
         /// @{ 只有session可以调用这个接口
@@ -42,26 +44,35 @@ namespace Bex { namespace bexio
         void initialize(shared_ptr<options> const& opts, F const& f, Id const& id)
         {
             opts_ = opts;
+            parser_.initialize(opts_->max_packet_size, BEX_IO_BIND(&tcp_packet_protocol::on_parse, this, _1, _2, _3, _4));
             if (f)
-                global_receiver_ = BEX_IO_BIND(f, id, _1, _2);
+                global_receiver_ = BEX_IO_BIND(f, id, _1, _2, _3, _4);
         }
+
     protected:
         /// 用于传递接收到的数据至解析器
         inline void parse(const_buffer const& buffer)
         {
-            if (opts_->mlpe_ == mlpe::mlp_derived || opts_->mlpe_ == mlpe::mlp_both)
-                on_receive((char const*)buffer_cast_helper(buffer),
-                    buffer_size_helper(buffer));
-            
-            if (opts_->mlpe_ == mlpe::mlp_callback || opts_->mlpe_ == mlpe::mlp_both)
-                if (global_receiver_)
-                    global_receiver_((char const*)buffer_cast_helper(buffer),
-                        buffer_size_helper(buffer));
+            parser_.parse((char const*)buffer_cast_helper(buffer), buffer_size_helper(buffer));
         }
         /// @}
         //////////////////////////////////////////////////////////////////////////
 
     private:
+        /// 解析回调
+        void on_parse(error_code const& ec, packet_head_type* ph, char const* data, std::size_t size)
+        {
+            if (opts_->mlpe_ == mlpe::mlp_derived || opts_->mlpe_ == mlpe::mlp_both)
+                on_receive(ec, ph, data, size);
+            
+            if (opts_->mlpe_ == mlpe::mlp_callback || opts_->mlpe_ == mlpe::mlp_both)
+                if (global_receiver_)
+                    global_receiver_(ec, ph, data, size);
+        }
+
+    private:
+        // 数据解析器
+        parser_type parser_;
         shared_ptr<options> opts_;
         OnReceiveF global_receiver_;
     };
@@ -69,4 +80,4 @@ namespace Bex { namespace bexio
 } //namespace bexio
 } //namespace Bex
 
-#endif //__BEX_IO_TCP_PROTOCOL_HPP__
+#endif //__BEX_IO_TCP_PACKET_PROTOCOL_HPP__
