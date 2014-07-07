@@ -29,6 +29,7 @@ namespace Bex { namespace bexio
         typedef typename protocol_type::acceptor acceptor;
         typedef typename protocol_type::endpoint endpoint;
         typedef typename protocol_type::allocator allocator;
+        typedef typename protocol_traits<protocol_type> protocol_traits_type;
 
     public:
         basic_server(io_service & ios, options const& opts)
@@ -144,11 +145,22 @@ namespace Bex { namespace bexio
             {
                 if (BOOST_INTERLOCKED_DECREMENT(&accept_count_) == 1 && shutdowning_.is_set())
                     shutdown_sessions();
+                else
+                    async_accept(true);
 
                 return ;
             }
 
             async_accept(true);
+            protocol_traits_type::async_handshake(*this, sp, ssl::stream_base::server
+                , BEX_IO_BIND(&this_type::on_async_handshake, this, BEX_IO_PH_ERROR, sp));
+        }
+
+        // Œ’ ÷ªÿµ˜
+        void on_async_handshake(error_code const& ec, socket_ptr sp)
+        {
+            if (ec)
+                return ;
 
             /// create session
             session_type * session_p = allocate<session_type, allocator>();

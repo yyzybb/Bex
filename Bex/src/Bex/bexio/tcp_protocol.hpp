@@ -14,12 +14,15 @@ namespace Bex { namespace bexio
         typename Allocator = ::Bex::bexio::allocator<int> >
     struct tcp_protocol
     {
+        typedef Buffer buffer_type;
+        typedef Allocator allocator;
+
         typedef ip::tcp::endpoint endpoint;
         typedef ip::tcp::acceptor acceptor;
         typedef ip::tcp::resolver resolver;
-        typedef buffered_socket<ip::tcp::socket, Buffer, Allocator> socket;
+        typedef ip::tcp::socket native_socket_type;
+        typedef buffered_socket<native_socket_type, buffer_type, allocator> socket;
         typedef boost::shared_ptr<socket> socket_ptr;
-        typedef Allocator allocator;
 
         // callback functions
         typedef boost::function<void(char const*, std::size_t)> OnReceiveF;
@@ -45,6 +48,7 @@ namespace Bex { namespace bexio
             if (f)
                 global_receiver_ = BEX_IO_BIND(f, id, _1, _2);
         }
+
     protected:
         /// 用于传递接收到的数据至解析器
         inline void parse(const_buffer const& buffer)

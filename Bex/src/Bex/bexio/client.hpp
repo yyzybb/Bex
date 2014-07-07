@@ -25,6 +25,7 @@ namespace Bex { namespace bexio
         typedef typename protocol_type::resolver resolver;
         typedef typename protocol_type::endpoint endpoint;
         typedef typename protocol_type::allocator allocator;
+        typedef typename protocol_traits<protocol_type> protocol_traits_type;
 
         typedef boost::function<void(error_code const&)> OnAsyncConnect;
 
@@ -162,10 +163,93 @@ namespace Bex { namespace bexio
 
     private:
         // 异步连接回调
-        void on_async_connect(error_code const& ec, socket_ptr sp
+        void on_async_connect(error_code const& ec, socket_ptr sp, endpoint addr)
+        {
+            if (ec)
+            {
+                // 错误
+                ec_ = ec;
+                async_connecting_.reset();
+                notify_onconnect();    // 通知连接结果
+            }
+            else if (sp->lowest_layer().remote_endpoint() == sp->lowest_layer().local_endpoint())
+            {
+                // 回环假链接, 重试.
+                async_connecting_.reset();
+                async_connect(addr);
+            }
+            else
+            {
+                // 连接成功, 握手
+                async_handshaking_.set();
+                protocol_traits_type::async_handshake(*sp, sp, ssl::stream_base::client
+                    , BEX_IO_BIND(&this_type::on_async_handshake, this, BEX_IO_PH_ERROR, sp, addr));
+            }
+        }
+
+        // 握手回调
+        void on_async_handshake(error_code const& ec, socket_ptr sp, endpoint addr)
+        {
+            async_handshaking_.reset();
+            if (ec)
+            {
+                ec_ = ec;
+                async_connecting_.reset();
+            }
+            else
+            {
+                ec_.clear();
+                running_.set();
+                async_connecting_.reset();
+                session_ = make_shared_ptr<session_type, allocator>();
+                session_->initialize(sp, opts_, callback_);
+            }
+
+            notify_onconnect();
+        }
+
+        // 异步连接回调(带超时)
+        void on_async_connect_timed(error_code const& ec, socket_ptr sp
             , endpoint addr, shared_ptr<sentry<inter_lock> > overtime_token
             , boost::posix_time::time_duration timed)
         {
+            if (overtime_token && overtime_token->is_set())
+            {
+                // 超时了
+                ec_ = generate_error(bee::connect_overtime);
+                async_connecting_.reset();
+                notify_onconnect();
+            }
+            else if (ec)
+            {
+                // 错误
+                ec_ = ec;
+                async_connecting_.reset();
+                notify_onconnect();
+            }
+            else if (sp->lowest_layer().remote_endpoint() == sp->lowest_layer().local_endpoint())
+            {
+                // 回环假链接, 重试.
+                async_connecting_.reset();
+                async_connect_timed(addr, timed);
+                return ;
+            }
+            else
+            {
+                // 连接成功
+                async_handshaking_.set();
+                protocol_traits_type::async_handshake(*sp, sp, ssl::stream_base::client
+                    , BEX_IO_BIND(&this_type::on_async_handshake_timed, this
+                        , BEX_IO_PH_ERROR, sp, addr, overtime_token, timed));
+            }
+        }
+
+        // 握手回调(带超时)
+        void on_async_handshake_timed(error_code const& ec, socket_ptr sp
+            , endpoint addr, shared_ptr<sentry<inter_lock> > overtime_token
+            , boost::posix_time::time_duration timed)
+        {
+            async_handshaking_.reset();
             if (overtime_token && !overtime_token->set())
             {
                 // 超时了
@@ -174,23 +258,11 @@ namespace Bex { namespace bexio
             }
             else if (ec)
             {
-                // 错误
                 ec_ = ec;
                 async_connecting_.reset();
             }
-            else if (sp->lowest_layer().remote_endpoint() == sp->lowest_layer().local_endpoint())
-            {
-                // 回环假链接, 重试.
-                async_connecting_.reset();
-                if (overtime_token)
-                    async_connect_timed(addr, timed);
-                else
-                    async_connect(addr);
-                return ;
-            }
             else
             {
-                // 连接成功
                 ec_.clear();
                 running_.set();
                 async_connecting_.reset();
@@ -198,26 +270,32 @@ namespace Bex { namespace bexio
                 session_->initialize(sp, opts_, callback_);
             }
 
-            if (async_connect_callback_)
-            {
-                if (opts_->nlte_ == nlte::nlt_reactor)
-                    mstrand_service_->post(BEX_IO_BIND(async_connect_callback_, ec_));
-                else
-                    notify_async_connect_.set();
-            }
+            notify_onconnect();
         }
 
         // 超时回调
         void on_overtime(error_code const& ec, socket_ptr sp, shared_ptr<sentry<inter_lock> > overtime_token, shared_ptr<deadline_timer>)
         {
             // @todo: 错误码处理
-
             if (overtime_token->set())
             {
                 // 连接超时了
                 error_code lec;
-                sp->lowest_layer().cancel(lec);
-                sp->lowest_layer().close(lec);
+                sp->next_layer().cancel(lec);
+                sp->lowest_layer().shutdown(socket_base::shutdown_both, lec);
+                sp->next_layer().close(lec);
+            }
+        }
+
+        // 通知连接结果
+        void notify_onconnect()
+        {
+            if (async_connect_callback_)
+            {
+                if (opts_->nlte_ == nlte::nlt_reactor)
+                    mstrand_service_->post(BEX_IO_BIND(async_connect_callback_, ec_));
+                else if (opts_->nlte_ == nlte::nlt_loop)
+                    notify_async_connect_.set();
             }
         }
 
@@ -229,6 +307,9 @@ namespace Bex { namespace bexio
 
         // 异步连接中
         sentry<inter_lock> async_connecting_;
+
+        // 握手中
+        sentry<inter_lock> async_handshaking_;
 
         // 异步连接回调
         OnAsyncConnect async_connect_callback_;

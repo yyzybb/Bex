@@ -4,10 +4,12 @@
 //////////////////////////////////////////////////////////////////////////
 /// 协议相关接口处理
 #include "bexio_fwd.hpp"
+#include <boost/asio/ssl/stream_base.hpp>
 
 namespace Bex { namespace bexio 
 {
-    /// boost::function addition
+    //////////////////////////////////////////////////////////////////////////
+    /// @{ boost::function addition
     template <typename Addition, typename F>
     struct function_addition;
 
@@ -35,55 +37,8 @@ namespace Bex { namespace bexio
     struct function_addition<Addition, boost::function<R(Arg1, Arg2, Arg3, Arg4)> >
         : boost::mpl::identity<boost::function<R(Addition, Arg1, Arg2, Arg3, Arg4)> >
     {};
-
-    //////////////////////////////////////////////////////////////////////////
-    /// @{ post strand
-    template <typename Protocol>
-    struct has_post_strand
-    {
-        struct Handler {};
-
-        template <typename U,
-            detail::wrapped_handler<io_service::strand, Handler, detail::is_continuation_if_running>(U::*)(BOOST_ASIO_MOVE_ARG(Handler))>
-        struct impl;
-
-        template <typename U>
-        static char _check(U*, impl<U, (&U::template post_strand<Handler>) >*);
-
-        template <typename U>
-        static short _check(...);
-
-        static const bool value = (sizeof(_check<Protocol>(0, 0)) == sizeof(char));
-    };
-
-    template <typename Protocol, typename Handler, bool has>
-    struct post_strand_helper
-    {
-        typedef detail::wrapped_handler<io_service::strand, Handler, detail::is_continuation_if_running> const& result_type;
-        result_type operator()(Protocol & proto, Handler const& handler)
-        {
-            return proto.post_strand(handler);
-        }
-    };
-
-    template <typename Protocol, typename Handler>
-    struct post_strand_helper<Protocol, Handler, false>
-    {
-        typedef Handler const& result_type;
-        result_type operator()(Protocol &, Handler const& handler)
-        {
-            return handler;
-        }
-    };
-
-    template <typename Protocol, typename Handler>
-    struct post_strand_c
-        : post_strand_helper<Protocol, Handler, has_post_strand<Protocol>::value>
-    {};
-
     /// @}
     //////////////////////////////////////////////////////////////////////////
-
 
     //////////////////////////////////////////////////////////////////////////
     /// @{ initialize
@@ -125,9 +80,94 @@ namespace Bex { namespace bexio
     /// @}
     //////////////////////////////////////////////////////////////////////////
 
+    //////////////////////////////////////////////////////////////////////////
+    /// @{ async_handshake
+    template <typename Protocol, typename Handler>
+    struct has_async_handshake
+    {
+        template <typename U, void(U::*)(typename U::socket_ptr, ssl::stream_base::handshake_type, BEX_MOVE_ARG(Handler))>
+        struct impl;
+
+        template <typename U>
+        static char _check(U*, impl<U, (&U::template async_handshake<Handler>) >*);
+
+        template <typename U>
+        static short _check(...);
+
+        static const bool value = (sizeof(_check<Protocol>(0, 0)) == sizeof(char));
+    };
+
+    template <typename Protocol, typename Handler, bool>
+    struct async_handshake_helper
+    {
+        inline void operator()(Protocol & proto, typename Protocol::socket_ptr sp, typename U::handshake_type hstype, BEX_MOVE_ARG(Handler) handler)
+        {
+            return proto.async_handshake(sp, hstype, BEX_MOVE_CAST(Handler)(handler));
+        }
+    };
+
+    template <typename Protocol, typename Handler>
+    struct async_handshake_helper <Protocol, Handler, false>
+    {
+        inline void operator()(Protocol &, typename Protocol::socket_ptr, typename U::handshake_type, BEX_MOVE_ARG(Handler) handler))
+        {
+            handler(error_code());
+        }
+    };
+
+    template <typename Protocol, typename Handler>
+    struct async_handshake_c
+        : async_handshake_helper<Protocol, Handler, has_async_handshake<Protocol, Handler>::value>
+    {};
+    /// @}
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
+    /// @{ async_shutdown
+    template <typename Protocol, typename Handler>
+    struct has_async_shutdown
+    {
+        template <typename U, void(U::*)(typename U::socket_ptr, BEX_MOVE_ARG(Handler))>
+        struct impl;
+
+        template <typename U>
+        static char _check(U*, impl<U, (&U::template async_shutdown<Handler>) >*);
+
+        template <typename U>
+        static short _check(...);
+
+        static const bool value = (sizeof(_check<Protocol>(0, 0)) == sizeof(char));
+    };
+
+    template <typename Protocol, typename Handler, bool>
+    struct async_shutdown_helper
+    {
+        inline void operator()(Protocol & proto, typename Protocol::socket_ptr sp, BEX_MOVE_ARG(Handler) handler)
+        {
+            return proto.async_shutdown(sp, BEX_MOVE_CAST(Handler)(handler));
+        }
+    };
+
+    template <typename Protocol, typename Handler>
+    struct async_shutdown_helper <Protocol, Handler, false>
+    {
+        inline void operator()(Protocol &, typename Protocol::socket_ptr, BEX_MOVE_ARG(Handler) handler))
+        {
+            handler(error_code());
+        }
+    };
+
+    template <typename Protocol, typename Handler>
+    struct async_shutdown_c
+        : async_shutdown_helper<Protocol, Handler, has_async_shutdown<Protocol, Handler>::value>
+    {};
+    /// @}
+    //////////////////////////////////////////////////////////////////////////
     template <typename Protocol>
     struct protocol_traits
     {
+        typedef typename Protocol::socket_ptr socket_ptr;
+
         // 初始化
         template <typename F, typename Id>
         static void initialize(Protocol & proto, shared_ptr<options> const& opts, F const& f, Id const& id)
@@ -135,11 +175,20 @@ namespace Bex { namespace bexio
             initialize_c<Protocol, F, Id>()(proto, opts, f, id);
         }
 
-        // 包装回调函数
+        // 握手
         template <typename Handler>
-        static typename post_strand_c<Protocol, Handler>::result_type post_strand(Protocol & proto, Handler const& handler)
+        static void async_handshake(Protocol & proto, socket_ptr sp
+            ssl::stream_base::handshake_type hstype, BEX_MOVE_ARG(Handler) handler)
         {
-            return post_strand_c<Protocol, Handler>()(proto, handler);
+            async_handshake_c<Protocol, Handler>(proto, sp, hstype, BEX_MOVE_CAST(Handler)(handler));
+        }
+
+        // 异步优雅地关闭
+        template <typename Handler>
+        static void async_shutdown(Protocol & proto, socket_ptr sp
+            , BEX_MOVE_ARG(Handler) handler)
+        {
+            async_shutdown_c<Protocol, Handler>(proto, sp, BEX_MOVE_CAST(Handler)(handler));
         }
     };
 

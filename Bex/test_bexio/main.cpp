@@ -203,7 +203,7 @@ int main()
     int input = 0;
     do 
     {
-        std::cout << "请输入端类型(0:simple, 1:pingpong, 2:multiconn, 3:packet) / (0:server, 1:client):" << std::endl;
+        std::cout << "请输入端类型(0:simple, 1:pingpong, 2:multiconn, 3:packet)\n\t(0:server, 1:client):" << std::endl;
         std::cin >> input;
 
         int type = input / 10;
