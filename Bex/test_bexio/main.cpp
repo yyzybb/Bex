@@ -1,21 +1,25 @@
 #pragma warning(disable:4996)
 #define _WIN32_WINNT 0x501
+#include <iostream>
+#include <string>
+#define Dump(x) do { std::cout << x << std::endl; } while(0)
+
 #include <Bex/bexio/bexio.hpp>
 #include <Bex/auto_link.h>
 #include <Bex/utility/format.hpp>
-#include <string>
-#include <iostream>
 using namespace Bex::bexio;
 
-#define Dump(x) do { std::cout << x << std::endl; } while(0)
 
 enum {
     t_simple = 0,       // 简单测试
     t_pingpong = 1,     // pingpong测试吞吐量
     t_multiconn = 2,    // 大量并发连接
     t_packet = 3,       // 解包测试
+    t_tcp_shutdown = 4, // 测试优雅地关闭连接(发送后立即shutdown, 要保证对端可以接收完整, 不丢数据.)
+    t_ssl_shutdown = 5, // 测试优雅地关闭连接(发送后立即shutdown, 要保证对端可以接收完整, 不丢数据.)
 };
 
+std::string remote_ip = "127.0.0.1";
 volatile long s_count = 0;
 volatile long s_obj_count = 0;
 
@@ -32,7 +36,7 @@ public:
 
     virtual void on_disconnect(error_code const& ec) BEX_OVERRIDE
     {
-        Dump(boost::this_thread::get_id() << " on disconnect");
+        Dump(boost::this_thread::get_id() << " on disconnect, error:" << ec.message());
     }
 
     virtual void on_receive(char const* data, std::size_t size) BEX_OVERRIDE
@@ -48,7 +52,7 @@ public:
     virtual void on_connect() BEX_OVERRIDE
     {
         Dump(boost::this_thread::get_id() << " on connect " << remote_endpoint());
-        char buf[2048] = {1};
+        char buf[8000] = {1};
         send(buf, sizeof(buf));
     }
 
@@ -56,8 +60,11 @@ public:
     {
         //Dump(boost::this_thread::get_id() << " size = " << size << " data:" << std::string(data, size));
         bool ok = send(data, size);
+        ok |= send(data, size);
         if (!ok)
-            Dump("send buffer full!");
+        {
+            //Dump("send buffer full!");
+        }
     }
 };
 
@@ -131,6 +138,44 @@ public:
     }
 };
 
+template <typename Protocol>
+class shutdown_session
+    : public basic_session<Protocol>
+{
+public:
+    shutdown_session()
+    {
+        ::BOOST_INTERLOCKED_INCREMENT(&s_obj_count);
+    }
+
+    ~shutdown_session()
+    {
+        ::BOOST_INTERLOCKED_DECREMENT(&s_obj_count);
+    }
+
+    virtual void on_connect() BEX_OVERRIDE
+    {
+        ::BOOST_INTERLOCKED_INCREMENT(&s_count);
+        Dump(boost::this_thread::get_id() << " on connect " << remote_endpoint());
+        char buf[] = "I will shutdown session!";
+        bool ok = send(buf, sizeof(buf));
+        shutdown();
+        if (!ok)
+            Dump("Send failed!");
+    }
+
+    virtual void on_receive(char const* data, std::size_t size) BEX_OVERRIDE
+    {
+        Dump("recv " << size << " bytes: " << std::string(data, size));
+    }
+
+    virtual void on_disconnect(error_code const& ec) BEX_OVERRIDE
+    {
+        ::BOOST_INTERLOCKED_DECREMENT(&s_count);
+        Dump(boost::this_thread::get_id() << " on disconnect! error:" << ec.message());
+    }
+};
+
 template <class Session>
 void start_server()
 {
@@ -158,7 +203,7 @@ void start_client()
     options opt = options::test();
 
     client c(ios, opt);
-    bool ok = c.connect(client::endpoint(ip::address::from_string("127.0.0.1"), 28087));
+    bool ok = c.connect(client::endpoint(ip::address::from_string(remote_ip), 28087));
     if (!ok)
         Dump("connect error: " << c.get_error_code().message());
 
@@ -188,7 +233,7 @@ void start_multi_client(int count = 100)
         shared_ptr<client> c(new client(ios, opt));
         clients.push_back(c);
         c->set_async_connect_callback(&on_connect_callback);
-        bool ok = c->async_connect(client::endpoint(ip::address::from_string("127.0.0.1"), 28087));
+        bool ok = c->async_connect(client::endpoint(ip::address::from_string(remote_ip), 28087));
         if (!ok)
             Dump("connect error: " << c->get_error_code().message());
     }
@@ -203,7 +248,8 @@ int main()
     int input = 0;
     do 
     {
-        std::cout << "请输入端类型(0:simple, 1:pingpong, 2:multiconn, 3:packet)\n\t(0:server, 1:client):" << std::endl;
+        std::cout << "请输入端类型(0:simple, 1:pingpong, 2:multiconn, 3:packet, 4:tcp_shutdown, 5:ssl_shutdown)"
+            "\n\t(0:server, 1:client):" << std::endl;
         std::cin >> input;
 
         int type = input / 10;
@@ -263,6 +309,20 @@ int main()
                     start_multi_client<packet_session>(count);
                 }
             }
+            break;
+
+        case t_tcp_shutdown:
+            if (point == 0)
+                start_server<shutdown_session<tcp_protocol<> > >();
+            else
+                start_client<shutdown_session<tcp_protocol<> > >();
+            break;
+
+        case t_ssl_shutdown:
+            if (point == 0)
+                start_server<shutdown_session<tcp_protocol<> > >();
+            else
+                start_client<shutdown_session<tcp_protocol<> > >();
             break;
 
         default:

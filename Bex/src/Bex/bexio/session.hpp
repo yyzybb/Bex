@@ -3,11 +3,26 @@
 
 //////////////////////////////////////////////////////////////////////////
 /// 连接
+
 /*
 * @仅用于有连接协议
 *
 * @functions: 带有_cb和_l后缀的接口必须在逻辑线程执行。
+*
+* @优雅地关闭连接流程:
+*   \主动方: 请求关闭(调用shutdown接口) -> 禁止发送(send全部返回false) -> 记录错误码
+*       -> 等待应用层发送缓冲区数据全部复制到底层socket缓冲区 -> 关闭发送通道
+*       -> 等待对方关闭另外一个通道 -> ...
+*   \被动方: 全部数据接收完毕直到eof -> 记录错误码 -> mark被动优雅地关闭 -> 禁止发送(send全部返回false)
+*       -> 等待应用层发送缓冲区数据全部复制到底层socket缓冲区 -> if(mark) 关闭发送通道
+*       -> do_shutdown_lowest -> 关闭完成
+*   \主动方: 全部数据接收完毕直到eof -> do_shutdown_lowest -> 关闭完成
+*
+* @todo: 优雅地关闭连接设置超时时间, 以防出现死连接.
+* @todo: pingpong测试时, 数据链会断档, 查bug!
+*
 */
+
 #include "bexio_fwd.hpp"
 #include "multithread_strand_service.hpp"
 #include "intrusive_list.hpp"
@@ -177,22 +192,21 @@ namespace Bex { namespace bexio
             shutdown_handshaking_.set();
             shutdowning_.set();
             on_error(generate_error(bee::initiative_shutdown));
-            protocol_traits_type::async_shutdown(*this, socket_
+            protocol_traits_type::async_shutdown(socket_
                 , BEX_IO_BIND(&this_type::on_async_shutdown, this, BEX_IO_PH_ERROR, shared_this()));
         }
 
-        // 强制地关闭连接
+        // 强制关闭连接(慎用)
+        //   发送RST, 不但会丢失本地上层和底层socket发送缓冲区中未发送的数据, 
+        //   也会丢失远端底层socket接收缓冲区中未读取的数据。
         virtual void terminate()
         {
             if (!terminating_.set())
                 return ;
 
             on_error(generate_error(bee::initiative_terminate));
-            error_code ec;
-            socket_->lowest_layer().cancel(ec);
-            socket_->lowest_layer().shutdown(socket_base::shutdown_both, ec);
-            socket_->lowest_layer().close(ec);
-            notify_ondisconnect();
+            socket_->lowest_layer().set_option(socket_base::linger(true, 0));
+            do_shutdown_lowest();
         }
 
         // 连接是否已断开
@@ -204,13 +218,13 @@ namespace Bex { namespace bexio
         // 本地网络地址
         endpoint local_endpoint() const
         {
-            return socket_->next_layer().local_endpoint();
+            return socket_->lowest_layer().local_endpoint();
         }
 
         // 远端网络地址
         endpoint remote_endpoint() const
         {
-            return socket_->next_layer().remote_endpoint();
+            return socket_->lowest_layer().remote_endpoint();
         }
 
         // 获取配置信息
@@ -294,6 +308,8 @@ namespace Bex { namespace bexio
         // 异步发送回调
         void on_async_send(error_code ec, std::size_t bytes, shared_ptr<this_type>)
         {
+            //Dump("on_async_send, ec:" << ec.value() << " bytes:" << bytes);
+
             if (ec)
             {
                 close_send();
@@ -307,10 +323,21 @@ namespace Bex { namespace bexio
         // 异步接收回调
         void on_async_receive(error_code ec, std::size_t bytes, shared_ptr<this_type>)
         {
+            //Dump("on_async_receive, ec:" << ec.value() << " bytes:" << bytes);
+
             if (ec) 
             {
                 close_receive();
-                on_error(ec);
+
+                // eof 对方调用shutdown, 尝试以优雅地方式关闭连接.
+                if (ec.value() == 2)
+                {
+                    shutdowning_.set();
+                    on_error(generate_error(bee::passive_shutdown));
+                }
+                else
+                    on_error(ec);
+
                 return ;
             }
 
@@ -318,17 +345,28 @@ namespace Bex { namespace bexio
             if (opts_->nlte_ == nlte::nlt_reactor)
                 if (notify_receive_.set())
                     mstrand_service()->post(BEX_IO_BIND(&this_type::on_receive_cb, this, shared_this()));
+
             post_receive(true);
         }
 
         // 关闭握手回调
-        void on_async_shutdown(error_code const& ec, shared_ptr<thie_type>)
+        void on_async_shutdown(error_code const& ec, shared_ptr<this_type>)
         {
             shutdown_handshaking_.reset();
             if (ec)
-                terminate();
+                do_shutdown_lowest();
             else if (!sending_.is_set() && !socket_->getable_write())
                 close_send();
+        }
+
+        // 关闭连接
+        void do_shutdown_lowest()
+        {
+            error_code ec;
+            socket_->lowest_layer().cancel(ec);
+            socket_->lowest_layer().shutdown(socket_base::shutdown_both, ec);
+            socket_->lowest_layer().close(ec);
+            notify_ondisconnect();
         }
 
     private:
@@ -344,9 +382,6 @@ namespace Bex { namespace bexio
                 do_onreceive_l(buffers[i]);
                 socket_->read_done(buffer_size_helper(buffers[i]));
             }
-
-            // 检测是否需要关闭
-            on_error(error_code());
         }
         void on_receive_cb(shared_ptr<this_type>)
         {
@@ -362,15 +397,17 @@ namespace Bex { namespace bexio
             /// shutdown is ok?
             if (shutdowning_.is_set())
             {
-                if (sendclosed_.is_set() && receiveclosed_.is_set() && !socket_->getable_read())
+                if (receiveclosed_.is_set())
                 {
-                    /// 可以关闭了
-                    terminate();
+                    if (sendclosed_.is_set())   //发送通道已关闭, 可以关闭socket了.
+                        do_shutdown_lowest();
+                    else if (!socket_->getable_write())  //发送通道未关闭但发送缓冲区已空, 可以关闭发送通道了.
+                        close_send();
                 }
             }
-            else if (ec && !terminating_.is_set())
+            else if (ec && terminating_.set())
             {
-                terminate();
+                do_shutdown_lowest();
             }
         }
 
@@ -380,7 +417,7 @@ namespace Bex { namespace bexio
         {
             sendclosed_.set();
             error_code ec;
-            socket_->next_layer().shutdown(socket_base::shutdown_send, ec);
+            socket_->lowest_layer().shutdown(socket_base::shutdown_send, ec);
         }
 
         /// 关闭接收通道(关闭后要处理完接收缓冲区中已接收到的数据才可以关闭)
@@ -388,7 +425,7 @@ namespace Bex { namespace bexio
         {
             receiveclosed_.set();
             error_code ec;
-            socket_->next_layer().shutdown(socket_base::shutdown_receive, ec);
+            socket_->lowest_layer().shutdown(socket_base::shutdown_receive, ec);
         }
 
     private:

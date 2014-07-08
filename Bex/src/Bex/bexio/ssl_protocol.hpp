@@ -58,13 +58,13 @@ namespace Bex { namespace bexio
         }
 
         template <typename Handler>
-        void async_shutdown(socket_ptr sp, BEX_MOVE_ARG(Handler) handler)
+        static void async_shutdown(socket_ptr sp, BEX_MOVE_ARG(Handler) handler)
         {
             sp->next_layer().async_shutdown(BEX_MOVE_CAST(Handler)(handler));
         }
 
         template <typename Handler>
-        void async_handshake(socket_ptr sp, handshake_type hstype, BEX_MOVE_ARG(Handler) handler)
+        static void async_handshake(socket_ptr sp, handshake_type hstype, BEX_MOVE_ARG(Handler) handler)
         {
             sp->next_layer().async_handshake(hstype, BEX_MOVE_CAST(Handler)(handler));
         }

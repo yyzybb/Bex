@@ -152,7 +152,7 @@ namespace Bex { namespace bexio
             }
 
             async_accept(true);
-            protocol_traits_type::async_handshake(*this, sp, ssl::stream_base::server
+            protocol_traits_type::async_handshake(sp, ssl::stream_base::server
                 , BEX_IO_BIND(&this_type::on_async_handshake, this, BEX_IO_PH_ERROR, sp));
         }
 

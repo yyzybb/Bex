@@ -12,6 +12,7 @@ namespace Bex { namespace bexio
     {
         initiative_terminate,   ///< 强制主动断开连接
         initiative_shutdown,    ///< 优雅地主动断开连接
+        passive_shutdown,       ///< 优雅地被动断开连接
         sendbuffer_overflow,    ///< 发送缓冲区溢出
         receivebuffer_overflow, ///< 接收缓冲区溢出
         connect_overtime,       ///< 连接超时
@@ -43,6 +44,9 @@ namespace Bex { namespace bexio
 
             case (int)bee::initiative_shutdown:
                 return "initiative shutdown";
+
+            case (int)bee::passive_shutdown:
+                return "passive shutdown";
 
             case (int)bee::sendbuffer_overflow:
                 return "sendbuffer overflow";

@@ -85,7 +85,7 @@ namespace Bex { namespace bexio
     template <typename Protocol, typename Handler>
     struct has_async_handshake
     {
-        template <typename U, void(U::*)(typename U::socket_ptr, ssl::stream_base::handshake_type, BEX_MOVE_ARG(Handler))>
+        template <typename U, void(*)(typename U::socket_ptr, ssl::stream_base::handshake_type, BEX_MOVE_ARG(Handler))>
         struct impl;
 
         template <typename U>
@@ -100,16 +100,18 @@ namespace Bex { namespace bexio
     template <typename Protocol, typename Handler, bool>
     struct async_handshake_helper
     {
-        inline void operator()(Protocol & proto, typename Protocol::socket_ptr sp, typename U::handshake_type hstype, BEX_MOVE_ARG(Handler) handler)
+        inline void operator()(typename Protocol::socket_ptr sp
+            , typename Protocol::handshake_type hstype, BEX_MOVE_ARG(Handler) handler)
         {
-            return proto.async_handshake(sp, hstype, BEX_MOVE_CAST(Handler)(handler));
+            return Protocol::async_handshake(sp, hstype, BEX_MOVE_CAST(Handler)(handler));
         }
     };
 
     template <typename Protocol, typename Handler>
     struct async_handshake_helper <Protocol, Handler, false>
     {
-        inline void operator()(Protocol &, typename Protocol::socket_ptr, typename U::handshake_type, BEX_MOVE_ARG(Handler) handler))
+        inline void operator()(typename Protocol::socket_ptr
+            , ssl::stream_base::handshake_type, BEX_MOVE_ARG(Handler) handler)
         {
             handler(error_code());
         }
@@ -127,7 +129,7 @@ namespace Bex { namespace bexio
     template <typename Protocol, typename Handler>
     struct has_async_shutdown
     {
-        template <typename U, void(U::*)(typename U::socket_ptr, BEX_MOVE_ARG(Handler))>
+        template <typename U, void(*)(typename U::socket_ptr, BEX_MOVE_ARG(Handler))>
         struct impl;
 
         template <typename U>
@@ -142,16 +144,16 @@ namespace Bex { namespace bexio
     template <typename Protocol, typename Handler, bool>
     struct async_shutdown_helper
     {
-        inline void operator()(Protocol & proto, typename Protocol::socket_ptr sp, BEX_MOVE_ARG(Handler) handler)
+        inline void operator()(typename Protocol::socket_ptr sp, BEX_MOVE_ARG(Handler) handler)
         {
-            return proto.async_shutdown(sp, BEX_MOVE_CAST(Handler)(handler));
+            return Protocol::async_shutdown(sp, BEX_MOVE_CAST(Handler)(handler));
         }
     };
 
     template <typename Protocol, typename Handler>
     struct async_shutdown_helper <Protocol, Handler, false>
     {
-        inline void operator()(Protocol &, typename Protocol::socket_ptr, BEX_MOVE_ARG(Handler) handler))
+        inline void operator()(typename Protocol::socket_ptr, BEX_MOVE_ARG(Handler) handler)
         {
             handler(error_code());
         }
@@ -177,18 +179,17 @@ namespace Bex { namespace bexio
 
         // 握手
         template <typename Handler>
-        static void async_handshake(Protocol & proto, socket_ptr sp
+        static void async_handshake(socket_ptr sp,
             ssl::stream_base::handshake_type hstype, BEX_MOVE_ARG(Handler) handler)
         {
-            async_handshake_c<Protocol, Handler>(proto, sp, hstype, BEX_MOVE_CAST(Handler)(handler));
+            async_handshake_c<Protocol, Handler>()(sp, hstype, BEX_MOVE_CAST(Handler)(handler));
         }
 
         // 异步优雅地关闭
         template <typename Handler>
-        static void async_shutdown(Protocol & proto, socket_ptr sp
-            , BEX_MOVE_ARG(Handler) handler)
+        static void async_shutdown(socket_ptr sp, BEX_MOVE_ARG(Handler) handler)
         {
-            async_shutdown_c<Protocol, Handler>(proto, sp, BEX_MOVE_CAST(Handler)(handler));
+            async_shutdown_c<Protocol, Handler>()(sp, BEX_MOVE_CAST(Handler)(handler));
         }
     };
 

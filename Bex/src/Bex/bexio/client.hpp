@@ -82,7 +82,7 @@ namespace Bex { namespace bexio
             socket_ptr sp = protocol_type::alloc_socket(ios_, opts_->send_buffer_size, opts_->send_buffer_size);
             sp->lowest_layer().async_connect(addr, 
                 BEX_IO_BIND(&this_type::on_async_connect, this, BEX_IO_PH_ERROR
-                    , sp, addr, shared_ptr<sentry<inter_lock> >(), boost::posix_time::seconds(0)));
+                    , sp, addr));
 
             // 启动工作线程
             use_service<mstrand_service_type>(ios_).startup(opts_->workthread_count);
@@ -182,7 +182,7 @@ namespace Bex { namespace bexio
             {
                 // 连接成功, 握手
                 async_handshaking_.set();
-                protocol_traits_type::async_handshake(*sp, sp, ssl::stream_base::client
+                protocol_traits_type::async_handshake(sp, ssl::stream_base::client
                     , BEX_IO_BIND(&this_type::on_async_handshake, this, BEX_IO_PH_ERROR, sp, addr));
             }
         }
@@ -238,7 +238,7 @@ namespace Bex { namespace bexio
             {
                 // 连接成功
                 async_handshaking_.set();
-                protocol_traits_type::async_handshake(*sp, sp, ssl::stream_base::client
+                protocol_traits_type::async_handshake(sp, ssl::stream_base::client
                     , BEX_IO_BIND(&this_type::on_async_handshake_timed, this
                         , BEX_IO_PH_ERROR, sp, addr, overtime_token, timed));
             }
