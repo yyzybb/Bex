@@ -22,6 +22,7 @@ enum {
 std::string remote_ip = "127.0.0.1";
 volatile long s_count = 0;
 volatile long s_obj_count = 0;
+io_service ios;
 
 class simple_session
     : public basic_session<tcp_protocol<> >
@@ -49,24 +50,35 @@ class pingpong_session
     : public simple_session
 {
 public:
+    static pingpong_session * p;
+
     virtual void on_connect() BEX_OVERRIDE
     {
         Dump(boost::this_thread::get_id() << " on connect " << remote_endpoint());
         char buf[8000] = {1};
         send(buf, sizeof(buf));
+        p = this;
     }
 
     virtual void on_receive(char const* data, std::size_t size) BEX_OVERRIDE
     {
         //Dump(boost::this_thread::get_id() << " size = " << size << " data:" << std::string(data, size));
-        bool ok = send(data, size);
-        ok |= send(data, size);
-        if (!ok)
-        {
-            //Dump("send buffer full!");
-        }
+        reply(data, size);
+    }
+
+    virtual void on_disconnect(error_code const& ec) BEX_OVERRIDE
+    {
+        Dump(boost::this_thread::get_id() << " on disconnect, error:" << ec.message());
+    }
+
+    bool reply(char const* data, std::size_t size)
+    {
+        bool first = send(data, size);
+        //bool second = send(data, size);
+        return first;// || second;
     }
 };
+pingpong_session * pingpong_session::p = 0;
 
 class multi_session
     : public basic_session<tcp_protocol<> >
@@ -179,7 +191,6 @@ public:
 template <class Session>
 void start_server()
 {
-    io_service ios;
     typedef basic_server<Session> server;
     options opt = options::test();
     if (boost::is_same<Session, multi_session>::value)
@@ -198,7 +209,6 @@ void start_server()
 template <class Session>
 void start_client()
 {
-    io_service ios;
     typedef basic_client<Session> client;
     options opt = options::test();
 
@@ -220,7 +230,6 @@ void on_connect_callback(error_code const& ec)
 template <class Session>
 void start_multi_client(int count = 100)
 {
-    io_service ios;
     typedef basic_client<Session> client;
     options opt = options::test();
     if (boost::is_same<Session, multi_session>::value)
@@ -243,8 +252,23 @@ void start_multi_client(int count = 100)
     core.run();
 }
 
+void handle_ctrl_c(error_code, int, signal_set * ss)
+{
+    ss->async_wait(boost::BOOST_BIND(&handle_ctrl_c, _1, _2, ss));
+    Dump("ctrl-c");
+    char buf[10];
+    if (pingpong_session::p)
+    {
+        bool ok = pingpong_session::p->send(buf, sizeof(buf));
+        Dump("Send " << ok);
+    }
+}
+
 int main()
 {
+    signal_set signal_proc(ios, SIGINT);
+    signal_proc.async_wait(boost::BOOST_BIND(&handle_ctrl_c, _1, _2, &signal_proc));
+
     int input = 0;
     do 
     {

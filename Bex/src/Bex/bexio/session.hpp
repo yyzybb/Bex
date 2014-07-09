@@ -19,7 +19,8 @@
 *   \主动方: 全部数据接收完毕直到eof -> do_shutdown_lowest -> 关闭完成
 *
 * @todo: 优雅地关闭连接设置超时时间, 以防出现死连接.
-* @todo: pingpong测试时, 数据链会断档, 查bug!
+*
+* @log 2014-07-10: double pingpong测试时, 数据链断档是wait机制导致的, 不是bug...
 *
 */
 
@@ -135,7 +136,7 @@ namespace Bex { namespace bexio
             // 查看接收到的数据
             on_receive_l();
 
-            if (!notify_receiving_.is_set())
+            if (!receiving_.is_set())
                 post_receive();
 
             if (notify_disconnect_.is_set())
@@ -282,7 +283,7 @@ namespace Bex { namespace bexio
         // 发起异步接收请求
         void post_receive(bool reply = false)
         {
-            if (!reply && !notify_receiving_.set())
+            if (!reply && !receiving_.set())
                 return;
 
             bool receiveok = socket_->async_read_some(
@@ -291,7 +292,7 @@ namespace Bex { namespace bexio
 
             if (!receiveok)
             {
-                notify_receiving_.reset();
+                receiving_.reset();
 
                 /// 接收缓冲区已满
                 if (on_receivebuffer_overflow())
@@ -373,8 +374,6 @@ namespace Bex { namespace bexio
         // 接收数据回调(仅在逻辑线程执行!)
         void on_receive_l()
         {
-            notify_receive_.reset();
-
             boost::array<const_buffer, 2> buffers;
             std::size_t sections = socket_->get_buffers(buffers);
             for (std::size_t i = 0; i < sections; ++i)
@@ -385,6 +384,7 @@ namespace Bex { namespace bexio
         }
         void on_receive_cb(shared_ptr<this_type>)
         {
+            notify_receive_.reset();
             on_receive_l();
         }
 
@@ -541,7 +541,7 @@ namespace Bex { namespace bexio
         sentry<inter_lock> sending_;
         
         /// 接收请求是否已投递
-        sentry<inter_lock> notify_receiving_;
+        sentry<inter_lock> receiving_;
 
         /// 发送通道是否关闭
         sentry<bool> sendclosed_;
