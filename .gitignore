@@ -8,4 +8,10 @@ _output
 boost/include
 boost/lib
 boost/boost_1_*.7z
+openssl/VS2013/out32/*.exe
+openssl/VS2013/out32/*.lib
+openssl/VS2013/out32/*.pdb
+openssl/VS2010/out32/*.exe
+openssl/VS2010/out32/*.lib
+openssl/VS2010/out32/*.pdb
 q
