@@ -27,9 +27,11 @@ namespace Bex { namespace bexio
         // callback functions
         typedef boost::function<void(char const*, std::size_t)> OnReceiveF;
 
-        static socket_ptr alloc_socket(io_service & ios, std::size_t rbsize, std::size_t wbsize)
+        static socket_ptr alloc_socket(io_service & ios, options & opts, error_code & ec)
         {
-            return make_shared_ptr<socket, allocator>(ios, rbsize, wbsize);
+            ec.clear();
+            return make_shared_ptr<socket, allocator>(ios
+                , opts.receive_buffer_size, opts.send_buffer_size);
         }
 
     protected:
@@ -65,7 +67,7 @@ namespace Bex { namespace bexio
         /// @}
         //////////////////////////////////////////////////////////////////////////
 
-    private:
+    protected:
         shared_ptr<options> opts_;
         OnReceiveF global_receiver_;
     };

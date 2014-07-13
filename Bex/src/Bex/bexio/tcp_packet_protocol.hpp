@@ -15,21 +15,26 @@ namespace Bex { namespace bexio
         typename Buffer = nonblocking_circularbuffer>
     struct tcp_packet_protocol
     {
-        typedef ip::tcp::endpoint endpoint;
-        typedef ip::tcp::acceptor acceptor;
-        typedef ip::tcp::resolver resolver;
+        typedef Buffer buffer_type;
         typedef Parser parser_type;
         typedef typename parser_type::allocator allocator;
         typedef typename parser_type::packet_head_type packet_head_type;
-        typedef buffered_socket<ip::tcp::socket, Buffer, allocator> socket;
+
+        typedef ip::tcp::endpoint endpoint;
+        typedef ip::tcp::acceptor acceptor;
+        typedef ip::tcp::resolver resolver;
+        typedef ip::tcp::socket native_socket_type;
+        typedef buffered_socket<native_socket_type, buffer_type, allocator> socket;
         typedef boost::shared_ptr<socket> socket_ptr;
 
         // callback functions
         typedef boost::function<void(error_code const&, packet_head_type*, char const*, std::size_t)> OnReceiveF;
 
-        static socket_ptr alloc_socket(io_service & ios, std::size_t rbsize, std::size_t wbsize)
+        static socket_ptr alloc_socket(io_service & ios, options & opts, error_code & ec)
         {
-            return make_shared_ptr<socket, allocator>(ios, rbsize, wbsize);
+            ec.clear();
+            return make_shared_ptr<socket, allocator>(ios
+                , opts.receive_buffer_size, opts.send_buffer_size);
         }
 
     protected:
@@ -73,6 +78,8 @@ namespace Bex { namespace bexio
     private:
         // Êý¾Ý½âÎöÆ÷
         parser_type parser_;
+
+    protected:
         shared_ptr<options> opts_;
         OnReceiveF global_receiver_;
     };

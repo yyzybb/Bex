@@ -467,6 +467,9 @@ namespace Bex { namespace bexio
         }
         void notify_ondisconnect()
         {
+            if (!disconect_notified_.set())
+                return ;
+
             if (opts_->nlte_ == nlte::nlt_loop)
                 notify_disconnect_.set();
             else if (opts_->nlte_ == nlte::nlt_reactor)
@@ -542,6 +545,9 @@ namespace Bex { namespace bexio
         
         /// 接收请求是否已投递
         sentry<inter_lock> receiving_;
+
+        /// 断线是否已通知
+        sentry<bool> disconect_notified_;
 
         /// 发送通道是否关闭
         sentry<bool> sendclosed_;

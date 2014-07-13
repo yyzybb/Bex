@@ -17,6 +17,7 @@ namespace Bex { namespace bexio
         receivebuffer_overflow, ///< 接收缓冲区溢出
         connect_overtime,       ///< 连接超时
         parse_error,            ///< 数据解析出错
+        reconnect_error,        ///< 重连失败
     };
     typedef bexio_error_em bee;
 
@@ -59,6 +60,9 @@ namespace Bex { namespace bexio
 
             case (int)bee::parse_error:
                 return "data parse error";
+
+            case (int)bee::reconnect_error:
+                return "reconnect error";
 
             default:
                 return "undefined bexio error";

@@ -43,7 +43,7 @@ namespace Bex { namespace bexio
     //////////////////////////////////////////////////////////////////////////
     /// @{ initialize
     template <typename Protocol, typename F, typename Id>
-    struct has_initialize
+    struct has_initialize_2
     {
         template <typename U, void(U::*)(shared_ptr<options> const&, F const&, Id const&)>
         struct impl;
@@ -55,6 +55,28 @@ namespace Bex { namespace bexio
         static short _check(...);
 
         static const bool value = (sizeof(_check<Protocol>(0, 0)) == sizeof(char));
+    };
+
+    template <typename Protocol, typename F, typename Id, bool>
+    struct has_initialize_1
+    {
+        typedef typename next_layer_t<Protocol>::type NextProtocol;
+        static const bool value = has_initialize_2<Protocol, F, Id>::value 
+            || has_initialize_1<NextProtocol, F, Id
+                , boost::is_same<typename next_layer_t<NextProtocol>::type, NextProtocol>::value>::value;
+    };
+
+    template <typename Protocol, typename F, typename Id>
+    struct has_initialize_1<Protocol, F, Id, true>
+        : has_initialize_2<Protocol, F, Id>
+    {};
+
+    /// 逐层检测
+    template <typename Protocol, typename F, typename Id>
+    struct has_initialize
+        : has_initialize_1<Protocol, F, Id
+            , boost::is_same<typename next_layer_t<Protocol>::type, Protocol>::value>
+    {
     };
 
     template <typename Protocol, typename F, typename Id, bool>
@@ -81,21 +103,50 @@ namespace Bex { namespace bexio
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
-    /// @{ async_handshake
-    template <typename Protocol, typename Handler>
-    struct has_async_handshake
+    /// @{ invoker
+    template <typename Protocol>
+    struct has_invoker
     {
-        template <typename U, void(*)(typename U::socket_ptr, ssl::stream_base::handshake_type, BEX_MOVE_ARG(Handler))>
-        struct impl;
-
         template <typename U>
-        static char _check(U*, impl<U, (&U::template async_handshake<Handler>) >*);
+        static char _check(U*, typename U::invoker * = 0);
 
         template <typename U>
         static short _check(...);
 
-        static const bool value = (sizeof(_check<Protocol>(0, 0)) == sizeof(char));
+        static const bool value = sizeof(_check<Protocol>((Protocol*)0)) == sizeof(char);
     };
+    /// @}
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
+    /// @{ async_handshake
+    template <typename Protocol, typename Handler, bool>
+    struct has_async_handshake_helper
+    {
+        typedef typename Protocol::invoker invoker;
+
+        template <typename P, typename U, 
+            void(U::*)(typename P::socket_ptr, ssl::stream_base::handshake_type, BEX_MOVE_ARG(Handler))>
+        struct impl;
+
+        template <typename P, typename U>
+        static char _check(U*, impl<P, U, (&U::template async_handshake<Handler>) >* = 0);
+
+        template <typename P, typename U>
+        static short _check(...);
+
+        static const bool value = (sizeof(_check<Protocol, invoker>(0)) == sizeof(char));
+    };
+
+    template <typename Protocol, typename Handler>
+    struct has_async_handshake_helper<Protocol, Handler, false>
+        : public boost::false_type
+    {};
+
+    template <typename Protocol, typename Handler>
+    struct has_async_handshake
+        : has_async_handshake_helper<Protocol, Handler, has_invoker<Protocol>::value>
+    {};
 
     template <typename Protocol, typename Handler, bool>
     struct async_handshake_helper
@@ -103,7 +154,7 @@ namespace Bex { namespace bexio
         inline void operator()(typename Protocol::socket_ptr sp
             , typename Protocol::handshake_type hstype, BEX_MOVE_ARG(Handler) handler)
         {
-            return Protocol::async_handshake(sp, hstype, BEX_MOVE_CAST(Handler)(handler));
+            return typename Protocol::invoker().async_handshake(sp, hstype, BEX_MOVE_CAST(Handler)(handler));
         }
     };
 
@@ -125,28 +176,98 @@ namespace Bex { namespace bexio
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
-    /// @{ async_shutdown
-    template <typename Protocol, typename Handler>
-    struct has_async_shutdown
+    /// @{ handshake
+    template <typename Protocol, bool>
+    struct has_handshake_helper
     {
-        template <typename U, void(*)(typename U::socket_ptr, BEX_MOVE_ARG(Handler))>
+        typedef typename Protocol::invoker invoker;
+
+        template <typename P, typename U, 
+            void(U::*)(typename P::socket_ptr, ssl::stream_base::handshake_type, error_code&)>
         struct impl;
 
-        template <typename U>
-        static char _check(U*, impl<U, (&U::template async_shutdown<Handler>) >*);
+        template <typename P, typename U>
+        static char _check(U*, impl<P, U, (&U::handshake) >* = 0);
 
-        template <typename U>
+        template <typename P, typename U>
         static short _check(...);
 
-        static const bool value = (sizeof(_check<Protocol>(0, 0)) == sizeof(char));
+        static const bool value = (sizeof(_check<Protocol, invoker>(0)) == sizeof(char));
     };
+
+    template <typename Protocol>
+    struct has_handshake_helper<Protocol, false>
+        : public boost::false_type
+    {};
+
+    template <typename Protocol>
+    struct has_handshake
+        : has_handshake_helper<Protocol, has_invoker<Protocol>::value>
+    {};
+
+    template <typename Protocol, bool>
+    struct handshake_helper
+    {
+        inline void operator()(typename Protocol::socket_ptr sp
+            , typename Protocol::handshake_type hstype, error_code& ec)
+        {
+            return typename Protocol::invoker().handshake(sp, hstype, ec);
+        }
+    };
+
+    template <typename Protocol>
+    struct handshake_helper <Protocol, false>
+    {
+        inline void operator()(typename Protocol::socket_ptr
+            , ssl::stream_base::handshake_type, error_code& ec)
+        {
+            ec.clear();
+        }
+    };
+
+    template <typename Protocol>
+    struct handshake_c
+        : handshake_helper<Protocol, has_handshake<Protocol>::value>
+    {};
+    /// @}
+    //////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
+    /// @{ async_shutdown
+    template <typename Protocol, typename Handler, bool>
+    struct has_async_shutdown_helper
+    {
+        typedef typename Protocol::invoker invoker;
+
+        template <typename P, typename U, 
+            void(U::*)(typename P::socket_ptr, BEX_MOVE_ARG(Handler))>
+        struct impl;
+
+        template <typename P, typename U>
+        static char _check(U*, impl<P, U, (&U::template async_handshake<Handler>) >* = 0);
+
+        template <typename P, typename U>
+        static short _check(...);
+
+        static const bool value = (sizeof(_check<Protocol, invoker>(0)) == sizeof(char));
+    };
+
+    template <typename Protocol, typename Handler>
+    struct has_async_shutdown_helper<Protocol, Handler, false>
+        : boost::false_type
+    {};
+
+    template <typename Protocol, typename Handler>
+    struct has_async_shutdown
+        : has_async_shutdown_helper<Protocol, Handler, has_invoker<Protocol>::value>
+    {};
 
     template <typename Protocol, typename Handler, bool>
     struct async_shutdown_helper
     {
         inline void operator()(typename Protocol::socket_ptr sp, BEX_MOVE_ARG(Handler) handler)
         {
-            return Protocol::async_shutdown(sp, BEX_MOVE_CAST(Handler)(handler));
+            return typename Protocol::invoker().async_shutdown(sp, BEX_MOVE_CAST(Handler)(handler));
         }
     };
 
@@ -177,12 +298,18 @@ namespace Bex { namespace bexio
             initialize_c<Protocol, F, Id>()(proto, opts, f, id);
         }
 
-        // 握手
+        // 异步握手
         template <typename Handler>
         static void async_handshake(socket_ptr sp,
             ssl::stream_base::handshake_type hstype, BEX_MOVE_ARG(Handler) handler)
         {
             async_handshake_c<Protocol, Handler>()(sp, hstype, BEX_MOVE_CAST(Handler)(handler));
+        }
+
+        // 同步握手
+        static void handshake(socket_ptr sp, ssl::stream_base::handshake_type hstype, error_code & ec)
+        {
+            handshake_c<Protocol>()(sp, hstype, ec);
         }
 
         // 异步优雅地关闭
@@ -191,6 +318,7 @@ namespace Bex { namespace bexio
         {
             async_shutdown_c<Protocol, Handler>()(sp, BEX_MOVE_CAST(Handler)(handler));
         }
+
     };
 
 } //namespace bexio

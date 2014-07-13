@@ -17,16 +17,26 @@ namespace Bex { namespace bexio
         typedef buffered_socket<Socket, Buffer, Allocator> this_type;
 
     public:
-        typedef typename next_layer_t<Socket>::type next_layer_type;
+        typedef typename boost::remove_reference<Socket>::type next_layer_type;
         typedef typename lowest_layer_t<Socket>::type lowest_layer_type;
         typedef boost::function<void(error_code, std::size_t)> callback_t;
 
     public:
         // @rbsize : 接收缓冲区大小
         // @wbsize : 发送缓冲区大小
-        template <typename Arg /*= io_service*/>
+        template <typename Arg>
         buffered_socket(Arg & arg, std::size_t rbsize, std::size_t wbsize)
             : socket_(arg)
+            , read_buffer_(alloc_t().allocate(rbsize), rbsize)
+            , write_buffer_(alloc_t().allocate(wbsize), wbsize)
+        {
+            read_storage_ = read_buffer_.address();
+            write_storage_ = write_buffer_.address();
+        }
+
+        template <typename Arg1, typename Arg2>
+        buffered_socket(Arg1 & arg1, Arg2 & arg2, std::size_t rbsize, std::size_t wbsize)
+            : socket_(arg1, arg2)
             , read_buffer_(alloc_t().allocate(rbsize), rbsize)
             , write_buffer_(alloc_t().allocate(wbsize), wbsize)
         {

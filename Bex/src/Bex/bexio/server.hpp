@@ -31,6 +31,8 @@ namespace Bex { namespace bexio
         typedef typename protocol_type::allocator allocator;
         typedef typename protocol_traits<protocol_type> protocol_traits_type;
 
+        typedef boost::function<void(error_code const&, endpoint const&)> OnHandshakeError;
+
     public:
         basic_server(io_service & ios, options const& opts)
             : ios_(ios), acceptor_(ios)
@@ -66,13 +68,24 @@ namespace Bex { namespace bexio
 
             accept_count_ = listen_count;
             for (std::size_t i = 0; i < listen_count; ++i)
-                async_accept();
+                if (!async_accept())
+                    return false;
 
             // 启动工作线程
             use_service<mstrand_service_type>(ios_).startup(opts_->workthread_count);
 
             running_.set();
             return true;
+        }
+
+        // 逻辑线程loop接口
+        void run()
+        {
+            // 1.run所有链接
+            session_mgr_.for_each(BEX_IO_BIND(&session_type::run, _1));
+
+            // 2.回调
+            callback_list.run();
         }
 
         // 优雅地关闭
@@ -117,25 +130,39 @@ namespace Bex { namespace bexio
             return ec_;
         }
 
-        // 设置回调
+        // 设置连接消息回调
         template <typename session_type::callback_em CallbackType, typename F>
         void set_callback(F const& f)
         {
             session_type::set_callback(*callback_, f);
         }
 
+        // 设置握手出错回调
+        void set_handshake_error_callbcak(OnHandshakeError const& f)
+        {
+            on_handshake_error_ = f;
+        }
+
     private:
         // 发起接受连接请求
-        void async_accept(bool reply = false)
+        bool async_accept(bool reply = false)
         {
             if (!reply)
             {
                 BOOST_INTERLOCKED_INCREMENT(&accept_count_);
             }
 
-            socket_ptr sp = protocol_type::alloc_socket(ios_, opts_->receive_buffer_size, opts_->send_buffer_size);
+            error_code ec;
+            socket_ptr sp = protocol_type::alloc_socket(ios_, *opts_, ec);
+            if (ec && !ec_)
+            {
+                ec_ = ec;
+                return false;
+            }
+
             acceptor_.async_accept(sp->lowest_layer(), 
                 BEX_IO_BIND(&this_type::on_async_accept, this, BEX_IO_PH_ERROR, sp));
+            return true;
         }
 
         // 接受连接请求回调
@@ -160,7 +187,18 @@ namespace Bex { namespace bexio
         void on_async_handshake(error_code const& ec, socket_ptr sp)
         {
             if (ec)
+            {
+                if (on_handshake_error_)
+                {
+                    if (opts_->nlte_ == nlte::nlt_reactor)
+                        use_service<mstrand_service_type>(ios_).actor().post(BEX_IO_BIND(
+                            on_handshake_error_, ec, sp->lowest_layer().remote_endpoint()));
+                    else if (opts_->nlte_ == nlte::nlt_loop)
+                        callback_list.post(BEX_IO_BIND(
+                            on_handshake_error_, ec, sp->lowest_layer().remote_endpoint()));
+                }
                 return ;
+            }
 
             /// create session
             session_type * session_p = allocate<session_type, allocator>();
@@ -228,6 +266,12 @@ namespace Bex { namespace bexio
 
         // 回调
         shared_ptr<callback_type> callback_;
+
+        // 握手出错回调
+        OnHandshakeError on_handshake_error_;
+
+        // loop模式的回调队列
+        io_service callback_list;
     };
     
 

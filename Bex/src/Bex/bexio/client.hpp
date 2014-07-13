@@ -28,6 +28,7 @@ namespace Bex { namespace bexio
         typedef typename protocol_traits<protocol_type> protocol_traits_type;
 
         typedef boost::function<void(error_code const&)> OnAsyncConnect;
+        typedef boost::function<void(error_code const&, endpoint const&)> OnHandshakeError;
 
     public:
         basic_client(io_service & ios, options const& opts)
@@ -53,8 +54,15 @@ namespace Bex { namespace bexio
             if (is_running() || async_connecting_.is_set())
                 return false;
 
-            socket_ptr sp = protocol_type::alloc_socket(ios_, opts_->send_buffer_size, opts_->send_buffer_size);
+            socket_ptr sp = protocol_type::alloc_socket(ios_, *opts_, ec_);
+            if (ec_)
+                return false;
+
             sp->lowest_layer().connect(addr, ec_);
+            if (ec_) 
+                return false;
+
+            protocol_traits_type::handshake(sp, ssl::stream_base::client, ec_);
             if (ec_) 
                 return false;
 
@@ -79,7 +87,10 @@ namespace Bex { namespace bexio
             if (is_running() || !async_connecting_.set())
                 return false;
 
-            socket_ptr sp = protocol_type::alloc_socket(ios_, opts_->send_buffer_size, opts_->send_buffer_size);
+            socket_ptr sp = protocol_type::alloc_socket(ios_, *opts_, ec_);
+            if (ec_)
+                return false;
+
             sp->lowest_layer().async_connect(addr, 
                 BEX_IO_BIND(&this_type::on_async_connect, this, BEX_IO_PH_ERROR
                     , sp, addr));
@@ -95,7 +106,9 @@ namespace Bex { namespace bexio
             if (is_running() || !async_connecting_.set())
                 return false;
 
-            socket_ptr sp = protocol_type::alloc_socket(ios_, opts_->send_buffer_size, opts_->send_buffer_size);
+            socket_ptr sp = protocol_type::alloc_socket(ios_, *opts_, ec_);
+            if (ec_)
+                return false;
 
             /// 超时标记
             shared_ptr<sentry<inter_lock> > overtime_token = make_shared_ptr<sentry<inter_lock>, allocator>();
@@ -161,6 +174,19 @@ namespace Bex { namespace bexio
             return ec_;
         }
 
+        // 设置连接消息回调
+        template <typename session_type::callback_em CallbackType, typename F>
+        void set_callback(F const& f)
+        {
+            session_type::set_callback(*callback_, f);
+        }
+
+        // 设置握手出错回调
+        void set_handshake_error_callbcak(OnHandshakeError const& f)
+        {
+            on_handshake_error_ = f;
+        }
+
     private:
         // 异步连接回调
         void on_async_connect(error_code const& ec, socket_ptr sp, endpoint addr)
@@ -176,7 +202,11 @@ namespace Bex { namespace bexio
             {
                 // 回环假链接, 重试.
                 async_connecting_.reset();
-                async_connect(addr);
+                if (!async_connect(addr))
+                {
+                    if (!ec_) ec_ = generate_error(bee::reconnect_error);
+                    notify_onconnect();
+                }
             }
             else
             {
@@ -195,6 +225,8 @@ namespace Bex { namespace bexio
             {
                 ec_ = ec;
                 async_connecting_.reset();
+                if (on_handshake_error_)
+                    on_handshake_error_(ec, sp->lowest_layer().remote_endpoint());
             }
             else
             {
@@ -231,7 +263,11 @@ namespace Bex { namespace bexio
             {
                 // 回环假链接, 重试.
                 async_connecting_.reset();
-                async_connect_timed(addr, timed);
+                if (!async_connect_timed(addr, timed))
+                {
+                    if (!ec_) ec_ = generate_error(bee::reconnect_error);
+                    notify_onconnect();
+                }
                 return ;
             }
             else
@@ -331,6 +367,9 @@ namespace Bex { namespace bexio
 
         // 回调
         shared_ptr<callback_type> callback_;
+
+        // 握手出错回调
+        OnHandshakeError on_handshake_error_;
     };
 
 } //namespace bexio
