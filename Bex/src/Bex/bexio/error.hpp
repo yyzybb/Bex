@@ -18,6 +18,7 @@ namespace Bex { namespace bexio
         connect_overtime,       ///< 连接超时
         parse_error,            ///< 数据解析出错
         reconnect_error,        ///< 重连失败
+        miss_ssl_options,       ///< SSL选项未设置
     };
     typedef bexio_error_em bee;
 
@@ -63,6 +64,9 @@ namespace Bex { namespace bexio
 
             case (int)bee::reconnect_error:
                 return "reconnect error";
+
+            case (int)bee::miss_ssl_options:
+                return "miss ssl options";
 
             default:
                 return "undefined bexio error";

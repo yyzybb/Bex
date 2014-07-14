@@ -204,10 +204,10 @@ template <class Session>
 void start_server()
 {
     typedef basic_server<Session> server;
-    opt.ssl_opts = ssl_options::server();
+    opt.ssl_opts.reset(new ssl_options(ssl_options::server()));
 
     server s(ios, opt);
-    s.set_handshake_error_callbcak(boost::BOOST_BIND(&on_handshake_error<server::endpoint>, _1, _2));
+    s.set_handshake_error_callbcak(boost::BOOST_BIND(&on_handshake_error<server::endpoint>, ::_1, ::_2));
     bool ok = s.startup(server::endpoint(ip::address::from_string("0.0.0.0"), 28087), 10);
     if (!ok)
         Dump("server startup error: " << s.get_error_code().message());
@@ -221,10 +221,10 @@ template <class Session>
 void start_client()
 {
     typedef basic_client<Session> client;
-    opt.ssl_opts = ssl_options::client();
+    opt.ssl_opts.reset(new ssl_options(ssl_options::client()));
 
     client c(ios, opt);
-    c.set_handshake_error_callbcak(boost::BOOST_BIND(&on_handshake_error<client::endpoint>, _1, _2));
+    c.set_handshake_error_callbcak(boost::BOOST_BIND(&on_handshake_error<client::endpoint>, ::_1, ::_2));
     bool ok = c.connect(client::endpoint(ip::address::from_string(remote_ip), 28087));
     if (!ok)
         Dump("connect error: " << c.get_error_code().message());
@@ -243,7 +243,7 @@ template <class Session>
 void start_multi_client(int count = 100)
 {
     typedef basic_client<Session> client;
-    opt.ssl_opts = ssl_options::client();
+    opt.ssl_opts.reset(new ssl_options(ssl_options::client()));
 
     std::list<boost::shared_ptr<client> > clients;
 
@@ -252,7 +252,7 @@ void start_multi_client(int count = 100)
         shared_ptr<client> c(new client(ios, opt));
         clients.push_back(c);
         c->set_async_connect_callback(&on_connect_callback);
-        c->set_handshake_error_callbcak(boost::BOOST_BIND(&on_handshake_error<client::endpoint>, _1, _2));
+        c->set_handshake_error_callbcak(boost::BOOST_BIND(&on_handshake_error<client::endpoint>, ::_1, ::_2));
         bool ok = c->async_connect(client::endpoint(ip::address::from_string(remote_ip), 28087));
         if (!ok)
             Dump("connect error: " << c->get_error_code().message());
@@ -265,7 +265,7 @@ void start_multi_client(int count = 100)
 
 void handle_ctrl_c(error_code, int, signal_set * ss)
 {
-    ss->async_wait(boost::BOOST_BIND(&handle_ctrl_c, _1, _2, ss));
+    ss->async_wait(boost::bind(&handle_ctrl_c, ::_1, ::_2, ss));
     Dump("ctrl-c");
     char buf[10];
     if (pingpong_session<tcp_protocol<> >::p)
@@ -278,7 +278,7 @@ void handle_ctrl_c(error_code, int, signal_set * ss)
 int main()
 {
     signal_set signal_proc(ios, SIGINT);
-    signal_proc.async_wait(boost::BOOST_BIND(&handle_ctrl_c, _1, _2, &signal_proc));
+    signal_proc.async_wait(boost::bind(&handle_ctrl_c, ::_1, ::_2, &signal_proc));
 
     int input = 0;
     do 

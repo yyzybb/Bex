@@ -30,19 +30,11 @@ namespace Bex { namespace bexio
         actor_.post(handler);
     }
 
-
-    template <class Strand, class Allocator>
-    std::size_t multithread_strand<Strand, Allocator>::run(error_code & ec)
-    {
-        return actor_.run(ec);
-    }
-
-
     template <class Strand, class Allocator>
     std::pair<std::size_t, error_code> multithread_strand<Strand, Allocator>::run()
     {
         error_code ec;
-        std::size_t n = run(ec);
+        std::size_t n = actor_.run(ec);;
         return std::pair<std::size_t, error_code>(n, ec);
     }
 

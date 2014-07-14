@@ -47,9 +47,6 @@ namespace Bex { namespace bexio
         template <typename Handler>
         void post(Handler const& handler);
 
-        // 处理完成回调
-        std::size_t run(error_code & ec);
-
         // 处理完成回调(noexcept)
         std::pair<std::size_t, error_code> run();
 

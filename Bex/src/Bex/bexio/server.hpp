@@ -154,9 +154,10 @@ namespace Bex { namespace bexio
 
             error_code ec;
             socket_ptr sp = protocol_type::alloc_socket(ios_, *opts_, ec);
-            if (ec && !ec_)
+            if (ec || !sp)
             {
-                ec_ = ec;
+                if (ec && !ec_)
+                    ec_ = ec;
                 return false;
             }
 
