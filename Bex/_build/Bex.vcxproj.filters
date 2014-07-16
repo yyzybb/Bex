@@ -468,6 +468,9 @@
     <ClInclude Include="..\src\Bex\bexio\options_ssl.hpp">
       <Filter>src\bexio</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\handlers.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Bex\thread\thread_pool\thread_pool.cpp">

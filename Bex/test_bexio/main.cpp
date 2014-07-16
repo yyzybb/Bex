@@ -212,9 +212,20 @@ void start_server()
     if (!ok)
         Dump("server startup error: " << s.get_error_code().message());
 
-    server::mstrand_service_type & core = use_service<server::mstrand_service_type >(ios);
-    io_service::work worker(core.actor());
-    core.run();
+    if (opt.nlte_ == nlte::nlt_reactor)
+    {
+        server::mstrand_service_type & core = use_service<server::mstrand_service_type >(ios);
+        io_service::work worker(core.actor());
+        core.run();
+    }
+    else if (opt.nlte_ == nlte::nlt_loop)
+    {
+        for (;;)
+        {
+            s.run();
+            boost::this_thread::sleep(boost::posix_time::millisec(1));
+        }
+    }
 }
 
 template <class Session>
@@ -229,9 +240,20 @@ void start_client()
     if (!ok)
         Dump("connect error: " << c.get_error_code().message());
 
-    client::mstrand_service_type & core = use_service<client::mstrand_service_type >(ios);
-    io_service::work worker(core.actor());
-    core.run();
+    if (opt.nlte_ == nlte::nlt_reactor)
+    {
+        client::mstrand_service_type & core = use_service<client::mstrand_service_type >(ios);
+        io_service::work worker(core.actor());
+        core.run();
+    }
+    else if (opt.nlte_ == nlte::nlt_loop)
+    {
+        for (;;)
+        {
+            c.run();
+            boost::this_thread::sleep(boost::posix_time::millisec(1));
+        }
+    }
 }
 
 void on_connect_callback(error_code const& ec)
@@ -240,12 +262,17 @@ void on_connect_callback(error_code const& ec)
 }
 
 template <class Session>
-void start_multi_client(int count = 100)
+void start_multi_client()
 {
+    int count = 1;
+    std::cout << "请输入客户端数量:" << std::endl;
+    std::cin >> count;
+
     typedef basic_client<Session> client;
+    typedef std::list<boost::shared_ptr<client> > client_list;
     opt.ssl_opts.reset(new ssl_options(ssl_options::client()));
 
-    std::list<boost::shared_ptr<client> > clients;
+    client_list clients;
 
     for (int i = 0; i < count; ++i)
     {
@@ -258,9 +285,22 @@ void start_multi_client(int count = 100)
             Dump("connect error: " << c->get_error_code().message());
     }
 
-    client::mstrand_service_type & core = use_service<client::mstrand_service_type >(ios);
-    io_service::work worker(core.actor());
-    core.run();
+    if (opt.nlte_ == nlte::nlt_reactor)
+    {
+        client::mstrand_service_type & core = use_service<client::mstrand_service_type >(ios);
+        io_service::work worker(core.actor());
+        core.run();
+    }
+    else if (opt.nlte_ == nlte::nlt_loop)
+    {
+        for (;;)
+        {
+            for (client_list::iterator it = clients.begin();
+                it != clients.end(); ++it)
+                (*it)->run();
+            boost::this_thread::sleep(boost::posix_time::millisec(1));
+        }
+    }
 }
 
 void handle_ctrl_c(error_code, int, signal_set * ss)
@@ -275,8 +315,32 @@ void handle_ctrl_c(error_code, int, signal_set * ss)
     }
 }
 
+void config()
+{
+    int input = 0;
+    std::cout << "配置:"
+        << "\n\t消息通知方式(0:退出配置, 1:reactor, 2:loop)" << std::endl;
+    std::cin >> input;
+    switch (input )
+    {
+    case 0:
+        return ;
+
+    case 1:
+        opt.nlte_ = nlte::nlt_reactor;
+        break;
+
+    case 2:
+        opt.nlte_ = nlte::nlt_loop;
+        break;
+    }
+}
+
 int main()
 {
+    // 配置
+    config();
+
     signal_set signal_proc(ios, SIGINT);
     signal_proc.async_wait(boost::bind(&handle_ctrl_c, ::_1, ::_2, &signal_proc));
 
@@ -284,7 +348,7 @@ int main()
     do 
     {
         std::cout << "请输入端类型"
-            "\n\t(0:tcp, 2:ssl_tcp)"
+            "\n\t(0:tcp, 1:ssl_tcp)"
             "\n\t(0:simple, 1:pingpong, 2:multiconn, 3:packet, 4:tcp_shutdown)"
             "\n\t(0:server, 1:client):" << std::endl;
         std::cin >> input;
@@ -349,13 +413,10 @@ int main()
                         start_server<multi_session<ssl_proto> >();
                 else
                 {
-                    int count = 1;
-                    std::cout << "请输入客户端数量:" << std::endl;
-                    std::cin >> count;
                     if (proto == 0)
-                        start_multi_client<multi_session<tcp_proto> >(count);
+                        start_multi_client<multi_session<tcp_proto> >();
                     else
-                        start_multi_client<multi_session<ssl_proto> >(count);
+                        start_multi_client<multi_session<ssl_proto> >();
                 }
             }
             break;
@@ -369,13 +430,10 @@ int main()
                         start_server<packet_session<ssl_packet_proto> >();
                 else
                 {
-                    int count = 1;
-                    std::cout << "请输入客户端数量:" << std::endl;
-                    std::cin >> count;
                     if (proto == 0)
-                        start_multi_client<packet_session<tcp_packet_proto> >(count);
+                        start_multi_client<packet_session<tcp_packet_proto> >();
                     else
-                        start_multi_client<packet_session<ssl_packet_proto> >(count);
+                        start_multi_client<packet_session<ssl_packet_proto> >();
                 }
             }
             break;

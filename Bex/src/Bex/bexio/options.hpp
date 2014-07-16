@@ -16,7 +16,7 @@ namespace Bex { namespace bexio
     enum BEX_ENUM_CLASS notify_logic_thread_em
     {
         nlt_reactor,        ///< reactor模式, 将消息post到指定完成队列中.
-        nlt_loop,           ///< 逻辑线程轮询session
+        nlt_loop,           ///< 逻辑线程轮询session //@todo: fixed this bug.
     };
     typedef notify_logic_thread_em nlte;
 

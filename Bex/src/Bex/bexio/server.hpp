@@ -5,6 +5,7 @@
 /// 有连接协议的服务端
 #include "bexio_fwd.hpp"
 #include "session_list_mgr.hpp"
+#include "handlers.hpp"
 
 namespace Bex { namespace bexio 
 {
@@ -39,13 +40,13 @@ namespace Bex { namespace bexio
         {
             opts_ = make_shared_ptr<options, allocator>(opts);
             callback_ = make_shared_ptr<callback_type, allocator>();
+            live_cond_ = make_shared_ptr<origin_condition_type, allocator>(true);
         }
 
         ~basic_server()
         {
+            live_cond_->reset();
             terminate();
-            while (session_mgr_.size())
-                boost::this_thread::sleep( boost::posix_time::milliseconds(1) );
         }
 
         // 启动
@@ -162,7 +163,7 @@ namespace Bex { namespace bexio
             }
 
             acceptor_.async_accept(sp->lowest_layer(), 
-                BEX_IO_BIND(&this_type::on_async_accept, this, BEX_IO_PH_ERROR, sp));
+                condition_handler(live_cond_, BEX_IO_BIND(&this_type::on_async_accept, this, BEX_IO_PH_ERROR, sp)));
             return true;
         }
 
@@ -203,7 +204,9 @@ namespace Bex { namespace bexio
 
             /// create session
             session_type * session_p = allocate<session_type, allocator>();
-            session_ptr session(session_p, BEX_IO_BIND(&this_type::session_deleter, this, _1), allocator());
+            session_ptr session(session_p
+                , if_else_handler(live_cond_, BEX_IO_BIND(&this_type::session_deleter, this, _1), deallocator<session_type, allocator>())
+                , allocator());
             session_p->initialize(sp, opts_, callback_);
             session_mgr_.insert(session);
         }
@@ -273,6 +276,9 @@ namespace Bex { namespace bexio
 
         // loop模式的回调队列
         io_service callback_list;
+
+        // 标识自身是否存活的condition
+        handler_condition_type live_cond_;
     };
     
 
