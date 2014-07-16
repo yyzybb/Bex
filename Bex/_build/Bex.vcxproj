@@ -22,6 +22,7 @@
     <ClInclude Include="..\src\Bex\bexio\client.hpp" />
     <ClInclude Include="..\src\Bex\bexio\error.hpp" />
     <ClInclude Include="..\src\Bex\bexio\intrusive_list.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\handlers.hpp" />
     <ClInclude Include="..\src\Bex\bexio\options.hpp" />
     <ClInclude Include="..\src\Bex\bexio\multithread_strand.hpp" />
     <ClInclude Include="..\src\Bex\bexio\multithread_strand_fwd.hpp" />
