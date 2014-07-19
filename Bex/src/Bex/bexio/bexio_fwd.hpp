@@ -17,6 +17,7 @@
 #include <boost/operators.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <boost/mpl/print.hpp>
+#include <boost/typeof/typeof.hpp>
 #include <numeric>
 #include <list>
 #include "options.hpp"

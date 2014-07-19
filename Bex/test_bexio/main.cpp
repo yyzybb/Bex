@@ -212,20 +212,9 @@ void start_server()
     if (!ok)
         Dump("server startup error: " << s.get_error_code().message());
 
-    if (opt.nlte_ == nlte::nlt_reactor)
-    {
-        server::mstrand_service_type & core = use_service<server::mstrand_service_type >(ios);
-        io_service::work worker(core.actor());
-        core.run();
-    }
-    else if (opt.nlte_ == nlte::nlt_loop)
-    {
-        for (;;)
-        {
-            s.run();
-            boost::this_thread::sleep(boost::posix_time::millisec(1));
-        }
-    }
+    server::mstrand_service_type & core = use_service<server::mstrand_service_type >(ios);
+    io_service::work worker(core.actor());
+    core.run();
 }
 
 template <class Session>
@@ -240,25 +229,26 @@ void start_client()
     if (!ok)
         Dump("connect error: " << c.get_error_code().message());
 
-    if (opt.nlte_ == nlte::nlt_reactor)
-    {
-        client::mstrand_service_type & core = use_service<client::mstrand_service_type >(ios);
-        io_service::work worker(core.actor());
-        core.run();
-    }
-    else if (opt.nlte_ == nlte::nlt_loop)
-    {
-        for (;;)
-        {
-            c.run();
-            boost::this_thread::sleep(boost::posix_time::millisec(1));
-        }
-    }
+    client::mstrand_service_type & core = use_service<client::mstrand_service_type >(ios);
+    io_service::work worker(core.actor());
+    core.run();
 }
 
-void on_connect_callback(error_code const& ec)
+template <class Container>
+void on_multiconnect_callback(error_code const& ec
+    , typename Container::iterator it
+    , Container & origin, Container & conn
+    , Bex::inter_lock & lock)
 {
-    Dump("connected!");
+    if (ec)
+    {
+        Dump("on connect error:{" << ec.value() << ", " << ec.message() << "}");
+        return ;
+    }
+
+    Bex::inter_lock::scoped_lock lc(lock);
+    conn.push_back(*it);
+    origin.erase(it);
 }
 
 template <class Session>
@@ -268,39 +258,37 @@ void start_multi_client()
     std::cout << "请输入客户端数量:" << std::endl;
     std::cin >> count;
 
-    typedef basic_client<Session> client;
-    typedef std::list<boost::shared_ptr<client> > client_list;
     opt.ssl_opts.reset(new ssl_options(ssl_options::client()));
 
-    client_list clients;
+    typedef basic_client<Session> client;
+    typedef std::list<boost::shared_ptr<client> > client_list;
+
+    client_list origin;
+    client_list conn;
+    Bex::inter_lock lock;
 
     for (int i = 0; i < count; ++i)
     {
         shared_ptr<client> c(new client(ios, opt));
-        clients.push_back(c);
-        c->set_async_connect_callback(&on_connect_callback);
+        origin.push_back(c);
+    }
+
+    for (client_list::iterator it = origin.begin(); it != origin.end(); ++it)
+    {
+        shared_ptr<client> & c = *it;
+        c->set_async_connect_callback(boost::BOOST_BIND(&on_multiconnect_callback<client_list>
+            , ::_1, it, boost::ref(origin), boost::ref(conn), boost::ref(lock)));
         c->set_handshake_error_callbcak(boost::BOOST_BIND(&on_handshake_error<client::endpoint>, ::_1, ::_2));
-        bool ok = c->async_connect(client::endpoint(ip::address::from_string(remote_ip), 28087));
+        //bool ok = c->async_connect(client::endpoint(ip::address::from_string(remote_ip), 28087));
+        bool ok = c->async_connect_timed(client::endpoint(ip::address::from_string(remote_ip), 28087)
+            , boost::posix_time::milliseconds(10000));
         if (!ok)
             Dump("connect error: " << c->get_error_code().message());
     }
 
-    if (opt.nlte_ == nlte::nlt_reactor)
-    {
-        client::mstrand_service_type & core = use_service<client::mstrand_service_type >(ios);
-        io_service::work worker(core.actor());
-        core.run();
-    }
-    else if (opt.nlte_ == nlte::nlt_loop)
-    {
-        for (;;)
-        {
-            for (client_list::iterator it = clients.begin();
-                it != clients.end(); ++it)
-                (*it)->run();
-            boost::this_thread::sleep(boost::posix_time::millisec(1));
-        }
-    }
+    client::mstrand_service_type & core = use_service<client::mstrand_service_type >(ios);
+    io_service::work worker(core.actor());
+    core.run();
 }
 
 void handle_ctrl_c(error_code, int, signal_set * ss)
@@ -317,23 +305,6 @@ void handle_ctrl_c(error_code, int, signal_set * ss)
 
 void config()
 {
-    int input = 0;
-    std::cout << "配置:"
-        << "\n\t消息通知方式(0:退出配置, 1:reactor, 2:loop)" << std::endl;
-    std::cin >> input;
-    switch (input )
-    {
-    case 0:
-        return ;
-
-    case 1:
-        opt.nlte_ = nlte::nlt_reactor;
-        break;
-
-    case 2:
-        opt.nlte_ = nlte::nlt_loop;
-        break;
-    }
 }
 
 int main()

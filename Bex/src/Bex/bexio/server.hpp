@@ -79,16 +79,6 @@ namespace Bex { namespace bexio
             return true;
         }
 
-        // 逻辑线程loop接口
-        void run()
-        {
-            // 1.run所有链接
-            session_mgr_.for_each(BEX_IO_BIND(&session_type::run, _1));
-
-            // 2.回调
-            callback_list.run();
-        }
-
         // 优雅地关闭
         void shutdown()
         {
@@ -181,8 +171,22 @@ namespace Bex { namespace bexio
             }
 
             async_accept(true);
-            protocol_traits_type::async_handshake(sp, ssl::stream_base::server
-                , BEX_IO_BIND(&this_type::on_async_handshake, this, BEX_IO_PH_ERROR, sp));
+            async_handshake(sp);
+        }
+
+        // 握手
+        void async_handshake(socket_ptr const& sp)
+        {
+            BOOST_AUTO(handler, BEX_IO_BIND(&this_type::on_async_handshake, this, BEX_IO_PH_ERROR, sp));
+            if (opts_->ssl_opts)
+            {
+                BOOST_AUTO(timed_handler, timer_handler<allocator>(handler, ios_));
+                timed_handler.expires_from_now(boost::posix_time::milliseconds(opts_->ssl_opts->handshake_overtime));
+                timed_handler.async_wait(BEX_IO_BIND(&this_type::on_async_handshake, this, generate_error(bee::handshake_overtime), sp));
+                protocol_traits_type::async_handshake(sp, ssl::stream_base::server, timed_handler);
+            }
+            else
+                protocol_traits_type::async_handshake(sp, ssl::stream_base::server, handler);
         }
 
         // 握手回调
@@ -192,12 +196,8 @@ namespace Bex { namespace bexio
             {
                 if (on_handshake_error_)
                 {
-                    if (opts_->nlte_ == nlte::nlt_reactor)
-                        use_service<mstrand_service_type>(ios_).actor().post(BEX_IO_BIND(
-                            on_handshake_error_, ec, sp->lowest_layer().remote_endpoint()));
-                    else if (opts_->nlte_ == nlte::nlt_loop)
-                        callback_list.post(BEX_IO_BIND(
-                            on_handshake_error_, ec, sp->lowest_layer().remote_endpoint()));
+                    use_service<mstrand_service_type>(ios_).actor().post(BEX_IO_BIND(
+                        on_handshake_error_, ec, sp->lowest_layer().remote_endpoint()));
                 }
                 return ;
             }

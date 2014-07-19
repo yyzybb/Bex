@@ -12,14 +12,6 @@ namespace Bex { namespace bexio
 
     //////////////////////////////////////////////////////////////////////////
     /// @{ 选项
-    // 连接成功\断开连接\收到数据 三种消息通知逻辑线程的方式
-    enum BEX_ENUM_CLASS notify_logic_thread_em
-    {
-        nlt_reactor,        ///< reactor模式, 将消息post到指定完成队列中.
-        nlt_loop,           ///< 逻辑线程轮询session //@todo: fixed this bug.
-    };
-    typedef notify_logic_thread_em nlte;
-
     // 连接成功\断开连接\收到数据 三种消息逻辑线程的响应方式
     enum BEX_ENUM_CLASS message_logic_process_em
     {
@@ -34,7 +26,7 @@ namespace Bex { namespace bexio
     {
         sbo_interrupt,      ///< 断开连接
         sbo_wait,           ///< 逻辑层等待
-        sbo_extend,         ///< 扩展发送缓冲区(暂不支持)
+        //sbo_extend,         ///< 扩展发送缓冲区(暂不支持)
     };
     typedef send_buffer_overflow_em sboe;
 
@@ -42,8 +34,8 @@ namespace Bex { namespace bexio
     enum BEX_ENUM_CLASS receive_buffer_overflow_em
     {
         rbo_interrupt,      ///< 断开连接
-        rbo_wait,           ///< 接收层等待
-        rbo_extend,         ///< 扩展接收缓冲区(暂不支持)
+        rbo_wait,           ///< 逻辑层等待
+        //rbo_extend,         ///< 扩展接收缓冲区(暂不支持)
     };
     typedef receive_buffer_overflow_em rboe;
     /// @}
@@ -53,9 +45,6 @@ namespace Bex { namespace bexio
 
     struct options
     {
-        // 连接成功\断开连接\收到数据 三种消息通知逻辑线程的方式
-        notify_logic_thread_em nlte_;
-
         // 发送缓冲区溢出处理方法
         send_buffer_overflow_em sboe_;
 
@@ -82,6 +71,9 @@ namespace Bex { namespace bexio
         std::size_t max_packet_size;
         static const std::size_t default_max_packet_size = 1024 * 8;
 
+        // 优雅地关闭连接可等待最大时长(毫秒 ms)
+        unsigned int shutdown_timeout;
+
         /// ssl配置
         boost::shared_ptr<ssl_options> ssl_opts;
 
@@ -89,14 +81,14 @@ namespace Bex { namespace bexio
         static options test()
         {
             static options const opts = {
-                nlte::nlt_reactor,
                 sboe::sbo_wait,
                 rboe::rbo_wait,
                 mlpe::mlp_derived,
                 0,
                 default_sbsize,
                 default_rbsize,
-                default_max_packet_size
+                default_max_packet_size,
+                30 * 1000
                 };
             return opts;
         }
@@ -105,50 +97,34 @@ namespace Bex { namespace bexio
         static options multi_session_server()
         {
             static options const opts = {
-                nlte::nlt_reactor,
                 sboe::sbo_interrupt,
                 rboe::rbo_interrupt,
                 mlpe::mlp_derived,
                 0,
                 default_sbsize,
                 default_rbsize,
-                default_max_packet_size
+                default_max_packet_size,
+                30 * 1000
                 };
             return opts;
         }
 
-        /// 稳定性优先的推荐配置方案
-        static options stability()
-        {
-            static options const opts = {
-                nlte::nlt_reactor,
-                sboe::sbo_extend,
-                rboe::rbo_extend,
-                mlpe::mlp_derived,
-                0,
-                default_sbsize,
-                default_rbsize,
-                default_max_packet_size
-                };
-            return opts;
-        }
-
-        /// 低连接数、高吞吐量的推荐配置方案(客户端很适合使用这个)
-        static options throughput()
-        {
-            static options const opts = {
-                nlte::nlt_loop,
-                sboe::sbo_extend,
-                rboe::rbo_extend,
-                mlpe::mlp_derived,
-                0,
-                large_sbsize,
-                large_rbsize,
-                default_max_packet_size
-                };
-            return opts;
-        }
-    };
+        ///// 稳定性优先的推荐配置方案(暂不支持)
+        //static options stability()
+        //{
+        //    static options const opts = {
+        //        sboe::sbo_extend,
+        //        rboe::rbo_extend,
+        //        mlpe::mlp_derived,
+        //        0,
+        //        default_sbsize,
+        //        default_rbsize,
+        //        default_max_packet_size,
+        //        30 * 1000
+        //        };
+        //    return opts;
+        //}
+    }; //struct options
 
 } //namespace bexio
 } //namespace Bex
