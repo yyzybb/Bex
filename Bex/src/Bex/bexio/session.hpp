@@ -18,7 +18,6 @@
 *       -> do_shutdown_lowest -> 关闭完成
 *   \主动方: 全部数据接收完毕直到eof -> do_shutdown_lowest -> 关闭完成
 *
-* @todo: 优雅地关闭连接设置超时时间, 以防出现死连接.
 *
 * @log 2014-07-10: double pingpong测试时, 数据链断档是wait机制导致的, 不是bug...
 *

@@ -269,7 +269,8 @@ namespace Bex { namespace bexio
         // 超时回调
         void on_overtime(error_code const& ec, socket_ptr sp, bee error_enum)
         {
-            // @todo: 错误码处理
+            if (ec)
+                return ;
 
             // 超时了
             error_code lec;

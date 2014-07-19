@@ -24,9 +24,6 @@
 #include "error.hpp"
 #include "sentry.hpp"
 
-// @todo: 互斥的回调仿函数包装
-// @todo: token条件分支式的回调仿函数包装
-
 #if defined(BEX_USE_FORWARDBIND)
 #include <Bex/bind.hpp>
 # define BEX_IO_BIND ::Bex::forward_bind::BEX_BIND

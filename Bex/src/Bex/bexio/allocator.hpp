@@ -19,7 +19,7 @@
 
 namespace Bex { namespace bexio
 {
-    // @todo: 内部改成内存池
+    // @todo: 内部改成内存池 or 使用tcmalloc
 
     template <typename T>
     class allocator
