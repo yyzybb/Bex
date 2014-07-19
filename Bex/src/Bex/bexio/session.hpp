@@ -113,37 +113,9 @@ namespace Bex { namespace bexio
             opts_ = opts, callbacks_ = callbacks, socket_ = socket;
             protocol_traits_type::initialize(*this, opts_, boost::get<(int)cbe::cb_receive>(*callbacks_), get_id());
 
-            if (opts_->nlte_ == nlte::nlt_reactor)
-                mstrand_service()->post(BEX_IO_BIND(&this_type::do_onconnect_cb, this, shared_this()));
-            else
-                notify_connect_.set();
+            mstrand_service()->post(BEX_IO_BIND(&this_type::do_onconnect_cb, this, shared_this()));
 
             post_receive();
-        }
-
-        // actor处理session的完成回调
-        void run()
-        {
-            if (opts_->nlte_ != nlte::nlt_loop)
-                return ;
-
-            if (notify_connect_.is_set())
-            {
-                do_onconnect_l();
-                notify_connect_.reset();
-            }
-            
-            // 查看接收到的数据
-            on_receive_l();
-
-            if (!receiving_.is_set())
-                post_receive();
-
-            if (notify_disconnect_.is_set())
-            {
-                do_ondisconnect_l();
-                notify_disconnect_.reset();
-            }
         }
 
         // 发送数据
@@ -193,8 +165,17 @@ namespace Bex { namespace bexio
             shutdown_handshaking_.set();
             shutdowning_.set();
             on_error(generate_error(bee::initiative_shutdown));
-            protocol_traits_type::async_shutdown(socket_
-                , BEX_IO_BIND(&this_type::on_async_shutdown, this, BEX_IO_PH_ERROR, shared_this()));
+
+            BOOST_AUTO(handler, BEX_IO_BIND(&this_type::on_async_shutdown, this, BEX_IO_PH_ERROR, shared_this()));
+            if (opts_->ssl_opts)
+            {
+                BOOST_AUTO(timeout_handler, timer_handler<allocator>(handler, socket_->get_io_service()));
+                timeout_handler.expires_from_now(boost::posix_time::milliseconds(opts_->ssl_opts->handshake_overtime));
+                timeout_handler.async_wait(BEX_IO_BIND(&this_type::on_async_shutdown, this, generate_error(bee::handshake_overtime), shared_this()));
+                protocol_traits_type::async_shutdown(socket_, timeout_handler);
+            }
+            else
+                protocol_traits_type::async_shutdown(socket_, handler);
         }
 
         // 强制关闭连接(慎用)
@@ -206,7 +187,8 @@ namespace Bex { namespace bexio
                 return ;
 
             on_error(generate_error(bee::initiative_terminate));
-            socket_->lowest_layer().set_option(socket_base::linger(true, 0));
+            error_code ec;
+            socket_->lowest_layer().set_option(socket_base::linger(true, 0), ec);
             do_shutdown_lowest();
         }
 
@@ -343,9 +325,8 @@ namespace Bex { namespace bexio
             }
 
             // on_receive_run回调要在post_receive前面, 才能确保wait模式下不浪费资源.
-            if (opts_->nlte_ == nlte::nlt_reactor)
-                if (notify_receive_.set())
-                    mstrand_service()->post(BEX_IO_BIND(&this_type::on_receive_cb, this, shared_this()));
+            if (notify_receive_.set())
+                mstrand_service()->post(BEX_IO_BIND(&this_type::on_receive_cb, this, shared_this()));
 
             post_receive(true);
         }
@@ -356,18 +337,42 @@ namespace Bex { namespace bexio
             shutdown_handshaking_.reset();
             if (ec)
                 do_shutdown_lowest();
-            else if (!sending_.is_set() && !socket_->getable_write())
-                close_send();
+            else
+            {
+                shutdown_dt_ = make_shared_ptr<deadline_timer, allocator>(socket_->get_io_service());
+                shutdown_dt_->expires_from_now(boost::posix_time::milliseconds(opts_->shutdown_timeout));
+                shutdown_dt_->async_wait(BEX_IO_BIND(&this_type::on_shutdown_overtime, this, BEX_IO_PH_ERROR, shared_from_this()));
+                if (!sending_.is_set() && !socket_->getable_write())
+                    close_send();
+            }
         }
 
         // 关闭连接
         void do_shutdown_lowest()
         {
+            if (shutdown_dt_)
+            {
+                error_code ec;
+                shutdown_dt_->cancel(ec);
+                shutdown_dt_.reset();
+            }
+
             error_code ec;
             socket_->lowest_layer().cancel(ec);
             socket_->lowest_layer().shutdown(socket_base::shutdown_both, ec);
             socket_->lowest_layer().close(ec);
             notify_ondisconnect();
+        }
+
+        // shutdown超时后直接关闭连接
+        void on_shutdown_overtime(error_code const& ec, shared_ptr<this_type>)
+        {
+            if (ec)
+                return ;
+
+            shutdown_dt_.reset();
+            ec_ = generate_error(bee::shutdown_overtime);   // 强制修改断开错误原因
+            terminate();
         }
 
     private:
@@ -401,6 +406,8 @@ namespace Bex { namespace bexio
                 {
                     if (sendclosed_.is_set())   //发送通道已关闭, 可以关闭socket了.
                         do_shutdown_lowest();
+                    else if (!sending_.is_set())    //发送已停止, 可以关闭发送通道了.
+                        close_send();
                     else if (!socket_->getable_write())  //发送通道未关闭但发送缓冲区已空, 可以关闭发送通道了.
                         close_send();
                 }
@@ -470,10 +477,7 @@ namespace Bex { namespace bexio
             if (!disconect_notified_.set())
                 return ;
 
-            if (opts_->nlte_ == nlte::nlt_loop)
-                notify_disconnect_.set();
-            else if (opts_->nlte_ == nlte::nlt_reactor)
-                mstrand_service()->post(BEX_IO_BIND(&this_type::do_ondisconnect_cb, this, shared_this()));
+            mstrand_service()->post(BEX_IO_BIND(&this_type::do_ondisconnect_cb, this, shared_this()));
         }
 
         /// 缓冲区溢出处理
@@ -489,11 +493,11 @@ namespace Bex { namespace bexio
             {
                 return false;
             }
-            else if (opts_->sboe_ == sboe::sbo_extend)
-            {
-                // @todo: extend send buffer
-                return true;
-            }
+            //else if (opts_->sboe_ == sboe::sbo_extend)
+            //{
+            //    // @todo: extend send buffer
+            //    return true;
+            //}
             else  // default
                 return false;
         }
@@ -507,15 +511,14 @@ namespace Bex { namespace bexio
             }
             else if (opts_->rboe_ == rboe::rbo_wait)
             {
-                if (opts_->nlte_ == nlte::nlt_reactor)
-                    mstrand_service()->post(BEX_IO_BIND(&this_type::post_receive_cb, this, shared_this()));
+                mstrand_service()->post(BEX_IO_BIND(&this_type::post_receive_cb, this, shared_this()));
                 return false;
             }
-            else if (opts_->rboe_ == rboe::rbo_extend)
-            {
-                // @todo: extend receive buffer
-                return true;
-            }
+            //else if (opts_->rboe_ == rboe::rbo_extend)
+            //{
+            //    // @todo: extend receive buffer
+            //    return true;
+            //}
             else // default
                 return false;
         }
@@ -562,6 +565,9 @@ namespace Bex { namespace bexio
         /// 关闭握手中
         sentry<bool> shutdown_handshaking_;
 
+        /// 优雅地关闭超时计时器
+        shared_ptr<deadline_timer> shutdown_dt_;
+
         /// 是否强制关闭中
         sentry<inter_lock> terminating_;
 
@@ -580,10 +586,6 @@ namespace Bex { namespace bexio
 
         /// reactor方式, 通知逻辑层receive消息
         sentry<inter_lock> notify_receive_;
-
-        /// loop方式, 通知connect/disconnect消息
-        sentry<bool> notify_connect_;
-        sentry<bool> notify_disconnect_;
 
         /// session id
         long id_;

@@ -4,6 +4,7 @@
 //////////////////////////////////////////////////////////////////////////
 /// 有连接协议的客户端
 #include "bexio_fwd.hpp"
+#include "handlers.hpp"
 
 namespace Bex { namespace bexio
 {
@@ -36,9 +37,7 @@ namespace Bex { namespace bexio
         {
             opts_ = make_shared_ptr<options, allocator>(opts);
             callback_ = make_shared_ptr<callback_type, allocator>();
-
-            if (opts_->nlte_ == nlte::nlt_reactor)
-                mstrand_service_ = &use_service<mstrand_service_type>(ios);
+            mstrand_service_ = &use_service<mstrand_service_type>(ios);
         }
 
         ~basic_client()
@@ -101,7 +100,7 @@ namespace Bex { namespace bexio
         }
 
         // 带超时的异步连接
-        bool async_connect_timed(endpoint const& addr, boost::posix_time::time_duration timed)
+        bool async_connect_timed(endpoint const& addr, boost::posix_time::time_duration time)
         {
             if (is_running() || !async_connecting_.set())
                 return false;
@@ -110,33 +109,15 @@ namespace Bex { namespace bexio
             if (ec_)
                 return false;
 
-            /// 超时标记
-            shared_ptr<sentry<inter_lock> > overtime_token = make_shared_ptr<sentry<inter_lock>, allocator>();
-
             /// 连接超时计时器, 异步等待
-            shared_ptr<deadline_timer> timer_ = make_shared_ptr<deadline_timer, allocator>(ios_);
-            timer_->expires_from_now(timed);
-            timer_->async_wait(BEX_IO_BIND(&this_type::on_overtime, this, BEX_IO_PH_ERROR, sp, overtime_token, timer_));
-
-            sp->lowest_layer().async_connect(addr, 
-                BEX_IO_BIND(&this_type::on_async_connect, this, BEX_IO_PH_ERROR, sp, addr, overtime_token, timed));
+            BOOST_AUTO(timed_handler, timer_handler<allocator>(BEX_IO_BIND(&this_type::on_async_connect_timed, this, BEX_IO_PH_ERROR, sp, addr, time), ios_));
+            timed_handler.expires_from_now(time);
+            timed_handler.async_wait(BEX_IO_BIND(&this_type::on_overtime, this, BEX_IO_PH_ERROR, sp, bee::connect_overtime));
+            sp->lowest_layer().async_connect(addr, timed_handler);
 
             // 启动工作线程
             use_service<mstrand_service_type>(ios_).startup(opts_->workthread_count);
             return true;
-        }
-
-        // 逻辑线程loop接口
-        void run()
-        {
-            if (notify_async_connect_.reset() && async_connect_callback_)
-                async_connect_callback_(ec_);
-
-            if (session_)
-                session_->run();
-
-            if (session_ && session_->is_disconnected())
-                session_.reset();
         }
 
         // 连接是否OK
@@ -211,48 +192,15 @@ namespace Bex { namespace bexio
             else
             {
                 // 连接成功, 握手
-                async_handshaking_.set();
-                protocol_traits_type::async_handshake(sp, ssl::stream_base::client
-                    , BEX_IO_BIND(&this_type::on_async_handshake, this, BEX_IO_PH_ERROR, sp, addr));
+                async_handshake(sp, addr);
             }
-        }
-
-        // 握手回调
-        void on_async_handshake(error_code const& ec, socket_ptr sp, endpoint addr)
-        {
-            async_handshaking_.reset();
-            if (ec)
-            {
-                ec_ = ec;
-                async_connecting_.reset();
-                if (on_handshake_error_)
-                    on_handshake_error_(ec, sp->lowest_layer().remote_endpoint());
-            }
-            else
-            {
-                ec_.clear();
-                running_.set();
-                async_connecting_.reset();
-                session_ = make_shared_ptr<session_type, allocator>();
-                session_->initialize(sp, opts_, callback_);
-            }
-
-            notify_onconnect();
         }
 
         // 异步连接回调(带超时)
         void on_async_connect_timed(error_code const& ec, socket_ptr sp
-            , endpoint addr, shared_ptr<sentry<inter_lock> > overtime_token
-            , boost::posix_time::time_duration timed)
+            , endpoint addr, boost::posix_time::time_duration timed)
         {
-            if (overtime_token && overtime_token->is_set())
-            {
-                // 超时了
-                ec_ = generate_error(bee::connect_overtime);
-                async_connecting_.reset();
-                notify_onconnect();
-            }
-            else if (ec)
+            if (ec)
             {
                 // 错误
                 ec_ = ec;
@@ -272,30 +220,38 @@ namespace Bex { namespace bexio
             }
             else
             {
-                // 连接成功
-                async_handshaking_.set();
-                protocol_traits_type::async_handshake(sp, ssl::stream_base::client
-                    , BEX_IO_BIND(&this_type::on_async_handshake_timed, this
-                        , BEX_IO_PH_ERROR, sp, addr, overtime_token, timed));
+                // 连接成功, 握手
+                async_handshake(sp, addr);
             }
         }
 
-        // 握手回调(带超时)
-        void on_async_handshake_timed(error_code const& ec, socket_ptr sp
-            , endpoint addr, shared_ptr<sentry<inter_lock> > overtime_token
-            , boost::posix_time::time_duration timed)
+        // 握手
+        void async_handshake(socket_ptr const& sp, endpoint const& addr)
+        {
+            async_handshaking_.set();
+            BOOST_AUTO(handler, BEX_IO_BIND(&this_type::on_async_handshake, this, BEX_IO_PH_ERROR, sp, addr));
+            if (opts_->ssl_opts)
+            {
+                BOOST_AUTO(timed_handler, timer_handler<allocator>(handler, ios_));
+                timed_handler.expires_from_now(boost::posix_time::milliseconds(opts_->ssl_opts->handshake_overtime));
+                timed_handler.async_wait(BEX_IO_BIND(&this_type::on_async_handshake, this, generate_error(bee::handshake_overtime), sp, addr));
+                protocol_traits_type::async_handshake(sp, ssl::stream_base::client, timed_handler);
+            }
+            else
+                protocol_traits_type::async_handshake(sp, ssl::stream_base::client, handler);
+        }
+
+        // 握手回调
+        void on_async_handshake(error_code const& ec, socket_ptr sp, endpoint addr)
         {
             async_handshaking_.reset();
-            if (overtime_token && !overtime_token->set())
-            {
-                // 超时了
-                ec_ = generate_error(bee::connect_overtime);
-                async_connecting_.reset();
-            }
-            else if (ec)
+            if (ec)
             {
                 ec_ = ec;
                 async_connecting_.reset();
+                if (on_handshake_error_)
+                    use_service<mstrand_service_type>(ios_).actor().post(BEX_IO_BIND(
+                        on_handshake_error_, ec, sp->lowest_layer().remote_endpoint()));
             }
             else
             {
@@ -309,30 +265,27 @@ namespace Bex { namespace bexio
             notify_onconnect();
         }
 
+
         // 超时回调
-        void on_overtime(error_code const& ec, socket_ptr sp, shared_ptr<sentry<inter_lock> > overtime_token, shared_ptr<deadline_timer>)
+        void on_overtime(error_code const& ec, socket_ptr sp, bee error_enum)
         {
             // @todo: 错误码处理
-            if (overtime_token->set())
-            {
-                // 连接超时了
-                error_code lec;
-                sp->next_layer().cancel(lec);
-                sp->lowest_layer().shutdown(socket_base::shutdown_both, lec);
-                sp->next_layer().close(lec);
-            }
+
+            // 超时了
+            error_code lec;
+            sp->lowest_layer().cancel(lec);
+            sp->lowest_layer().shutdown(socket_base::shutdown_both, lec);
+            sp->lowest_layer().close(lec);
+            async_connecting_.reset();
+            ec_ = generate_error(error_enum);
+            notify_onconnect();
         }
 
         // 通知连接结果
         void notify_onconnect()
         {
             if (async_connect_callback_)
-            {
-                if (opts_->nlte_ == nlte::nlt_reactor)
-                    mstrand_service_->post(BEX_IO_BIND(async_connect_callback_, ec_));
-                else if (opts_->nlte_ == nlte::nlt_loop)
-                    notify_async_connect_.set();
-            }
+                mstrand_service_->post(BEX_IO_BIND(async_connect_callback_, ec_));
         }
 
     private:

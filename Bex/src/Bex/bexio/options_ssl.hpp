@@ -63,6 +63,12 @@ namespace Bex { namespace bexio
         //      @end code.
         std::string cipher_list;
 
+        // 握手超时时长(毫秒 ms)
+        // * 默认值: "60 * 1000"
+        unsigned int handshake_overtime;
+
+
+        // 客户端默认配置
         static ssl_options client()
         {
             static ssl_options opts = {
@@ -72,11 +78,13 @@ namespace Bex { namespace bexio
                 "",
                 ssl::context_base::pem,
                 "dh512.pem",
-                "RC4-MD5"
+                "RC4-MD5",
+                10 * 1000
             };
             return opts;
         }
 
+        // 服务端默认配置
         static ssl_options server()
         {
             static ssl_options opts = {
@@ -86,7 +94,8 @@ namespace Bex { namespace bexio
                 "bexio.pem",
                 ssl::context_base::pem,
                 "dh512.pem",
-                "RC4-MD5"
+                "RC4-MD5",
+                10 * 1000
             };
             return opts;
         }
