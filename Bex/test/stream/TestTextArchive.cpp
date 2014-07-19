@@ -198,7 +198,8 @@ BOOST_AUTO_TEST_CASE(t_stream_text_archive_case)
 
         TestStreamStruct x, check;
         x.i = 0, x.db = 12.7, x.vec.push_back(1), x.vec.push_back(3), x.vec.push_back(2);
-        x.vec_str.swap( std::vector<std::string>(3, std::string("asdlkjfweo")) );
+        std::vector<std::string> tmp_vec(3, std::string("asdlkjfweo"));
+        x.vec_str.swap(tmp_vec);
         FOR(10)
             x.arr[i] = i;
         FOR(3)
@@ -249,7 +250,8 @@ BOOST_AUTO_TEST_CASE(t_stream_text_archive_case)
     {
         TestStreamStruct x, check;
         x.i = 0, x.db = 12.7, x.vec.push_back(1), x.vec.push_back(3), x.vec.push_back(2);
-        x.vec_str.swap( std::vector<std::string>(3, std::string("asdlkjfweo")) );
+        std::vector<std::string> tmp_vec(3, std::string("asdlkjfweo"));
+        x.vec_str.swap(tmp_vec);
         FOR(10)
             x.arr[i] = i;
         FOR(3)

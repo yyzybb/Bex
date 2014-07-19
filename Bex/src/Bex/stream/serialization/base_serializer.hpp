@@ -1,6 +1,7 @@
 #ifndef __BEX_STREAM_SERIALIZATION_BASE_SERIALIZER__
 #define __BEX_STREAM_SERIALIZATION_BASE_SERIALIZER__
 
+#include <Bex/config.hpp>
 #include <vector>
 #include <list>
 #include <string>
@@ -16,6 +17,12 @@
 
 //////////////////////////////////////////////////////////////////////////
 /// 序列化接口基类
+
+#if defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+# define BEX_SERIALIZATION_INTERFACE_REFERENCE(type) type &
+#else
+# define BEX_SERIALIZATION_INTERFACE_REFERENCE(type) type &&
+#endif //defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 
 namespace Bex { namespace serialization
 {
@@ -89,12 +96,13 @@ namespace Bex { namespace serialization
         //////////////////////////////////////////////////////////////////////////
         /// load
         template <typename T>
-        inline bool load(T & t)
+        inline bool load(BEX_SERIALIZATION_INTERFACE_REFERENCE(T) t)
         {
             rollback_sentry sentry(get());
-            return sentry.wrap(adapter<Archive, T>::load(t, get()));
+            return sentry.wrap(adapter<Archive, typename boost::remove_reference<T>::type 
+                >::load(t, get()));
         }
-        
+
     protected:
         class rollback_sentry
         {

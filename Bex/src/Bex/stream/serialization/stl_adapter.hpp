@@ -43,10 +43,11 @@ struct adapter<Ar, std::vector<T, Alloc> >
     : public stl_adapter_base<Ar, std::vector<T, Alloc> >
 {
     typedef std::vector<T, Alloc> Vector;
+    typedef stl_adapter_base<Ar, std::vector<T, Alloc> > base_type;
 
     inline static bool save(Vector & vecT, Ar & ar)
     {
-        if (!save_size(vecT, ar)) return false;
+        if (!base_type::save_size(vecT, ar)) return false;
         if (vecT.empty()) return true;
             
         if (is_optimize<T, Ar>::value)
@@ -65,7 +66,7 @@ struct adapter<Ar, std::vector<T, Alloc> >
     {
         vecT.clear();
         std::size_t size = 0;
-        if (!load_size(size, ar)) return false;
+        if (!base_type::load_size(size, ar)) return false;
 
         T t;
         for (std::size_t ui = 0; ui < size; ++ui)
@@ -86,10 +87,11 @@ struct adapter<Ar, std::vector<bool, Alloc> >
     : public stl_adapter_base<Ar, std::vector<bool, Alloc> >
 {
     typedef std::vector<bool, Alloc> Vector;
+    typedef stl_adapter_base<Ar, std::vector<bool, Alloc> > base_type;
 
     inline static bool save(Vector & vecT, Ar & ar)
     {
-        if (!save_size(vecT, ar)) return false;
+        if (!base_type::save_size(vecT, ar)) return false;
 
         if (!vecT.empty())
         {
@@ -105,7 +107,7 @@ struct adapter<Ar, std::vector<bool, Alloc> >
     inline static bool load(Vector & vecT, Ar & ar)
     {
         std::size_t bits;
-        if (!load_size(bits, ar)) return false;
+        if (!base_type::load_size(bits, ar)) return false;
 
         vecT.clear();
         if (bits)
@@ -143,10 +145,11 @@ struct adapter<Ar, std::list<T, Alloc> >
     : public stl_adapter_base<Ar, std::list<T, Alloc> >
 {
     typedef std::list<T, Alloc> List;
+    typedef stl_adapter_base<Ar, std::list<T, Alloc> > base_type;
 
     inline static bool save(List & listT, Ar & ar)
     {
-        if (!save_size(listT, ar)) return false;
+        if (!base_type::save_size(listT, ar)) return false;
         if (listT.empty()) return true;
 
         BOOST_AUTO(it, listT.begin());
@@ -161,7 +164,7 @@ struct adapter<Ar, std::list<T, Alloc> >
     {
         listT.clear();
         std::size_t size = 0;
-        if (!load_size(size, ar)) return false;
+        if (!base_type::load_size(size, ar)) return false;
 
         T t;
         for (std::size_t ui = 0; ui < size; ++ui)
@@ -182,12 +185,13 @@ struct adapter<Ar, std::basic_string<T, Traits, Alloc> >
     : public stl_adapter_base<Ar, std::basic_string<T, Traits, Alloc> >
 {
     typedef std::basic_string<T, Traits, Alloc> String;
+    typedef stl_adapter_base<Ar, std::basic_string<T, Traits, Alloc> > base_type;
 
     inline static bool save(String & stringT, Ar & ar)
     {
         BOOST_STATIC_ASSERT((boost::is_same<T, char>::value || boost::is_same<T, wchar_t>::value));
 
-        if (!save_size(stringT, ar)) return false;
+        if (!base_type::save_size(stringT, ar)) return false;
         if (stringT.empty()) return true;
         return ar.save((char *)&stringT[0], stringT.size() * sizeof(T));
     }
@@ -198,7 +202,7 @@ struct adapter<Ar, std::basic_string<T, Traits, Alloc> >
 
         stringT.clear();
         std::size_t size = 0;
-        if (!load_size(size, ar)) return false;
+        if (!base_type::load_size(size, ar)) return false;
 
         T buf[128];
         while (size)
@@ -219,10 +223,11 @@ struct adapter<Ar, std::map<K, T, Pr, Alloc> >
     : public stl_adapter_base<Ar, std::map<K, T, Pr, Alloc> >
 {
     typedef std::map<K, T, Pr, Alloc> Map;
+    typedef stl_adapter_base<Ar, std::map<K, T, Pr, Alloc> > base_type;
     
     inline static bool save(Map & mapT, Ar & ar)
     {
-        if (!save_size(mapT, ar)) return false;
+        if (!base_type::save_size(mapT, ar)) return false;
         if (mapT.empty()) return true;
 
         BOOST_AUTO(it, mapT.begin());
@@ -237,7 +242,7 @@ struct adapter<Ar, std::map<K, T, Pr, Alloc> >
     {
         mapT.clear();
         std::size_t size = 0;
-        if (!load_size(size, ar)) return false;
+        if (!base_type::load_size(size, ar)) return false;
 
         K k;
         T t;
@@ -260,6 +265,7 @@ struct adapter<Ar, std::pair<T1, T2> >
     : public stl_adapter_base<Ar, std::pair<T1, T2> >
 {
     typedef std::pair<T1, T2> Pair;
+    typedef stl_adapter_base<Ar, std::pair<T1, T2> > base_type;
 
     inline static bool save(Pair & pairT, Ar & ar)
     {

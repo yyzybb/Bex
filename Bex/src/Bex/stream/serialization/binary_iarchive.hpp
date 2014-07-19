@@ -47,13 +47,13 @@ namespace Bex { namespace serialization
         }
 
         template <typename T>
-        inline binary_iarchive & operator&(T & t)
+        inline binary_iarchive & operator&(BEX_SERIALIZATION_INTERFACE_REFERENCE(T) t)
         {
             return (*this >> t);
         }
 
         template <typename T>
-        inline binary_iarchive & operator>>(T & t)
+        inline binary_iarchive & operator>>(BEX_SERIALIZATION_INTERFACE_REFERENCE(T) t)
         {
             rollback_sentry sentry(this);
             if (!sentry.wrap(load(t)))
@@ -61,12 +61,14 @@ namespace Bex { namespace serialization
 
             return (*this);
         }
+
     };
 
     //////////////////////////////////////////////////////////////////////////
     /// binary_load
     template <typename T>
-    bool binary_load(T & t, std::istream& is, archive_mark state = default_mark)
+    bool binary_load(BEX_SERIALIZATION_INTERFACE_REFERENCE(T) t
+        , std::istream& is, archive_mark state = default_mark)
     {
         try
         {
@@ -83,7 +85,8 @@ namespace Bex { namespace serialization
     }
 
     template <typename T>
-    bool binary_load(T & t, std::streambuf& isb, archive_mark state = default_mark)
+    bool binary_load(BEX_SERIALIZATION_INTERFACE_REFERENCE(T) t
+        , std::streambuf& isb, archive_mark state = default_mark)
     {
         try
         {
@@ -98,7 +101,8 @@ namespace Bex { namespace serialization
     }
 
     template <typename T>
-    std::size_t binary_load(T & t, char const * buffer, std::size_t size, archive_mark state = default_mark)
+    std::size_t binary_load(BEX_SERIALIZATION_INTERFACE_REFERENCE(T) t
+        , char const * buffer, std::size_t size, archive_mark state = default_mark)
     {
         try
         {

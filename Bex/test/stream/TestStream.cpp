@@ -161,7 +161,7 @@ template <typename T>
 void check_function(T &)
 {
     //DumpX(typeid(T).name());
-    BOOST_CHECK(typeid(remove_all<T>::type) == typeid(int));
+    BOOST_CHECK(typeid(typename remove_all<T>::type) == typeid(int));
 }
 
 template <typename T>
@@ -172,7 +172,7 @@ struct check_class
 };
 
 template <typename T>
-inline void assert_convert(T &
+inline void assert_convert(T const&
     , bool is_convert, bool is_load, bool is_save, bool is_unkown)
 {
     typedef convert_traits<T> traits;
@@ -201,7 +201,7 @@ BOOST_AUTO_TEST_CASE(t_stream_convert_case)
         obj.i = 2;
         obj.s = 3;
         obj.str = "Œ“√«";
-        strcpy_s(obj.arr_char, sizeof(obj.arr_char), "”◊÷…");
+        strcpy(obj.arr_char, "”◊÷…");
         BOOST_CHECK(binary_save(obj, buf, sizeof(buf)) > 0);
 
         BOOST_CHECK(*(int*)buf == 3);
@@ -220,31 +220,31 @@ BOOST_AUTO_TEST_CASE(t_stream_convert_case)
 /// ≤‚ ‘remove_all
 BOOST_AUTO_TEST_CASE(t_stream_utility_case)
 {
-    int i; check_function(i); check_class<int>;
-    int const ci = 0; check_function(ci); check_class<int const>;
-    int volatile vi = 0; check_function(vi); check_class<int volatile>;
-    int const volatile cvi = 0; check_function(cvi); check_class<int const volatile>;
+    int i; check_function(i); check_class<int> cc_int;
+    int const ci = 0; check_function(ci); check_class<int const> cc_int_c;
+    int volatile vi = 0; check_function(vi); check_class<int volatile> cc_int_v;
+    int const volatile cvi = 0; check_function(cvi); check_class<int const volatile> cc_int_cv;
 
-    int & ref_i = i; check_function(ref_i); check_class<int&>;
-    int const& ref_ci = ci; check_function(ref_ci); check_class<int const&>;
-    int volatile& ref_vi = i; check_function(ref_vi); check_class<int volatile&>;
-    int const volatile& ref_cvi = i; check_function(ref_cvi); check_class<int const volatile&>;
+    int & ref_i = i; check_function(ref_i); check_class<int&> cc_int_r;
+    int const& ref_ci = ci; check_function(ref_ci); check_class<int const&> cc_int_cr;
+    int volatile& ref_vi = i; check_function(ref_vi); check_class<int volatile&> cc_int_vr;
+    int const volatile& ref_cvi = i; check_function(ref_cvi); check_class<int const volatile&> cc_int_cvr;
 
-    int * pi; check_function(pi); check_class<int*>;
-    int * const pc_i = 0; check_function(pc_i); check_class<int * const>;
-    int const * p_ci = 0; check_function(p_ci); check_class<int const *>;
-    int const * const pc_ci = 0; check_function(pc_ci); check_class<int const* const>;
-    int * volatile pv_i = 0; check_function(pv_i); check_class<int * volatile>;
-    int volatile * p_vi = 0; check_function(p_vi); check_class<int volatile *>;
-    int volatile * volatile pv_vi = 0; check_function(pv_vi); check_class<int volatile * volatile>;
-    int * volatile const pcv_i = 0; check_function(pcv_i); check_class<int * volatile const>;
-    int volatile const * p_cvi = 0; check_function(p_cvi); check_class<int volatile const*>;
-    int volatile const * volatile const pcv_cvi = 0; check_function(pcv_cvi); check_class<int volatile const * volatile const>;
+    int * pi; check_function(pi); check_class<int*> cc_int_p;
+    int * const pc_i = 0; check_function(pc_i); check_class<int * const> cc_int_pc;
+    int const * p_ci = 0; check_function(p_ci); check_class<int const *> cc_int_cp;
+    int const * const pc_ci = 0; check_function(pc_ci); check_class<int const* const> cc_int_cpc;
+    int * volatile pv_i = 0; check_function(pv_i); check_class<int * volatile> cc_int_pv;
+    int volatile * p_vi = 0; check_function(p_vi); check_class<int volatile *> cc_int_vp;
+    int volatile * volatile pv_vi = 0; check_function(pv_vi); check_class<int volatile * volatile> cc_int_vpv;
+    int * volatile const pcv_i = 0; check_function(pcv_i); check_class<int * volatile const> cc_int_pvc;
+    int volatile const * p_cvi = 0; check_function(p_cvi); check_class<int volatile const*> cc_int_vcp;
+    int volatile const * volatile const pcv_cvi = 0; check_function(pcv_cvi); check_class<int volatile const * volatile const> cc_int_cvpcv;
 
-    int arr[5]; check_function(arr); check_class<int[5]>;
-    int const carr[5] = {}; check_function(carr); check_class<int const[5]>;
+    int arr[5]; check_function(arr); check_class<int[5]> cc_int_a5;
+    int const carr[5] = {}; check_function(carr); check_class<int const[5]> cc_int_ca5;
 
-    int *& ref_pi = pi; check_function(ref_pi); check_class<int *&>;
+    int *& ref_pi = pi; check_function(ref_pi); check_class<int *&> cc_int_pr;
 }
 
 /// ≤‚ ‘static_streambuf
@@ -639,7 +639,8 @@ BOOST_AUTO_TEST_CASE(t_stream_case)
 
         TestStreamStruct x, check;
         x.i = 0, x.db = 12.7, x.vec.push_back(1), x.vec.push_back(3), x.vec.push_back(2);
-        x.vec_str.swap( std::vector<std::string>(3, std::string("asdlkjfweo")) );
+        std::vector<std::string> tmp_vec(3, std::string("asdlkjfweo"));
+        x.vec_str.swap(tmp_vec);
         FOR(10)
             x.arr[i] = i;
         FOR(3)
@@ -690,7 +691,8 @@ BOOST_AUTO_TEST_CASE(t_stream_case)
     {
         TestStreamStruct x, check;
         x.i = 0, x.db = 12.7, x.vec.push_back(1), x.vec.push_back(3), x.vec.push_back(2);
-        x.vec_str.swap( std::vector<std::string>(3, std::string("asdlkjfweo")) );
+        std::vector<std::string> tmp_vec(3, std::string("asdlkjfweo"));
+        x.vec_str.swap(tmp_vec);
         FOR(10)
             x.arr[i] = i;
         FOR(3)

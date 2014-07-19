@@ -53,7 +53,7 @@ namespace Bex { namespace serialization
     inline void serialize(Archive & ar, T & t, const unsigned int version)
     {
         detail::mem_serialize(ar, t, version
-            , boost::mpl::if_c<has_serialize<T>::value
+            , typename boost::mpl::if_c<has_serialize<T>::value
                 , detail::mem_serialize_tag, detail::no_mem_serialize_tag>::type());
     }
 #else
@@ -69,8 +69,8 @@ namespace Bex { namespace serialization
     inline private_type_wrapper::type serialize(Archive & ar, T & t, const unsigned int version)
     {
         detail::mem_serialize(ar, t, version
-            , boost::mpl::if_c<has_serialize<T>::value
-            , detail::mem_serialize_tag, detail::no_mem_serialize_tag>::type());
+            , typename boost::mpl::if_c<has_serialize<T>::value
+                , detail::mem_serialize_tag, detail::no_mem_serialize_tag>::type());
 
         return private_type_wrapper::type();
     }
@@ -94,7 +94,7 @@ namespace Bex { namespace serialization
     inline void serialize_adl(Archive & ar, T & t, const unsigned int version)
     {
         version_serialize(ar, t, version
-            , boost::mpl::if_c<has_version<T>::value
+            , typename boost::mpl::if_c<has_version<T>::value
                 , detail::has_version_tag, detail::no_version_tag>::type());
     }
 } //namespace serialization

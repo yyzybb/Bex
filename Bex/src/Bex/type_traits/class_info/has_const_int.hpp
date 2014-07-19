@@ -58,9 +58,9 @@ namespace Bex
         template <typename U>                                                           \
         static no_type test(...);                                                       \
                                                                                         \
-        template <typename U, int C = T::constexpr_integer_name>                        \
+        template <typename U, int C = U::constexpr_integer_name>                        \
         static typename std::enable_if<                                                 \
-            !std::is_enum<decltype(T::constexpr_integer_name)>::value, yes_type>::type  \
+            !std::is_enum<decltype(U::constexpr_integer_name)>::value, yes_type>::type  \
             test(int*);                                                                 \
                                                                                         \
         static const bool value = (sizeof(test<T>(nullptr)) == sizeof(yes_type));       \

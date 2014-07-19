@@ -1,8 +1,7 @@
 #include "TestPCH.h"
 #include <Bex/type_traits/class_info.hpp>
+#include <Bex/config.hpp>
 using namespace Bex;
-
-#include <boost/config/compiler/visualc.hpp>
 
 #define TTT template <typename T>
 
@@ -44,8 +43,10 @@ struct TemplateTwoPostfix
     TTT TemplateTwoPostfix& operator BEX_OPERATOR_COMMA(T);
     TTT TemplateTwoPostfix& operator BEX_OPERATOR_ASSIGN(T);
     TTT int& operator BEX_OPERATOR_SUBSCRIPT(int);
+#if defined(_MSC_VER)
     TTT void* operator BEX_OPERATOR_NEW(size_t);
     TTT void operator BEX_OPERATOR_DELETE(void*);
+#endif //defined(_MSC_VER)
 };
 
 /// 重载操作符(普通, 二元, 后置)
@@ -85,8 +86,10 @@ struct NormalTwoPostfix
     NormalTwoPostfix& operator BEX_OPERATOR_COMMA(this_type);
     NormalTwoPostfix& operator BEX_OPERATOR_ASSIGN(this_type);
     this_type& operator BEX_OPERATOR_SUBSCRIPT(int);
+#if defined(_MSC_VER)
     void* operator BEX_OPERATOR_NEW(size_t);
     void operator BEX_OPERATOR_DELETE(void*);
+#endif //defined(_MSC_VER)
 };
 
 /// 重载操作符(模板式, 一元, 前置)
@@ -306,8 +309,10 @@ BOOST_AUTO_TEST_CASE(t_has_operator)
     CHECK_HAS_OPERATOR    (has_dereference,             0, 0, 0, 1, 0, 0);
     CHECK_HAS_OPERATOR    (has_member_select,           0, 0, 0, 1, 0, 0);
     CHECK_HAS_OPERATOR_RIGHT(has_subscript, int,        0, 1, 0, 0, 0, 0);
+#if defined(_MSC_VER)
     CHECK_HAS_OPERATOR_RIGHT(has_new, std::size_t,      0, 1, 0, 0, 0, 0);
     CHECK_HAS_OPERATOR_RIGHT(has_delete, void*,         0, 1, 0, 0, 0, 0);
+#endif //defined(_MSC_VER)
 
     /// 赋值操作符
     CHECK_HAS_OPERATOR_TWO(can_assign,                  1, 1, 1, 1, 1, 1);

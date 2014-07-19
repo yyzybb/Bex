@@ -98,12 +98,13 @@ namespace Bex { namespace serialization
     struct has_serialize_helper
     {
         struct Ar {};
+        static Ar sar;
 
         template <class U>
         static no_type test(...);
 
         template <class U>
-        static yes_type test(U*, decltype(make<U>().template serialize<Ar>(make<Ar>(), unsigned()))* = nullptr);
+        static yes_type test(U*, decltype(make<U>().template serialize<Ar>(sar, unsigned()))* = nullptr);
 
         static const bool value = sizeof(test<C>(nullptr)) == sizeof(yes_type);
     };

@@ -22,7 +22,7 @@ BOOST_AUTO_TEST_CASE(t_signature_traits)
     }
 
     {
-        typedef void(_cdecl*FT)(void);
+        typedef void(*FT)(void);
         typedef signature_traits<FT> st;
         DumpX(typeid(st::result_type).name());
         DumpX(typeid(st::function).name());
