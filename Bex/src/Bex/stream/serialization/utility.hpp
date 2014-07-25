@@ -7,6 +7,34 @@
 #include <Bex/config.hpp>
 #include <Bex/type_traits/type_traits.hpp>
 
+// stl containers adapter
+#include <vector> // vector<T> and vector<bool>
+#include <set>
+#include <list>
+#include <string>
+#include <map>
+#include <deque>
+
+#if defined(_MSC_VER)
+# include <hash_map>
+#endif //defined(_MSC_VER)
+
+#if defined(BOOST_HAS_TR1_UNORDERED_MAP)
+# include <unordered_map>
+#endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
+
+#if defined(BOOST_HAS_TR1_UNORDERED_SET)
+# include <unordered_set>
+#endif //defined(BOOST_HAS_TR1_UNORDERED_SET)
+
+#if defined(BEX_SUPPORT_CXX11)
+# include <array>
+#endif //defined(BEX_SUPPORT_CXX11)
+
+// boost containers adapter
+#include <boost/bimap.hpp>
+#include <boost/array.hpp>
+
 namespace Bex { namespace serialization
 {
     //////////////////////////////////////////////////////////////////////////

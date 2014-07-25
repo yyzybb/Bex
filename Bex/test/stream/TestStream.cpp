@@ -7,6 +7,34 @@ struct TestStreamStruct
     typedef std::vector<V1> V2;
     typedef std::vector<V2> V3;
 
+    typedef std::list<int>                  List;
+    typedef std::deque<std::string>         Deque;
+    typedef std::set<std::string>           Set;
+    typedef std::multiset<int>              MultiSet;
+    typedef std::map<std::string, V2>       Map;
+    typedef std::multimap<std::string, V2>  MultiMap;
+
+#if defined(_MSC_VER)
+    typedef stdext::hash_map<int, std::string> HashMap;
+#endif //defined(_MSC_VER)
+
+#if defined(BOOST_HAS_TR1_UNORDERED_MAP)
+    typedef std::unordered_map<int, std::string>        UnorderedMap;
+    typedef std::unordered_multimap<int, std::string>   UnorderedMultiMap;
+#endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
+
+#if defined(BOOST_HAS_TR1_UNORDERED_SET)
+    typedef std::unordered_set<std::string>             UnorderedSet;
+    typedef std::unordered_multiset<std::string>        UnorderedMultiSet;
+#endif //defined(BOOST_HAS_TR1_UNORDERED_SET)
+
+#if defined(BEX_SUPPORT_CXX11)
+    typedef std::array<std::string, 7>                  StdArray;
+#endif //defined(BEX_SUPPORT_CXX11)
+
+    typedef boost::array<int, 3> BoostArray;
+    typedef boost::bimap<int, int> BoostBimap;
+
     int i;
     double db;
     std::vector<int> vec;
@@ -14,6 +42,29 @@ struct TestStreamStruct
     int arr[10];
     std::wstring arr_str[3];
     V3 vec3;
+
+    List list;
+    Deque deque;
+    Set set;
+    MultiSet mset;
+    Map map;
+    MultiMap mmap;
+#if defined(_MSC_VER)
+    HashMap hmap;
+#endif //defined(_MSC_VER)
+#if defined(BOOST_HAS_TR1_UNORDERED_MAP)
+    UnorderedMap umap;
+    UnorderedMultiMap ummap;
+#endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
+#if defined(BOOST_HAS_TR1_UNORDERED_SET)
+    UnorderedSet uset;
+    UnorderedMultiSet umset;
+#endif //defined(BOOST_HAS_TR1_UNORDERED_SET)
+#if defined(BEX_SUPPORT_CXX11)
+    StdArray sarray;
+#endif //defined(BEX_SUPPORT_CXX11)
+    BoostArray barray;
+    BoostBimap bbimap;
 
     enum {BEX_SS_VERSION = 1,};
 
@@ -31,6 +82,69 @@ struct TestStreamStruct
         return std::equal(lhs.begin(), lhs.end(), rhs.begin(), pred);
     }
 
+    template <class HashContainer, class Pr>
+    static bool check_hashmap_container(HashContainer const& lhs, HashContainer const& rhs, Pr pred)
+    {
+        if (lhs.size() != rhs.size()) return false;
+        typedef typename HashContainer::const_iterator iterator;
+        for (iterator it1 = lhs.begin(); it1 != lhs.end(); ++it1)
+        {
+            iterator it2 = rhs.find(it1->first);
+            if (it2 == rhs.end() || !pred(it2->second, it1->second))
+                return false;
+        }
+        return true;
+    }
+
+    template <class HashContainer, class Pr>
+    static bool check_hashmultimap_container(HashContainer const& lhs, HashContainer const& rhs, Pr pred)
+    {
+        if (lhs.size() != rhs.size()) return false;
+        typedef typename HashContainer::const_iterator iterator;
+        for (iterator it1 = lhs.begin(); it1 != lhs.end(); ++it1)
+        {
+            if (lhs.count(it1->first) != rhs.count(it1->first)) return false;
+
+            BOOST_AUTO(r, rhs.equal_range(it1->first));
+            if (r.first == r.second) return false;
+
+            iterator it2 = r.first;
+            for (; it2 != r.second; ++it2)
+                if (pred(it2->second, it1->second))
+                    break;
+
+            if (it2 == r.second)
+                return false;
+        }
+        return true;
+    }
+
+    template <class HashContainer>
+    static bool check_hashset_container(HashContainer const& lhs, HashContainer const& rhs)
+    {
+        if (lhs.size() != rhs.size()) return false;
+        typedef typename HashContainer::const_iterator iterator;
+        for (iterator it1 = lhs.begin(); it1 != lhs.end(); ++it1)
+        {
+            iterator it2 = rhs.find(*it1);
+            if (it2 == rhs.end())
+                return false;
+        }
+        return true;
+    }
+
+    template <class HashContainer>
+    static bool check_hashmultiset_container(HashContainer const& lhs, HashContainer const& rhs)
+    {
+        if (lhs.size() != rhs.size()) return false;
+        typedef typename HashContainer::const_iterator iterator;
+        for (iterator it1 = lhs.begin(); it1 != lhs.end(); ++it1)
+        {
+            if (lhs.count(*it1) != rhs.count(*it1)) return false;
+        }
+        return true;
+    }
+
     bool operator==(const this_type& rhs) const
     {
         bool ret = i == rhs.i;
@@ -46,7 +160,57 @@ struct TestStreamStruct
         PrV1 pr_v1 = boost::bind(&check_container<V1>, _1, _2);
         PrV2 pr_v2 = boost::bind(&check_container_pr<V2, PrV1>, _1, _2, pr_v1);
         ret &= check_container_pr(vec3, rhs.vec3, pr_v2);
+        ret &= check_container(list, rhs.list);
+        ret &= check_container(deque, rhs.deque);
+        ret &= check_container(set, rhs.set);
+        ret &= check_container(mset, rhs.mset);
+        ret &= check_hashmap_container(map, rhs.map, pr_v2);
+        ret &= check_hashmap_container(mmap, rhs.mmap, pr_v2);
+#if defined(_MSC_VER)
+        ret &= check_hashmap_container(hmap, rhs.hmap, std::equal_to<>() );
+#endif //defined(_MSC_VER)
+#if defined(BOOST_HAS_TR1_UNORDERED_MAP)
+        ret &= check_hashmap_container(umap, rhs.umap, std::equal_to<>() );
+        ret &= check_hashmultimap_container(ummap, rhs.ummap, std::equal_to<>() );
+#endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
+#if defined(BOOST_HAS_TR1_UNORDERED_SET)
+        ret &= check_hashset_container(uset, rhs.uset);
+        ret &= check_hashmultiset_container(umset, rhs.umset);
+#endif //defined(BOOST_HAS_TR1_UNORDERED_SET)
+#if defined(BEX_SUPPORT_CXX11)
+        ret &= check_container(sarray, rhs.sarray);
+#endif //defined(BEX_SUPPORT_CXX11)
+        ret &= check_container(barray, rhs.barray);
+        ret &= check_hashmap_container(bbimap.left, rhs.bbimap.left, std::equal_to<>() );
         return ret;
+    }
+
+    void init_ext_containers()
+    {
+#if defined(BEX_SUPPORT_CXX11)
+        list = List{1, 2, 3, 5, 7};
+        deque = Deque{"abc", "xxd", "fffff", ""};
+        set = Set{"abc", "xxd", "fffff", ""};
+        mset = MultiSet{1, 1, 1, 1, 2, 3, 3, 3, 66, 66, 7};
+        map = Map{ {"a", {{1, 2, 1}, {2, 3, 4}}}, {"b", {{1, 2, 1}, {2, 3, 4}}} };
+        mmap = MultiMap{ {"a", {{1, 2, 1}, {2, 3, 4}}}, {"a", {{1, 2, 1}, {2, 3, 4}}}, {"c", {{1, 2, 1}, {2, 3, 4}}} };
+#if defined(_MSC_VER)
+        hmap = HashMap{{1, "abc"}, {2, "ddc"}, {1024, ""}};
+#endif //defined(_MSC_VER)
+#if defined(BOOST_HAS_TR1_UNORDERED_MAP)
+        umap = UnorderedMap{{1, "abc"}, {2, "ddc"}, {1024, ""}};;
+        ummap = UnorderedMultiMap{{1, "abc"}, {1, "ddc"}, {1024, ""}};;
+#endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
+#if defined(BOOST_HAS_TR1_UNORDERED_SET)
+        uset = UnorderedSet{"abc", "xxd", "fffff", ""};
+        umset = UnorderedMultiSet{"abc", "xxd", "fffff", "", "", "xxd"};
+#endif //defined(BOOST_HAS_TR1_UNORDERED_SET)
+        sarray = StdArray{"a", "ab", "abc", "abcd", "abcde", ""};
+        barray = BoostArray{1, 2, 3};
+        bbimap.left.insert(std::make_pair(1, 2));
+        bbimap.left.insert(std::make_pair(3, 4));
+        bbimap.left.insert(std::make_pair(5, 6));
+#endif //defined(BEX_SUPPORT_CXX11)
     }
 };
 
@@ -59,6 +223,29 @@ void serialize(Archive & ar, TestStreamStruct & t, const unsigned int version)
     ar & t.arr;
     ar & t.arr_str;
     ar & t.vec3;
+
+    ar & t.list;
+    ar & t.deque;
+    ar & t.set;
+    ar & t.mset;
+    ar & t.map;
+    ar & t.mmap;
+#if defined(_MSC_VER)
+    ar & t.hmap;
+#endif //defined(_MSC_VER)
+#if defined(BOOST_HAS_TR1_UNORDERED_MAP)
+    ar & t.umap;
+    ar & t.ummap;
+#endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
+#if defined(BOOST_HAS_TR1_UNORDERED_SET)
+    ar & t.uset;
+    ar & t.umset;
+#endif //defined(BOOST_HAS_TR1_UNORDERED_SET)
+#if defined(BEX_SUPPORT_CXX11)
+    ar & t.sarray;
+#endif //defined(BEX_SUPPORT_CXX11)
+    ar & t.barray;
+    ar & t.bbimap;
 }
 
 struct fake_pod_struct
@@ -620,7 +807,11 @@ BOOST_AUTO_TEST_CASE(t_stream_case)
         BOOST_CHECK_EQUAL(rsb.size(), 0);
 
         TestStreamStruct x, check;
-        x.i = 0, x.db = 12.7, x.vec.push_back(1), x.vec.push_back(3), x.vec.push_back(2);
+        x.i = 0, x.db = 12.7;
+        x.vec.push_back(1), x.vec.push_back(3), x.vec.push_back(2);
+        for (int i = 0; i < 1023; ++i)
+            x.vec.push_back(i);
+        x.init_ext_containers();
 
         bo & x;
         //BOOST_CHECK_EQUAL(rsb.size(), 26);
@@ -776,7 +967,7 @@ BOOST_AUTO_TEST_CASE(t_stream_property_case)
 #endif //_DEBUG
 
     {
-        const int len = 60 * tc;
+        const int len = 160 * tc;
         char *buf = new char[len];
         static_streambuf ssb(buf, len);
         binary_archive bio(ssb);

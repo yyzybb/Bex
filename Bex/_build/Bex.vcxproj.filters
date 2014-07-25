@@ -471,6 +471,9 @@
     <ClInclude Include="..\src\Bex\bexio\handlers.hpp">
       <Filter>src\bexio</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization\boost_container_adapter.hpp">
+      <Filter>src\stream\serialization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Bex\thread\thread_pool\thread_pool.cpp">

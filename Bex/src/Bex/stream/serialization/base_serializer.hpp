@@ -82,6 +82,7 @@ namespace Bex { namespace serialization
 
 #include "stl_adapter.hpp"
 #include "array_adapter.hpp"
+#include "boost_container_adapter.hpp"
 
     public:
         //////////////////////////////////////////////////////////////////////////

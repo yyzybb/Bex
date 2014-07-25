@@ -97,6 +97,7 @@
     <ClInclude Include="..\src\Bex\stream\serialization\binary_archive.hpp" />
     <ClInclude Include="..\src\Bex\stream\serialization\binary_iarchive.hpp" />
     <ClInclude Include="..\src\Bex\stream\serialization\binary_oarchive.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\boost_container_adapter.hpp" />
     <ClInclude Include="..\src\Bex\stream\serialization\concept.hpp" />
     <ClInclude Include="..\src\Bex\stream\serialization\serialization_fwd.h" />
     <ClInclude Include="..\src\Bex\stream\serialization\serialize_adl.hpp" />

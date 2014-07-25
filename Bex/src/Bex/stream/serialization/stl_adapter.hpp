@@ -1,11 +1,11 @@
-
 //////////////////////////////////////////////////////////////////////////
 /// stream支持stl容器类型的适配器
 
-template <class Ar, class Container>
-struct stl_adapter_base
+// size
+struct sized_adapter
 {
-    inline static bool save_size(Container & container, Ar & ar)
+    template <class Container, class Ar>
+    inline static bool save(Container const& container, Ar & ar)
     {
         cn32 size(container.size());
         try
@@ -19,7 +19,8 @@ struct stl_adapter_base
         }
     }
 
-    inline static bool load_size(std::size_t & out_size, Ar & ar)
+    template <class Ar>
+    inline static bool load(std::size_t & out_size, Ar & ar)
     {
         cn32 size;
         try
@@ -35,25 +36,70 @@ struct stl_adapter_base
     }
 };
 
+//////////////////////////////////////////////////////////////////////////
+/// Inserters
+struct Pushback
+{
+    template <class Container, typename ValueType>
+    inline void operator()(Container & c, ValueType const& v) const
+    { c.push_back(v); }
+};
+struct Insert
+{
+    template <class Container, typename ValueType>
+    inline void operator()(Container & c, ValueType const& v) const
+    { c.insert(v); }
+};
+
+/// container
+template <class Ar, class Container, class Inserter>
+struct container_adapter
+{
+    inline static bool save(Container const& c, Ar & ar)
+    {
+        if (!sized_adapter::save(c, ar)) return false;
+        if (c.empty()) return true;
+
+        BOOST_AUTO(it, c.begin());
+        for (; it != c.end(); ++it)
+            if (!ar.save(*it))
+                return false;
+
+        return true;
+    }
+
+    inline static bool load(Container & c, Ar & ar)
+    {
+        c.clear();
+        std::size_t size = 0;
+        if (!sized_adapter::load(size, ar)) return false;
+
+        typename Container::value_type v;
+        for (std::size_t ui = 0; ui < size; ++ui)
+        {
+            if (!ar.load(v))
+                return false;
+
+            Inserter()(c, v);
+        }
+        return true;
+    }
+};
     
 //////////////////////////////////////////////////////////////////////////
 /// vector
 template <class Ar, typename T, typename Alloc>
 struct adapter<Ar, std::vector<T, Alloc> >
-    : public stl_adapter_base<Ar, std::vector<T, Alloc> >
 {
     typedef std::vector<T, Alloc> Vector;
-    typedef stl_adapter_base<Ar, std::vector<T, Alloc> > base_type;
 
-    inline static bool save(Vector & vecT, Ar & ar)
+    inline static bool save(Vector const& vecT, Ar & ar)
     {
-        if (!base_type::save_size(vecT, ar)) return false;
+        if (!sized_adapter::save(vecT, ar)) return false;
         if (vecT.empty()) return true;
             
         if (is_optimize<T, Ar>::value)
-        {
             return ar.save((char*)&vecT[0], vecT.size() * sizeof(T));
-        }
         
         for (std::size_t ui = 0; ui < vecT.size(); ++ui)
             if (!ar.save(vecT[ui]))
@@ -66,16 +112,26 @@ struct adapter<Ar, std::vector<T, Alloc> >
     {
         vecT.clear();
         std::size_t size = 0;
-        if (!base_type::load_size(size, ar)) return false;
+        if (!sized_adapter::load(size, ar)) return false;
 
-        T t;
-        for (std::size_t ui = 0; ui < size; ++ui)
+        std::size_t count = size;
+        while (count)
         {
-            if (!ar.load(t)) 
-                return false;
-
-            vecT.push_back(t);
+            std::size_t once = std::min<std::size_t>(count, 128);
+            count -= once;
+            std::size_t start = vecT.size();
+            vecT.resize(vecT.size() + once);
+            if (is_optimize<T, Ar>::value)
+            {
+                if (!ar.load((char*)&vecT[start], once * sizeof(T)))
+                    return false;
+            }
+            else
+                for (std::size_t i = 0; i < once; ++i)
+                    if (!ar.load(vecT[start + i]))
+                        return false;
         }
+
         return true;
     }
 };
@@ -84,14 +140,12 @@ struct adapter<Ar, std::vector<T, Alloc> >
 /// vector<bool>
 template <class Ar, typename Alloc>
 struct adapter<Ar, std::vector<bool, Alloc> >
-    : public stl_adapter_base<Ar, std::vector<bool, Alloc> >
 {
     typedef std::vector<bool, Alloc> Vector;
-    typedef stl_adapter_base<Ar, std::vector<bool, Alloc> > base_type;
 
-    inline static bool save(Vector & vecT, Ar & ar)
+    inline static bool save(Vector const& vecT, Ar & ar)
     {
-        if (!base_type::save_size(vecT, ar)) return false;
+        if (!sized_adapter::save(vecT, ar)) return false;
 
         if (!vecT.empty())
         {
@@ -107,7 +161,7 @@ struct adapter<Ar, std::vector<bool, Alloc> >
     inline static bool load(Vector & vecT, Ar & ar)
     {
         std::size_t bits;
-        if (!base_type::load_size(bits, ar)) return false;
+        if (!sized_adapter::load(bits, ar)) return false;
 
         vecT.clear();
         if (bits)
@@ -130,7 +184,7 @@ struct adapter<Ar, std::vector<bool, Alloc> >
         return true;
     }
 
-    inline static char * get_base(Vector & vecT)
+    inline static char * get_base(Vector const& vecT)
     {
 #if defined(_MSC_VER)
         return (char*)(vecT.begin()._Myptr);
@@ -139,59 +193,17 @@ struct adapter<Ar, std::vector<bool, Alloc> >
 };
 
 //////////////////////////////////////////////////////////////////////////
-/// list
-template <class Ar, typename T, typename Alloc>
-struct adapter<Ar, std::list<T, Alloc> >
-    : public stl_adapter_base<Ar, std::list<T, Alloc> >
-{
-    typedef std::list<T, Alloc> List;
-    typedef stl_adapter_base<Ar, std::list<T, Alloc> > base_type;
-
-    inline static bool save(List & listT, Ar & ar)
-    {
-        if (!base_type::save_size(listT, ar)) return false;
-        if (listT.empty()) return true;
-
-        BOOST_AUTO(it, listT.begin());
-        for (; it != listT.end(); ++it)
-            if (!ar.save(*it))
-                return false;
-
-        return true;
-    }
-
-    inline static bool load(List & listT, Ar & ar)
-    {
-        listT.clear();
-        std::size_t size = 0;
-        if (!base_type::load_size(size, ar)) return false;
-
-        T t;
-        for (std::size_t ui = 0; ui < size; ++ui)
-        {
-            if (!ar.load(t))
-                return false;
-
-            listT.push_back(t);
-        }
-        return true;
-    }
-};
-
-//////////////////////////////////////////////////////////////////////////
 /// string
 template <class Ar, typename T, typename Traits, typename Alloc>
 struct adapter<Ar, std::basic_string<T, Traits, Alloc> >
-    : public stl_adapter_base<Ar, std::basic_string<T, Traits, Alloc> >
 {
     typedef std::basic_string<T, Traits, Alloc> String;
-    typedef stl_adapter_base<Ar, std::basic_string<T, Traits, Alloc> > base_type;
 
-    inline static bool save(String & stringT, Ar & ar)
+    inline static bool save(String const& stringT, Ar & ar)
     {
         BOOST_STATIC_ASSERT((boost::is_same<T, char>::value || boost::is_same<T, wchar_t>::value));
 
-        if (!base_type::save_size(stringT, ar)) return false;
+        if (!sized_adapter::save(stringT, ar)) return false;
         if (stringT.empty()) return true;
         return ar.save((char *)&stringT[0], stringT.size() * sizeof(T));
     }
@@ -202,7 +214,7 @@ struct adapter<Ar, std::basic_string<T, Traits, Alloc> >
 
         stringT.clear();
         std::size_t size = 0;
-        if (!base_type::load_size(size, ar)) return false;
+        if (!sized_adapter::load(size, ar)) return false;
 
         T buf[128];
         while (size)
@@ -217,55 +229,53 @@ struct adapter<Ar, std::basic_string<T, Traits, Alloc> >
 };
 
 //////////////////////////////////////////////////////////////////////////
+/// list
+template <class Ar, typename T, typename Alloc>
+struct adapter<Ar, std::list<T, Alloc> >
+    : public container_adapter<Ar, std::list<T, Alloc>, Pushback>
+{};
+
+//////////////////////////////////////////////////////////////////////////
+/// deque
+template <class Ar, typename T, typename Alloc>
+struct adapter<Ar, std::deque<T, Alloc> >
+    : public container_adapter<Ar, std::deque<T, Alloc>, Pushback>
+{};
+
+//////////////////////////////////////////////////////////////////////////
+/// set
+template <class Ar, typename T, typename Pr, typename Alloc>
+struct adapter<Ar, std::set<T, Pr, Alloc> >
+    : public container_adapter<Ar, std::set<T, Pr, Alloc>, Insert>
+{};
+
+//////////////////////////////////////////////////////////////////////////
+/// multiset
+template <class Ar, typename T, typename Pr, typename Alloc>
+struct adapter<Ar, std::multiset<T, Pr, Alloc> >
+    : public container_adapter<Ar, std::multiset<T, Pr, Alloc>, Insert>
+{};
+
+//////////////////////////////////////////////////////////////////////////
 /// map
 template <class Ar, typename K, typename T, typename Pr, typename Alloc>
 struct adapter<Ar, std::map<K, T, Pr, Alloc> >
-    : public stl_adapter_base<Ar, std::map<K, T, Pr, Alloc> >
-{
-    typedef std::map<K, T, Pr, Alloc> Map;
-    typedef stl_adapter_base<Ar, std::map<K, T, Pr, Alloc> > base_type;
-    
-    inline static bool save(Map & mapT, Ar & ar)
-    {
-        if (!base_type::save_size(mapT, ar)) return false;
-        if (mapT.empty()) return true;
+    : public container_adapter<Ar, std::map<K, T, Pr, Alloc>, Insert>
+{};
 
-        BOOST_AUTO(it, mapT.begin());
-        for (; it != mapT.end(); ++it)
-            if (!ar.save(it->first) || !ar.save(it->second))
-                return false;
-
-        return true;
-    }
-
-    inline static bool load(Map & mapT, Ar & ar)
-    {
-        mapT.clear();
-        std::size_t size = 0;
-        if (!base_type::load_size(size, ar)) return false;
-
-        K k;
-        T t;
-        for (std::size_t ui = 0; ui < size; ++ui)
-        {
-            if (!ar.load(k) || !ar.load(t))
-                return false;
-
-            mapT[k] = t;
-        }
-
-        return true;
-    }
-};
+//////////////////////////////////////////////////////////////////////////
+/// multimap
+template <class Ar, typename K, typename T, typename Pr, typename Alloc>
+struct adapter<Ar, std::multimap<K, T, Pr, Alloc> >
+    : public container_adapter<Ar, std::multimap<K, T, Pr, Alloc>, Insert>
+{};
 
 //////////////////////////////////////////////////////////////////////////
 /// pair
 template <class Ar, typename T1, typename T2>
 struct adapter<Ar, std::pair<T1, T2> >
-    : public stl_adapter_base<Ar, std::pair<T1, T2> >
 {
     typedef std::pair<T1, T2> Pair;
-    typedef stl_adapter_base<Ar, std::pair<T1, T2> > base_type;
 
     inline static bool save(Pair & pairT, Ar & ar)
     {
@@ -274,6 +284,47 @@ struct adapter<Ar, std::pair<T1, T2> >
 
     inline static bool load(Pair & pairT, Ar & ar)
     {
-        return ar.load(pairT.first) && ar.load(pairT.second);
+        return ar.load((boost::remove_cv<T1>::type&)pairT.first) 
+            && ar.load((boost::remove_cv<T2>::type&)pairT.second);
     }
 };
+
+#if defined(_MSC_VER)
+//////////////////////////////////////////////////////////////////////////
+/// hash_map
+template <class Ar, typename K, typename T, typename Tr, typename Alloc>
+struct adapter<Ar, stdext::hash_map<K, T, Tr, Alloc> >
+    : public container_adapter<Ar, stdext::hash_map<K, T, Tr, Alloc>, Insert>
+{};
+#endif //defined(_MSC_VER)
+
+
+#if defined(BOOST_HAS_TR1_UNORDERED_MAP)
+//////////////////////////////////////////////////////////////////////////
+/// unordered_map
+template <class Ar, typename K, typename T, typename H, typename Eq, typename Alloc>
+struct adapter<Ar, std::unordered_map<K, T, H, Eq, Alloc> >
+    : public container_adapter<Ar, std::unordered_map<K, T, H, Eq, Alloc>, Insert>
+{};
+//////////////////////////////////////////////////////////////////////////
+/// unordered_multimap
+template <class Ar, typename K, typename T, typename H, typename Eq, typename Alloc>
+struct adapter<Ar, std::unordered_multimap<K, T, H, Eq, Alloc> >
+    : public container_adapter<Ar, std::unordered_multimap<K, T, H, Eq, Alloc>, Insert>
+{};
+#endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
+
+#if defined(BOOST_HAS_TR1_UNORDERED_SET)
+//////////////////////////////////////////////////////////////////////////
+/// unordered_set
+template <class Ar, typename T, typename H, typename Eq, typename Alloc>
+struct adapter<Ar, std::unordered_set<T, H, Eq, Alloc> >
+    : public container_adapter<Ar, std::unordered_set<T, H, Eq, Alloc>, Insert>
+{};
+//////////////////////////////////////////////////////////////////////////
+/// unordered_multiset
+template <class Ar, typename T, typename H, typename Eq, typename Alloc>
+struct adapter<Ar, std::unordered_multiset<T, H, Eq, Alloc> >
+    : public container_adapter<Ar, std::unordered_multiset<T, H, Eq, Alloc>, Insert>
+{};
+#endif //defined(BOOST_HAS_TR1_UNORDERED_SET)

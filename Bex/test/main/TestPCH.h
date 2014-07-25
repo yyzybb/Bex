@@ -2,6 +2,7 @@
 #define __TEST_PCH__
 
 #pragma warning(disable:4996)
+#pragma warning(disable:4101)
 
 #include <iostream>
 #include <stdio.h>

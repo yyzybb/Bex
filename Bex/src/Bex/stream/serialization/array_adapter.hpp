@@ -1,41 +1,89 @@
-
-
 //////////////////////////////////////////////////////////////////////////
 /// stream支持数组类型的适配器
 
-
-//////////////////////////////////////////////////////////////////////////
-/// array
-template <class Ar, typename T, int N>
-struct adapter<Ar, T[N] >
+// array size
+template <class Ar, typename Array>
+struct array_adapter
 {
-    BOOST_STATIC_ASSERT(N > 0);
-
-    inline static bool save(T (& arrayT)[N], Ar & ar)
+    template <typename A>
+    struct vt
     {
+        typedef typename A::value_type type;
+    };
+
+    template <typename T, std::size_t N>
+    struct vt<T[N]>
+    {
+        typedef T type;
+        static const std::size_t size = N;
+    };
+
+    template <typename A>
+    inline static typename boost::enable_if<boost::is_array<A>, std::size_t>::type 
+        size(A const& arr)
+    {
+        return vt<A>::size;
+    }
+
+    template <typename A>
+    inline static typename boost::disable_if<boost::is_array<A>, std::size_t>::type 
+        size(A const& arr)
+    {
+        return arr.size();
+    }
+
+    inline static bool save(Array const& arrayT, Ar & ar)
+    {
+        std::size_t N = size(arrayT);
+        typedef typename vt<Array>::type T;
         if (is_optimize<T, Ar>::value)
-        {
             return ar.save((char*)&arrayT[0], N * sizeof(T));
-        }
         
-        for (int i = 0; i < N; ++i)
+        for (std::size_t i = 0; i < N; ++i)
             if (!ar.save(arrayT[i]))
                 return false;
 
         return true;
     }
 
-    inline static bool load(T (& arrayT)[N], Ar & ar)
+    inline static bool load(Array & arrayT, Ar & ar)
     {
+        std::size_t N = size(arrayT);
+        typedef typename vt<Array>::type T;
         if (is_optimize<T, Ar>::value)
-        {
             return ar.load((char*)&arrayT[0], N * sizeof(T));
-        }
         
-        for (int i = 0; i < N; ++i)
+        for (std::size_t i = 0; i < N; ++i)
             if (!ar.load(arrayT[i]))
                 return false;
 
         return true;
     }
+};
+
+//////////////////////////////////////////////////////////////////////////
+/// array
+template <class Ar, typename T, int N>
+struct adapter<Ar, T[N]>
+    : public array_adapter<Ar, T[N]>
+{
+    BOOST_STATIC_ASSERT(N > 0);
+};
+
+#if defined(BEX_SUPPORT_CXX11)
+/// std::array
+template <class Ar, typename T, std::size_t N>
+struct adapter<Ar, std::array<T, N> >
+    : public array_adapter<Ar, std::array<T, N> >
+{
+    BOOST_STATIC_ASSERT(N > 0);
+};
+#endif //defined(BEX_SUPPORT_CXX11)
+
+/// boost::array
+template <class Ar, typename T, std::size_t N>
+struct adapter<Ar, boost::array<T, N> >
+    : public array_adapter<Ar, boost::array<T, N> >
+{
+    BOOST_STATIC_ASSERT(N > 0);
 };

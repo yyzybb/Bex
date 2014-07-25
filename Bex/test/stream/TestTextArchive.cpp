@@ -1,7 +1,7 @@
 #include "TestPCH.h"
 #include <Bex/stream.hpp>
 
-struct TestStreamStruct
+struct TestTextStruct
 {
     typedef std::vector<int> V1;
     typedef std::vector<V1> V2;
@@ -17,7 +17,7 @@ struct TestStreamStruct
 
     enum {BEX_SS_VERSION = 1,};
 
-    typedef TestStreamStruct this_type;
+    typedef TestTextStruct this_type;
 
     template <class Container>
     static bool check_container(Container const& lhs, Container const& rhs)
@@ -51,7 +51,7 @@ struct TestStreamStruct
 };
 
 template <class Archive>
-void serialize(Archive & ar, TestStreamStruct & t, const unsigned int version)
+void serialize(Archive & ar, TestTextStruct & t, const unsigned int version)
 {
     BOOST_CHECK_EQUAL(version, 1);
     ar & t.i;
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE(t_stream_text_archive_case)
 
         BOOST_CHECK_EQUAL(rsb.size(), 0);
 
-        TestStreamStruct x, check;
+        TestTextStruct x, check;
         x.i = 0, x.db = 12.7, x.vec.push_back(1), x.vec.push_back(3), x.vec.push_back(2);
 
         bo & x;
@@ -196,7 +196,7 @@ BOOST_AUTO_TEST_CASE(t_stream_text_archive_case)
 
         BOOST_CHECK_EQUAL(rsb.size(), 0);
 
-        TestStreamStruct x, check;
+        TestTextStruct x, check;
         x.i = 0, x.db = 12.7, x.vec.push_back(1), x.vec.push_back(3), x.vec.push_back(2);
         std::vector<std::string> tmp_vec(3, std::string("asdlkjfweo"));
         x.vec_str.swap(tmp_vec);
@@ -208,11 +208,11 @@ BOOST_AUTO_TEST_CASE(t_stream_text_archive_case)
         x.vec3.resize(5);
         FOR(5)
         {
-            TestStreamStruct::V2 & v2 = x.vec3[i];
+            TestTextStruct::V2 & v2 = x.vec3[i];
             v2.resize(10);
             UFOR(10)
             {
-                TestStreamStruct::V1 & v1 = v2[ui];
+                TestTextStruct::V1 & v1 = v2[ui];
                 v1.push_back(1);
                 v1.push_back(2);
                 v1.push_back(i + ui);
@@ -248,7 +248,7 @@ BOOST_AUTO_TEST_CASE(t_stream_text_archive_case)
 
     /// text_load text_save
     {
-        TestStreamStruct x, check;
+        TestTextStruct x, check;
         x.i = 0, x.db = 12.7, x.vec.push_back(1), x.vec.push_back(3), x.vec.push_back(2);
         std::vector<std::string> tmp_vec(3, std::string("asdlkjfweo"));
         x.vec_str.swap(tmp_vec);
@@ -260,11 +260,11 @@ BOOST_AUTO_TEST_CASE(t_stream_text_archive_case)
         x.vec3.resize(5);
         FOR(5)
         {
-            TestStreamStruct::V2 & v2 = x.vec3[i];
+            TestTextStruct::V2 & v2 = x.vec3[i];
             v2.resize(10);
             UFOR(10)
             {
-                TestStreamStruct::V1 & v1 = v2[ui];
+                TestTextStruct::V1 & v1 = v2[ui];
                 v1.push_back(1);
                 v1.push_back(2);
                 v1.push_back(i + ui);
@@ -339,7 +339,7 @@ BOOST_AUTO_TEST_CASE(t_stream_text_archive_property_case)
         char *buf = new char[len];
         static_streambuf ssb(buf, len);
         text_archive bio(ssb);
-        TestStreamStruct obj;
+        TestTextStruct obj;
 
         //DumpX(detail::has_version<TestStreamStruct>::value);
 
