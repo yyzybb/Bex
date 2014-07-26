@@ -4,6 +4,7 @@
 #include <Bex/config.hpp>
 #include <Bex/thread/lock/inter_lock.hpp>
 #include <Bex/type_traits/class_info.hpp>
+#include <Bex/utility/singleton.hpp>
 #include <boost/asio.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/bind.hpp>
@@ -23,6 +24,7 @@
 #include "options.hpp"
 #include "error.hpp"
 #include "sentry.hpp"
+#include "allocator.hpp"
 
 #if defined(BEX_USE_FORWARDBIND)
 #include <Bex/bind.hpp>

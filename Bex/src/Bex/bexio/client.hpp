@@ -5,6 +5,7 @@
 /// 有连接协议的客户端
 #include "bexio_fwd.hpp"
 #include "handlers.hpp"
+#include "core.hpp"
 
 namespace Bex { namespace bexio
 {
@@ -32,12 +33,12 @@ namespace Bex { namespace bexio
         typedef boost::function<void(error_code const&, endpoint const&)> OnHandshakeError;
 
     public:
-        basic_client(io_service & ios, options const& opts)
-            : ios_(ios), session_(0), mstrand_service_(0)
+        explicit basic_client(options const& opts
+            , io_service & ios = core<allocator>::getInstance().backend())
+            : ios_(ios), mstrand_service_(use_service<mstrand_service_type>(ios))
         {
             opts_ = make_shared_ptr<options, allocator>(opts);
             callback_ = make_shared_ptr<callback_type, allocator>();
-            mstrand_service_ = &use_service<mstrand_service_type>(ios);
         }
 
         ~basic_client()
@@ -69,7 +70,7 @@ namespace Bex { namespace bexio
             session_->initialize(sp, opts_, callback_);
 
             // 启动工作线程
-            use_service<mstrand_service_type>(ios_).startup(opts_->workthread_count);
+            mstrand_service_.startup(opts_->workthread_count);
             running_.set();
             return true;
         }
@@ -95,7 +96,7 @@ namespace Bex { namespace bexio
                     , sp, addr));
 
             // 启动工作线程
-            use_service<mstrand_service_type>(ios_).startup(opts_->workthread_count);
+            mstrand_service_.startup(opts_->workthread_count);
             return true;
         }
 
@@ -116,7 +117,7 @@ namespace Bex { namespace bexio
             sp->lowest_layer().async_connect(addr, timed_handler);
 
             // 启动工作线程
-            use_service<mstrand_service_type>(ios_).startup(opts_->workthread_count);
+            mstrand_service_.startup(opts_->workthread_count);
             return true;
         }
 
@@ -250,7 +251,7 @@ namespace Bex { namespace bexio
                 ec_ = ec;
                 async_connecting_.reset();
                 if (on_handshake_error_)
-                    use_service<mstrand_service_type>(ios_).actor().post(BEX_IO_BIND(
+                    mstrand_service_.post(BEX_IO_BIND(
                         on_handshake_error_, ec, sp->lowest_layer().remote_endpoint()));
             }
             else
@@ -286,7 +287,7 @@ namespace Bex { namespace bexio
         void notify_onconnect()
         {
             if (async_connect_callback_)
-                mstrand_service_->post(BEX_IO_BIND(async_connect_callback_, ec_));
+                mstrand_service_.post(BEX_IO_BIND(async_connect_callback_, ec_));
         }
 
     private:
@@ -314,7 +315,7 @@ namespace Bex { namespace bexio
         error_code ec_;
 
         // 工作线程服务
-        mstrand_service_type * mstrand_service_;
+        mstrand_service_type & mstrand_service_;
 
         // 选项
         shared_ptr<options> opts_;

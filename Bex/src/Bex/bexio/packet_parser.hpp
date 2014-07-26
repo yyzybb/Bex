@@ -36,7 +36,7 @@ namespace Bex { namespace bexio
     /// 封包解析器
     template <typename PacketHead = boost::uint32_t,    ///< 封包头类型定义
         typename Sizer = first4_packet_head,            ///< 根据封包头计算包长的接口(结果不包含包头的长度)
-        typename Allocator = allocator<int> >
+        typename Allocator = ::Bex::bexio::allocator<int> >
     class packet_parser
     {
     public:

@@ -6,6 +6,7 @@
 #include "bexio_fwd.hpp"
 #include "session_list_mgr.hpp"
 #include "handlers.hpp"
+#include "core.hpp"
 
 namespace Bex { namespace bexio 
 {
@@ -35,7 +36,8 @@ namespace Bex { namespace bexio
         typedef boost::function<void(error_code const&, endpoint const&)> OnHandshakeError;
 
     public:
-        basic_server(io_service & ios, options const& opts)
+        explicit basic_server(options const& opts
+            , io_service & ios = core<allocator>::getInstance().backend())
             : ios_(ios), acceptor_(ios)
         {
             opts_ = make_shared_ptr<options, allocator>(opts);

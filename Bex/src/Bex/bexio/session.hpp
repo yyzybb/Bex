@@ -114,6 +114,18 @@ namespace Bex { namespace bexio
 
             mstrand_service()->post(BEX_IO_BIND(&this_type::do_onconnect_cb, this, shared_this()));
 
+            if (opts_->use_keepalive)
+            {
+                error_code ec;
+                set_keepalive(socket_->lowest_layer(), opts_->keepalive_idle, opts_->keepalive_interval, ec);
+                if (ec && !opts_->ignore_keepalive_startup_fail)
+                {
+                    ec_ = ec;
+                    terminate();
+                    return ;
+                }
+            }
+
             post_receive();
         }
 
@@ -215,6 +227,12 @@ namespace Bex { namespace bexio
             return opts_;
         }
 
+        // 获取socket
+        socket_ptr get_socket()
+        {
+            return socket_;
+        }
+
         // 获取id
         id get_id()
         {
@@ -235,7 +253,7 @@ namespace Bex { namespace bexio
         // 断开连接回调(mlp_derived || mlp_both 生效)
         virtual void on_disconnect(error_code const& ec) {}
 
-    protected:
+    private:
         // 发起异步发送请求
         void post_send(bool reply = false)
         {

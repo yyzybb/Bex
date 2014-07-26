@@ -59,23 +59,40 @@ namespace Bex { namespace bexio
 
         // 发送缓冲区
         std::size_t send_buffer_size;
-        static const std::size_t default_sbsize = 1024 * 8;
+        static const std::size_t default_sbsize = 1024 * 64;
         static const std::size_t large_sbsize = 1024 * 1024 * 8;
 
         // 发送缓冲区
         std::size_t receive_buffer_size;
-        static const std::size_t default_rbsize = 1024 * 8;
-        static const std::size_t large_rbsize = 1024 * 8;
+        static const std::size_t default_rbsize = 1024 * 64;
+        static const std::size_t large_rbsize = 1024 * 1024 * 8;
 
-        // 每个封包最大长度(目前仅tcp packet/ssl packet协议有效)
-        std::size_t max_packet_size;
-        static const std::size_t default_max_packet_size = 1024 * 8;
+        // 每个封包最大长度(仅对tcp packet/ssl packet协议生效)
+        std::size_t mtu;
+        static const std::size_t default_mtu = 1024 * 8;
 
         // 优雅地关闭连接可等待最大时长(毫秒 ms)
         unsigned int shutdown_timeout;
 
-        /// ssl配置
+        //////////////////////////////////////////////////////////////////////////
+        // keepalive(tcp底层心跳机制)
+        // 是否启用
+        bool use_keepalive;
+
+        // 是否忽略keepalive启用失败
+        bool ignore_keepalive_startup_fail;
+
+        // 空闲N秒后开始心跳检测(单位:秒)
+        int keepalive_idle;
+
+        // 每次检测间隔(单位:秒)
+        int keepalive_interval;
+        //////////////////////////////////////////////////////////////////////////
+
+        //////////////////////////////////////////////////////////////////////////
+        // ssl配置
         boost::shared_ptr<ssl_options> ssl_opts;
+        //////////////////////////////////////////////////////////////////////////
 
         /// 测试配置方案(Test)
         static options test()
@@ -85,10 +102,14 @@ namespace Bex { namespace bexio
                 rboe::rbo_wait,
                 mlpe::mlp_derived,
                 0,
-                default_sbsize,
-                default_rbsize,
-                default_max_packet_size,
-                30 * 1000
+                large_sbsize,
+                large_rbsize,
+                default_mtu,
+                30 * 1000,
+                true,
+                false,
+                300,
+                30
                 };
             return opts;
         }
@@ -103,27 +124,16 @@ namespace Bex { namespace bexio
                 0,
                 default_sbsize,
                 default_rbsize,
-                default_max_packet_size,
-                30 * 1000
+                default_mtu,
+                30 * 1000,
+                true,
+                true,
+                300,
+                30
                 };
             return opts;
         }
 
-        ///// 稳定性优先的推荐配置方案(暂不支持)
-        //static options stability()
-        //{
-        //    static options const opts = {
-        //        sboe::sbo_extend,
-        //        rboe::rbo_extend,
-        //        mlpe::mlp_derived,
-        //        0,
-        //        default_sbsize,
-        //        default_rbsize,
-        //        default_max_packet_size,
-        //        30 * 1000
-        //        };
-        //    return opts;
-        //}
     }; //struct options
 
 } //namespace bexio

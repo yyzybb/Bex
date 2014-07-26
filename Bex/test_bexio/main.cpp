@@ -4,6 +4,8 @@
 #include <string>
 #define Dump(x) do { std::cout << x << std::endl; } while(0)
 
+// @todo: Test keepalive.
+
 #include <Bex/bexio/bexio.hpp>
 #include <Bex/bexio/ssl_protocol.hpp>
 #include <Bex/auto_link.h>
@@ -23,7 +25,6 @@ enum {
 std::string remote_ip = "127.0.0.1";
 volatile long s_count = 0;
 volatile long s_obj_count = 0;
-io_service ios;
 options opt = options::test();
 
 template <typename Protocol>
@@ -55,11 +56,17 @@ class pingpong_session
 {
 public:
     static pingpong_session * p;
+    char buf[64 * 1024];
 
     virtual void on_connect() BEX_OVERRIDE
     {
         Dump(boost::this_thread::get_id() << " on connect " << remote_endpoint());
-        char buf[8000] = {1};
+        error_code ec;
+        get_socket()->lowest_layer().set_option(socket_base::send_buffer_size(8 * 1024 * 1024), ec);
+        get_socket()->lowest_layer().set_option(socket_base::receive_buffer_size(8 * 1024 * 1024), ec);
+        if (ec)
+            Dump("set socket options error:{" << ec.value() << ", " << ec.message() << "}");
+
         send(buf, sizeof(buf));
         p = this;
     }
@@ -67,7 +74,8 @@ public:
     virtual void on_receive(char const* data, std::size_t size) BEX_OVERRIDE
     {
         //Dump(boost::this_thread::get_id() << " size = " << size << " data:" << std::string(data, size));
-        reply(data, size);
+        //reply(data, size);
+        send(buf, sizeof(buf));
     }
 
     virtual void on_disconnect(error_code const& ec) BEX_OVERRIDE
@@ -206,15 +214,14 @@ void start_server()
     typedef basic_server<Session> server;
     opt.ssl_opts.reset(new ssl_options(ssl_options::server()));
 
-    server s(ios, opt);
+    server s(opt);
     s.set_handshake_error_callbcak(boost::BOOST_BIND(&on_handshake_error<server::endpoint>, ::_1, ::_2));
     bool ok = s.startup(server::endpoint(ip::address::from_string("0.0.0.0"), 28087), 10);
     if (!ok)
         Dump("server startup error: " << s.get_error_code().message());
 
-    server::mstrand_service_type & core = use_service<server::mstrand_service_type >(ios);
-    io_service::work worker(core.actor());
-    core.run();
+    io_service::work worker(core<server::allocator>::getInstance().backfront());
+    core<server::allocator>::getInstance().run();
 }
 
 template <class Session>
@@ -223,15 +230,14 @@ void start_client()
     typedef basic_client<Session> client;
     opt.ssl_opts.reset(new ssl_options(ssl_options::client()));
 
-    client c(ios, opt);
+    client c(opt);
     c.set_handshake_error_callbcak(boost::BOOST_BIND(&on_handshake_error<client::endpoint>, ::_1, ::_2));
     bool ok = c.connect(client::endpoint(ip::address::from_string(remote_ip), 28087));
     if (!ok)
         Dump("connect error: " << c.get_error_code().message());
 
-    client::mstrand_service_type & core = use_service<client::mstrand_service_type >(ios);
-    io_service::work worker(core.actor());
-    core.run();
+    io_service::work worker(core<client::allocator>::getInstance().backfront());
+    core<client::allocator>::getInstance().run();
 }
 
 template <class Container>
@@ -269,7 +275,7 @@ void start_multi_client()
 
     for (int i = 0; i < count; ++i)
     {
-        shared_ptr<client> c(new client(ios, opt));
+        shared_ptr<client> c(new client(opt));
         origin.push_back(c);
     }
 
@@ -286,9 +292,8 @@ void start_multi_client()
             Dump("connect error: " << c->get_error_code().message());
     }
 
-    client::mstrand_service_type & core = use_service<client::mstrand_service_type >(ios);
-    io_service::work worker(core.actor());
-    core.run();
+    io_service::work worker(core<client::allocator>::getInstance().backfront());
+    core<client::allocator>::getInstance().run();
 }
 
 void handle_ctrl_c(error_code, int, signal_set * ss)
@@ -312,7 +317,7 @@ int main()
     // ≈‰÷√
     config();
 
-    signal_set signal_proc(ios, SIGINT);
+    signal_set signal_proc(core<>::getInstance().backfront(), SIGINT);
     signal_proc.async_wait(boost::bind(&handle_ctrl_c, ::_1, ::_2, &signal_proc));
 
     int input = 0;

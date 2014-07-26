@@ -49,7 +49,7 @@ namespace Bex { namespace bexio
         void initialize(shared_ptr<options> const& opts, F const& f, Id const& id)
         {
             opts_ = opts;
-            parser_.initialize(opts_->max_packet_size, BEX_IO_BIND(&tcp_packet_protocol::on_parse, this, _1, _2, _3, _4));
+            parser_.initialize(opts_->mtu, BEX_IO_BIND(&tcp_packet_protocol::on_parse, this, _1, _2, _3, _4));
             if (f)
                 global_receiver_ = BEX_IO_BIND(f, id, _1, _2, _3, _4);
         }
