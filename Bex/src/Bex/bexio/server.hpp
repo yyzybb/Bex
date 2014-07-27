@@ -142,7 +142,7 @@ namespace Bex { namespace bexio
         {
             if (!reply)
             {
-                BOOST_INTERLOCKED_INCREMENT(&accept_count_);
+                ++ accept_count_;
             }
 
             error_code ec;
@@ -164,7 +164,7 @@ namespace Bex { namespace bexio
         {
             if (ec)
             {
-                if (BOOST_INTERLOCKED_DECREMENT(&accept_count_) == 1 && shutdowning_.is_set())
+                if ((--accept_count_) == 0 && shutdowning_.is_set())
                     shutdown_sessions();
                 else
                     async_accept(true);
@@ -262,7 +262,7 @@ namespace Bex { namespace bexio
         error_code ec_;
 
         // 执行中的accept请求数
-        volatile long accept_count_;
+        std::atomic<long> accept_count_;
 
         // 优雅地关闭中
         sentry<bool> shutdowning_;

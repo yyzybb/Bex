@@ -1,12 +1,19 @@
 #ifndef __BEX_THREAD_LOCK_INTER_LOCK_HPP__
 #define __BEX_THREAD_LOCK_INTER_LOCK_HPP__
 
-#include <boost/detail/interlocked.hpp>
+#include <Bex/config.hpp>
+
+#if !defined(BEX_SUPPORT_CXX11)
+# include <boost/detail/interlocked.hpp>
+#else //!defined(BEX_SUPPORT_CXX11)
+# include <atomic>
+#endif //!defined(BEX_SUPPORT_CXX11)
 
 namespace Bex
 {
     class inter_lock
     {
+#if !defined(BEX_SUPPORT_CXX11)
         mutable volatile long value_;
 
     public:
@@ -28,6 +35,31 @@ namespace Bex
         {
             return (BOOST_INTERLOCKED_COMPARE_EXCHANGE(&value_, 1, 1) == 1);
         }
+#else //!defined(BEX_SUPPORT_CXX11)
+        std::atomic<int> value_;
+
+    public:
+        inter_lock() : value_(0) 
+        {
+        }
+
+        bool try_lock()
+        {
+            int except = 0;
+            return std::atomic_compare_exchange_weak(&value_, &except, 1);
+        }
+
+        bool unlock()
+        {
+            int except = 1;
+            return std::atomic_compare_exchange_weak(&value_, &except, 0);
+        }
+
+        bool is_locked() const
+        {
+            return (value_ == 1);
+        }
+#endif //!defined(BEX_SUPPORT_CXX11)
 
     public:
         class try_scoped

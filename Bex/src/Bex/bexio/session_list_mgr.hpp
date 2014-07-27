@@ -25,8 +25,9 @@ namespace Bex { namespace bexio
         session_list_mgr() : size_(0) {}
         ~session_list_mgr()
         {
-            list_.clear();
             size_ = 0;
+            typename lock_type::scoped_lock lock(lock_);
+            list_.clear();
         }
 
         /// 创建连接id
@@ -40,7 +41,7 @@ namespace Bex { namespace bexio
         {
             if (!sp) return ;
 
-            BOOST_INTERLOCKED_INCREMENT(&size_);
+            ++ size_;
             typename lock_type::scoped_lock lock(lock_);
             list_.push_back(sp.get());
         }
@@ -57,7 +58,7 @@ namespace Bex { namespace bexio
         /// 删除
         void erase(session_type * sp)
         {
-            BOOST_INTERLOCKED_DECREMENT(&size_);
+            -- size_;
             typename lock_type::scoped_lock lock(lock_);
             list_.erase(sp);
         }
@@ -85,7 +86,7 @@ namespace Bex { namespace bexio
 
     private:
         list_type list_;
-        volatile long size_;
+        std::atomic<long> size_;
         lock_type lock_;
     };
 

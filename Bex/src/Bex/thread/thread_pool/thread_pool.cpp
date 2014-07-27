@@ -2,6 +2,10 @@
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 #include <boost/timer.hpp>
+#include <Bex/config.hpp>
+#if defined(BEX_SUPPORT_CXX11)
+# include <atomic>
+#endif
 
 namespace Bex
 {
@@ -68,7 +72,11 @@ namespace Bex
         /// 添加任务到线程池中
         inline void push_task(Task const& task)
         {
+#if !defined(BEX_SUPPORT_CXX11)
             BOOST_INTERLOCKED_INCREMENT(&m_unfinished);
+#else
+            ++ m_unfinished;
+#endif
             m_taskQueue.push(task);
         }
 
@@ -113,7 +121,11 @@ namespace Bex
     private:
         boost::thread_group     m_tg;           ///< 线程组
         TSQueue                 m_taskQueue;    ///< 线程安全的任务队列
+#if !defined(BEX_SUPPORT_CXX11)
         volatile long           m_unfinished;   ///< 未完成任务数量
+#else
+        std::atomic<long>       m_unfinished;
+#endif
     };
 
     void ThreadPool::thread_pool_impl::run()
@@ -132,7 +144,11 @@ namespace Bex
                 continue;
 
             task();
+#if !defined(BEX_SUPPORT_CXX11)
             BOOST_INTERLOCKED_DECREMENT(&m_unfinished);
+#else
+            --m_unfinished;
+#endif
         }
     }
 

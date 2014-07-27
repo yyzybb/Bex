@@ -22,7 +22,11 @@ public:
     void sleep_1()
     {
         sys_sleep(1000);
+#if !defined(BEX_SUPPORT_CXX11)
         BOOST_INTERLOCKED_INCREMENT(&m_long);
+#else
+        ++m_long;
+#endif
     }
 
     void sleep_2()
@@ -31,7 +35,11 @@ public:
     }
 
     ThreadPool      m_threadpool;
+#if !defined(BEX_SUPPORT_CXX11)
     volatile long   m_long;
+#else
+    std::atomic<long> m_long;
+#endif
 };
 
 BOOST_FIXTURE_TEST_SUITE(s_threadpool, TestThreadPool)

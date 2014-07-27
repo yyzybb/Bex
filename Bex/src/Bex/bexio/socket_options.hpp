@@ -5,8 +5,8 @@
 /// socket—°œÓ¿©’π
 #include "bexio_fwd.hpp"
 
-#if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
-#include <MSTCPiP.h>
+#if defined(BOOST_ASIO_MSVC)
+# include <MSTCPiP.h>
 #endif
 
 namespace Bex { namespace bexio { namespace pltf

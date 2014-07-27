@@ -93,76 +93,15 @@ namespace Bex { namespace bexio
         }
     };
 
-    template <typename T, class Allocator>
-    T * allocate()
+    template <typename T, class Allocator, typename ... Args>
+    T * allocate(Args && ... args)
     {
         typedef typename Allocator::template rebind<T>::other alloc_t;
         alloc_t alloc;
         T * pointer = alloc.allocate(1);
-        alloc.construct(pointer);
+        ::new ((void*)pointer) T(std::forward<Args>(args)...);
         return pointer;
     }
-
-    template <typename T, class Allocator, typename Arg>
-    T * allocate(Arg const& arg)
-    {
-        typedef typename Allocator::template rebind<T>::other alloc_t;
-        alloc_t alloc;
-        T * pointer = alloc.allocate(1);
-        ::new ((void*)pointer) T(arg);
-        return pointer;
-    }
-
-    template <typename T, class Allocator, typename Arg>
-    T * allocate(Arg & arg)
-    {
-        typedef typename Allocator::template rebind<T>::other alloc_t;
-        alloc_t alloc;
-        T * pointer = alloc.allocate(1);
-        ::new ((void*)pointer) T(arg);
-        return pointer;
-    }
-
-    template <typename T, class Allocator, typename Arg1, typename Arg2>
-    T * allocate(Arg1 const& arg1, Arg2 const& arg2)
-    {
-        typedef typename Allocator::template rebind<T>::other alloc_t;
-        alloc_t alloc;
-        T * pointer = alloc.allocate(1);
-        ::new ((void*)pointer) T(arg1, arg2);
-        return pointer;
-    }
-
-    template <typename T, class Allocator, typename Arg1, typename Arg2>
-    T * allocate(Arg1 & arg1, Arg2 const& arg2)
-    {
-        typedef typename Allocator::template rebind<T>::other alloc_t;
-        alloc_t alloc;
-        T * pointer = alloc.allocate(1);
-        ::new ((void*)pointer) T(arg1, arg2);
-        return pointer;
-    }
-
-    template <typename T, class Allocator, typename Arg1, typename Arg2, typename Arg3>
-    T * allocate(Arg1 & arg1, Arg2 const& arg2, Arg3 const& arg3)
-    {
-        typedef typename Allocator::template rebind<T>::other alloc_t;
-        alloc_t alloc;
-        T * pointer = alloc.allocate(1);
-        ::new ((void*)pointer) T(arg1, arg2, arg3);
-        return pointer;
-    }
-
-    template <typename T, class Allocator, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-    T * allocate(Arg1 & arg1, Arg2 & arg2, Arg3 const& arg3, Arg4 const& arg4)
-    {
-        typedef typename Allocator::template rebind<T>::other alloc_t;
-        alloc_t alloc;
-        T * pointer = alloc.allocate(1);
-        ::new ((void*)pointer) T(arg1, arg2, arg3, arg4);
-        return pointer;
-    }
-
 
     template <class Allocator, typename T>
     void deallocate(T * pointer)
@@ -182,45 +121,10 @@ namespace Bex { namespace bexio
         }
     };
 
-    template <typename T, class Allocator>
-    boost::shared_ptr<T> make_shared_ptr()
+    template <typename T, class Allocator, typename ... Args>
+    boost::shared_ptr<T> make_shared_ptr(Args && ... args)
     {
-        return boost::shared_ptr<T>(allocate<T, Allocator>(),
-            deallocator<T, Allocator>(), Allocator());
-    }
-
-    template <typename T, class Allocator, typename Arg>
-    boost::shared_ptr<T> make_shared_ptr(Arg const& arg)
-    {
-        return boost::shared_ptr<T>(allocate<T, Allocator>(arg),
-            deallocator<T, Allocator>(), Allocator());
-    }
-
-    template <typename T, class Allocator, typename Arg>
-    boost::shared_ptr<T> make_shared_ptr(Arg & arg)
-    {
-        return boost::shared_ptr<T>(allocate<T, Allocator>(arg),
-            deallocator<T, Allocator>(), Allocator());
-    }
-
-    template <typename T, class Allocator, typename Arg1, typename Arg2>
-    boost::shared_ptr<T> make_shared_ptr(Arg1 & arg1, Arg2 const& arg2)
-    {
-        return boost::shared_ptr<T>(allocate<T, Allocator>(arg1, arg2),
-            deallocator<T, Allocator>(), Allocator());
-    }
-
-    template <typename T, class Allocator, typename Arg1, typename Arg2, typename Arg3>
-    boost::shared_ptr<T> make_shared_ptr(Arg1 & arg1, Arg2 const& arg2, Arg3 const& arg3)
-    {
-        return boost::shared_ptr<T>(allocate<T, Allocator>(arg1, arg2, arg3),
-            deallocator<T, Allocator>(), Allocator());
-    }
-
-    template <typename T, class Allocator, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-    boost::shared_ptr<T> make_shared_ptr(Arg1 & arg1, Arg2 & arg2, Arg3 const& arg3, Arg4 const& arg4)
-    {
-        return boost::shared_ptr<T>(allocate<T, Allocator>(arg1, arg2, arg3, arg4),
+        return boost::shared_ptr<T>(allocate<T, Allocator>(std::forward<Args>(args)...),
             deallocator<T, Allocator>(), Allocator());
     }
 

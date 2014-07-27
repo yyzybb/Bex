@@ -6,6 +6,7 @@
 
 // @todo: Test keepalive.
 
+
 #include <Bex/bexio/bexio.hpp>
 #include <Bex/bexio/ssl_protocol.hpp>
 #include <Bex/auto_link.h>
@@ -23,8 +24,8 @@ enum {
 };
 
 std::string remote_ip = "127.0.0.1";
-volatile long s_count = 0;
-volatile long s_obj_count = 0;
+std::atomic<long> s_count = 0;
+std::atomic<long> s_obj_count = 0;
 options opt = options::test();
 
 template <typename Protocol>
@@ -100,22 +101,22 @@ class multi_session
 public:
     multi_session()
     {
-        ::BOOST_INTERLOCKED_INCREMENT(&s_obj_count);
+        ++ s_obj_count;
     }
 
     ~multi_session()
     {
-        ::BOOST_INTERLOCKED_DECREMENT(&s_obj_count);
+        -- s_obj_count;
     }
 
     virtual void on_connect() BEX_OVERRIDE
     {
-        ::BOOST_INTERLOCKED_INCREMENT(&s_count);
+        ++ s_count;
     }
 
     virtual void on_disconnect(error_code const& ec) BEX_OVERRIDE
     {
-        ::BOOST_INTERLOCKED_DECREMENT(&s_count);
+        -- s_count;
     }
 };
 
@@ -127,7 +128,7 @@ public:
     virtual void on_connect() BEX_OVERRIDE
     {
         Dump(boost::this_thread::get_id() << " on connect " << remote_endpoint());
-        ::BOOST_INTERLOCKED_INCREMENT(&s_count);
+        ++ s_count;
 
         char p1[4] = {};
         char p2[8] = {};
@@ -146,7 +147,7 @@ public:
     virtual void on_disconnect(error_code const& ec) BEX_OVERRIDE
     {
         Dump(boost::this_thread::get_id() << " on disconnect");
-        ::BOOST_INTERLOCKED_DECREMENT(&s_count);
+        -- s_count;
     }
 
     virtual void on_receive(error_code const& ec, boost::uint32_t * ph
@@ -171,17 +172,17 @@ class shutdown_session
 public:
     shutdown_session()
     {
-        ::BOOST_INTERLOCKED_INCREMENT(&s_obj_count);
+        ++ s_obj_count;
     }
 
     ~shutdown_session()
     {
-        ::BOOST_INTERLOCKED_DECREMENT(&s_obj_count);
+        -- s_obj_count;
     }
 
     virtual void on_connect() BEX_OVERRIDE
     {
-        ::BOOST_INTERLOCKED_INCREMENT(&s_count);
+        ++ s_count;
         Dump(boost::this_thread::get_id() << " on connect " << remote_endpoint());
         char buf[] = "I will shutdown session!";
         bool ok = send(buf, sizeof(buf));
@@ -197,7 +198,7 @@ public:
 
     virtual void on_disconnect(error_code const& ec) BEX_OVERRIDE
     {
-        ::BOOST_INTERLOCKED_DECREMENT(&s_count);
+        -- s_count;
         Dump(boost::this_thread::get_id() << " on disconnect! error:" << ec.message());
     }
 };

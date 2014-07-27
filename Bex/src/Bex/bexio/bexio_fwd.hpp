@@ -21,6 +21,7 @@
 #include <boost/typeof/typeof.hpp>
 #include <numeric>
 #include <list>
+#include <atomic>
 #include "options.hpp"
 #include "error.hpp"
 #include "sentry.hpp"
