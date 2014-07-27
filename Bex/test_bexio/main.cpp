@@ -32,12 +32,13 @@ template <typename Protocol>
 class simple_session
     : public basic_session<Protocol>
 {
+    typedef basic_session<Protocol> base_type;
 public:
     virtual void on_connect() BEX_OVERRIDE
     {
         Dump(boost::this_thread::get_id() << " on connect " << remote_endpoint());
         char buf[] = "Hello, I'm bexio!";
-        send(buf, sizeof(buf));
+        base_type::send(buf, sizeof(buf));
     }
 
     virtual void on_disconnect(error_code const& ec) BEX_OVERRIDE
@@ -55,6 +56,7 @@ template <typename Protocol>
 class pingpong_session
     : public simple_session<Protocol>
 {
+    typedef simple_session<Protocol> base_type;
 public:
     static pingpong_session * p;
     char buf[64 * 1024];
@@ -63,12 +65,12 @@ public:
     {
         Dump(boost::this_thread::get_id() << " on connect " << remote_endpoint());
         error_code ec;
-        get_socket()->lowest_layer().set_option(socket_base::send_buffer_size(8 * 1024 * 1024), ec);
-        get_socket()->lowest_layer().set_option(socket_base::receive_buffer_size(8 * 1024 * 1024), ec);
+        base_type::get_socket()->lowest_layer().set_option(socket_base::send_buffer_size(8 * 1024 * 1024), ec);
+        base_type::get_socket()->lowest_layer().set_option(socket_base::receive_buffer_size(8 * 1024 * 1024), ec);
         if (ec)
             Dump("set socket options error:{" << ec.value() << ", " << ec.message() << "}");
 
-        send(buf, sizeof(buf));
+        base_type::send(buf, sizeof(buf));
         p = this;
     }
 
@@ -76,7 +78,7 @@ public:
     {
         //Dump(boost::this_thread::get_id() << " size = " << size << " data:" << std::string(data, size));
         //reply(data, size);
-        send(buf, sizeof(buf));
+        base_type::send(buf, sizeof(buf));
     }
 
     virtual void on_disconnect(error_code const& ec) BEX_OVERRIDE
@@ -86,7 +88,7 @@ public:
 
     bool reply(char const* data, std::size_t size)
     {
-        bool first = send(data, size);
+        bool first = base_type::send(data, size);
         //bool second = send(data, size);
         return first;// || second;
     }
@@ -124,6 +126,7 @@ template <typename Protocol>
 class packet_session
     : public basic_session<Protocol>
 {
+    typedef basic_session<Protocol> base_type;
 public:
     virtual void on_connect() BEX_OVERRIDE
     {
@@ -138,10 +141,10 @@ public:
         *(boost::uint32_t*)p3 = 134;
         *(boost::uint32_t*)p4 = 4095;
 
-        send(p1, sizeof(p1));
-        send(p2, sizeof(p2));
-        send(p3, sizeof(p3));
-        send(p4, sizeof(p4));
+        base_type::send(p1, sizeof(p1));
+        base_type::send(p2, sizeof(p2));
+        base_type::send(p3, sizeof(p3));
+        base_type::send(p4, sizeof(p4));
     }
 
     virtual void on_disconnect(error_code const& ec) BEX_OVERRIDE
@@ -161,7 +164,7 @@ public:
             return ;
         }
 
-        send((char const*)ph, size + sizeof(boost::uint32_t));
+        base_type::send((char const*)ph, size + sizeof(boost::uint32_t));
     }
 };
 
@@ -169,6 +172,7 @@ template <typename Protocol>
 class shutdown_session
     : public basic_session<Protocol>
 {
+    typedef basic_session<Protocol> base_type;
 public:
     shutdown_session()
     {
@@ -183,9 +187,9 @@ public:
     virtual void on_connect() BEX_OVERRIDE
     {
         ++ s_count;
-        Dump(boost::this_thread::get_id() << " on connect " << remote_endpoint());
+        Dump(boost::this_thread::get_id() << " on connect " << base_type::remote_endpoint());
         char buf[] = "I will shutdown session!";
-        bool ok = send(buf, sizeof(buf));
+        bool ok = base_type::send(buf, sizeof(buf));
         shutdown();
         if (!ok)
             Dump("Send failed!");

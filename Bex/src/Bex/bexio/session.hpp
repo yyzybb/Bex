@@ -28,6 +28,7 @@
 #include "intrusive_list.hpp"
 #include "protocol_traits.hpp"
 #include "socket_options.hpp"
+#include "handlers.hpp"
 
 namespace Bex { namespace bexio
 {
@@ -178,10 +179,10 @@ namespace Bex { namespace bexio
             shutdowning_.set();
             on_error(generate_error(bee::initiative_shutdown));
 
-            BOOST_AUTO(handler, BEX_IO_BIND(&this_type::on_async_shutdown, this, BEX_IO_PH_ERROR, shared_this()));
+            auto handler = BEX_IO_BIND(&this_type::on_async_shutdown, this, BEX_IO_PH_ERROR, shared_this());
             if (opts_->ssl_opts)
             {
-                BOOST_AUTO(timeout_handler, timer_handler<allocator>(handler, socket_->get_io_service()));
+                auto timeout_handler = timer_handler<allocator>(handler, socket_->get_io_service());
                 timeout_handler.expires_from_now(boost::posix_time::milliseconds(opts_->ssl_opts->handshake_overtime));
                 timeout_handler.async_wait(BEX_IO_BIND(&this_type::on_async_shutdown, this, generate_error(bee::handshake_overtime), shared_this()));
                 protocol_traits_type::async_shutdown(socket_, timeout_handler);

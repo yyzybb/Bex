@@ -111,7 +111,7 @@ namespace Bex { namespace bexio
                 return false;
 
             /// 连接超时计时器, 异步等待
-            BOOST_AUTO(timed_handler, timer_handler<allocator>(BEX_IO_BIND(&this_type::on_async_connect_timed, this, BEX_IO_PH_ERROR, sp, addr, time), ios_));
+            auto timed_handler = timer_handler<allocator>(BEX_IO_BIND(&this_type::on_async_connect_timed, this, BEX_IO_PH_ERROR, sp, addr, time), ios_);
             timed_handler.expires_from_now(time);
             timed_handler.async_wait(BEX_IO_BIND(&this_type::on_overtime, this, BEX_IO_PH_ERROR, sp, bee::connect_overtime));
             sp->lowest_layer().async_connect(addr, timed_handler);
@@ -230,10 +230,10 @@ namespace Bex { namespace bexio
         void async_handshake(socket_ptr const& sp, endpoint const& addr)
         {
             async_handshaking_.set();
-            BOOST_AUTO(handler, BEX_IO_BIND(&this_type::on_async_handshake, this, BEX_IO_PH_ERROR, sp, addr));
+            auto handler = BEX_IO_BIND(&this_type::on_async_handshake, this, BEX_IO_PH_ERROR, sp, addr);
             if (opts_->ssl_opts)
             {
-                BOOST_AUTO(timed_handler, timer_handler<allocator>(handler, ios_));
+                auto timed_handler = timer_handler<allocator>(handler, ios_);
                 timed_handler.expires_from_now(boost::posix_time::milliseconds(opts_->ssl_opts->handshake_overtime));
                 timed_handler.async_wait(BEX_IO_BIND(&this_type::on_async_handshake, this, generate_error(bee::handshake_overtime), sp, addr));
                 protocol_traits_type::async_handshake(sp, ssl::stream_base::client, timed_handler);

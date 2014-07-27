@@ -35,7 +35,7 @@ namespace Bex { namespace bexio { namespace pltf
     {
         errno = 0;
         if(::setsockopt(s, SOL_TCP, TCP_KEEPIDLE
-            , (void*)&idle, sizeof(idle)) == SOCKET_ERROR)
+            , (void*)&idle, sizeof(idle)) == -1)
         {
             ec = boost::system::error_code(errno
                 , boost::asio::error::get_system_category());
@@ -43,7 +43,7 @@ namespace Bex { namespace bexio { namespace pltf
         }
         
         if(::setsockopt(s, SOL_TCP, TCP_KEEPINTVL
-            , (void*)&interval, sizeof(interval)) == SOCKET_ERROR)
+            , (void*)&interval, sizeof(interval)) == -1)
         {
             ec = boost::system::error_code(errno
                 , boost::asio::error::get_system_category());
@@ -52,7 +52,7 @@ namespace Bex { namespace bexio { namespace pltf
 
         int default_count = 5;  // 默认最多可允许丢失的心跳包数量
         if(::setsockopt(s, SOL_TCP, TCP_KEEPCNT
-            , (void*)&default_count, sizeof(default_count)) == SOCKET_ERROR)
+            , (void*)&default_count, sizeof(default_count)) == -1)
         {
             ec = boost::system::error_code(errno
                 , boost::asio::error::get_system_category());

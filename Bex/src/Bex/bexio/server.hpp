@@ -179,10 +179,10 @@ namespace Bex { namespace bexio
         // ÎÕÊÖ
         void async_handshake(socket_ptr const& sp)
         {
-            BOOST_AUTO(handler, BEX_IO_BIND(&this_type::on_async_handshake, this, BEX_IO_PH_ERROR, sp));
+            auto handler = BEX_IO_BIND(&this_type::on_async_handshake, this, BEX_IO_PH_ERROR, sp);
             if (opts_->ssl_opts)
             {
-                BOOST_AUTO(timed_handler, timer_handler<allocator>(handler, ios_));
+                auto timed_handler = timer_handler<allocator>(handler, ios_);
                 timed_handler.expires_from_now(boost::posix_time::milliseconds(opts_->ssl_opts->handshake_overtime));
                 timed_handler.async_wait(BEX_IO_BIND(&this_type::on_async_handshake, this, generate_error(bee::handshake_overtime), sp));
                 protocol_traits_type::async_handshake(sp, ssl::stream_base::server, timed_handler);
