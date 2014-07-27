@@ -112,7 +112,8 @@ namespace Bex { namespace bexio
         void initialize(socket_ptr socket, options_ptr const& opts, callback_ptr const& callbacks)
         {
             opts_ = opts, callbacks_ = callbacks, socket_ = socket;
-            protocol_traits_type::initialize(*this, opts_, boost::get<(int)cbe::cb_receive>(*callbacks_), get_id());
+            protocol_traits_type::initialize(static_cast<protocol_type&>(*this)
+                , opts_, boost::get<(int)cbe::cb_receive>(*callbacks_), get_id());
 
             mstrand_service()->post(BEX_IO_BIND(&this_type::do_onconnect_cb, this, shared_this()));
 
@@ -360,7 +361,7 @@ namespace Bex { namespace bexio
             {
                 shutdown_dt_ = make_shared_ptr<deadline_timer, allocator>(socket_->get_io_service());
                 shutdown_dt_->expires_from_now(boost::posix_time::milliseconds(opts_->shutdown_timeout));
-                shutdown_dt_->async_wait(BEX_IO_BIND(&this_type::on_shutdown_overtime, this, BEX_IO_PH_ERROR, shared_from_this()));
+                shutdown_dt_->async_wait(BEX_IO_BIND(&this_type::on_shutdown_overtime, this, BEX_IO_PH_ERROR, shared_this()));
                 if (!sending_.is_set() && !socket_->getable_write())
                     close_send();
             }

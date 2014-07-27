@@ -36,7 +36,7 @@ class simple_session
 public:
     virtual void on_connect() BEX_OVERRIDE
     {
-        Dump(boost::this_thread::get_id() << " on connect " << remote_endpoint());
+        Dump(boost::this_thread::get_id() << " on connect " << base_type::remote_endpoint());
         char buf[] = "Hello, I'm bexio!";
         base_type::send(buf, sizeof(buf));
     }
@@ -63,7 +63,7 @@ public:
 
     virtual void on_connect() BEX_OVERRIDE
     {
-        Dump(boost::this_thread::get_id() << " on connect " << remote_endpoint());
+        Dump(boost::this_thread::get_id() << " on connect " << base_type::remote_endpoint());
         error_code ec;
         base_type::get_socket()->lowest_layer().set_option(socket_base::send_buffer_size(8 * 1024 * 1024), ec);
         base_type::get_socket()->lowest_layer().set_option(socket_base::receive_buffer_size(8 * 1024 * 1024), ec);
@@ -130,7 +130,7 @@ class packet_session
 public:
     virtual void on_connect() BEX_OVERRIDE
     {
-        Dump(boost::this_thread::get_id() << " on connect " << remote_endpoint());
+        Dump(boost::this_thread::get_id() << " on connect " << base_type::remote_endpoint());
         ++ s_count;
 
         char p1[4] = {};
@@ -160,7 +160,7 @@ public:
         if (ec)
         {
             Dump("error: " << ec.message());
-            terminate();
+            base_type::terminate();
             return ;
         }
 
@@ -190,7 +190,7 @@ public:
         Dump(boost::this_thread::get_id() << " on connect " << base_type::remote_endpoint());
         char buf[] = "I will shutdown session!";
         bool ok = base_type::send(buf, sizeof(buf));
-        shutdown();
+        base_type::shutdown();
         if (!ok)
             Dump("Send failed!");
     }

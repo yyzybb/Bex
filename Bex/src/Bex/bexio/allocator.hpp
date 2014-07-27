@@ -81,9 +81,10 @@ namespace Bex { namespace bexio
             this->deallocate(ptr);
         }
 
-        void construct(T * ptr) const throw()
+        template <typename ... Args>
+        void construct(T * ptr, Args && ... args) const
         {
-            ::new ((void*)ptr) T();
+            ::new ((void*)ptr) T(std::forward<Args>(args)...);
         }
 
         template <class U>
