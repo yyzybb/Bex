@@ -64,7 +64,7 @@ namespace Bex { namespace bexio
     {
         template <typename U>
         static char _check(U*
-            , decltype(std::declval<U>().initialize<F, Id>(shared_ptr<options>(), std::declval<F>(), std::declval<Id>()))* = nullptr);
+            , decltype(std::declval<U>().initialize(shared_ptr<options>(), std::declval<F>(), std::declval<Id>()))* = nullptr);
 
         template <typename U>
         static short _check(...);
