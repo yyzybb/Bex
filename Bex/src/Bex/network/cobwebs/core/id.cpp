@@ -7,8 +7,8 @@ namespace Bex { namespace cobwebs
     volatile long id32::s_id = 1;
     boost::uint64_t id64::s_id = 1;
 #else
-    std::atomic<long> id32::s_id = 1;
-    std::atomic<long long> id64::s_id = 1;
+    std::atomic<long> id32::s_id {1};
+    std::atomic<long long> id64::s_id {1};
 #endif
 
     static boost::mutex s_mu;

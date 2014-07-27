@@ -612,7 +612,7 @@ namespace Bex { namespace bexio
     template <typename Protocol,
         template <typename> class Hook
     >
-    std::atomic<long> basic_session<Protocol, Hook>::svlid = 1;
+    std::atomic<long> basic_session<Protocol, Hook>::svlid (1);
 
 } //namespace bexio
 } //namespace Bex

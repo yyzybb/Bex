@@ -24,8 +24,8 @@ enum {
 };
 
 std::string remote_ip = "127.0.0.1";
-std::atomic<long> s_count = 0;
-std::atomic<long> s_obj_count = 0;
+std::atomic<long> s_count;
+std::atomic<long> s_obj_count;
 options opt = options::test();
 
 template <typename Protocol>
