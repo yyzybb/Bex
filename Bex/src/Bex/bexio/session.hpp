@@ -27,6 +27,7 @@
 #include "multithread_strand_service.hpp"
 #include "intrusive_list.hpp"
 #include "protocol_traits.hpp"
+#include "socket_options.hpp"
 
 namespace Bex { namespace bexio
 {
