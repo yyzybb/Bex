@@ -22,41 +22,54 @@ namespace Bex { namespace bexio
 
     //////////////////////////////////////////////////////////////////////////
     /// @{ initialize
-    template <typename Protocol, typename F, typename Id>
-    struct has_initialize_2
-    {
-        template <typename U, void(U::*)(shared_ptr<options> const&, F const&, Id const&)>
-        struct impl;
+    //template <typename Protocol, typename F, typename Id>
+    //struct has_initialize_2
+    //{
+    //    template <typename U, void(U::*)(shared_ptr<options> const&, F const&, Id const&)>
+    //    struct impl;
 
+    //    template <typename U>
+    //    static char _check(U*, impl<U, (&U::template initialize<F, Id>) >*);
+
+    //    template <typename U>
+    //    static short _check(...);
+
+    //    static const bool value = (sizeof(_check<Protocol>(0, 0)) == sizeof(char));
+    //};
+
+    //template <typename Protocol, typename F, typename Id, bool>
+    //struct has_initialize_1
+    //{
+    //    typedef typename next_layer_t<Protocol>::type NextProtocol;
+    //    static const bool value = has_initialize_2<Protocol, F, Id>::value 
+    //        || has_initialize_1<NextProtocol, F, Id
+    //            , boost::is_same<typename next_layer_t<NextProtocol>::type, NextProtocol>::value>::value;
+    //};
+
+    //template <typename Protocol, typename F, typename Id>
+    //struct has_initialize_1<Protocol, F, Id, true>
+    //    : has_initialize_2<Protocol, F, Id>
+    //{};
+
+    /// Öð²ã¼ì²â
+    //template <typename Protocol, typename F, typename Id>
+    //struct has_initialize
+    //    : has_initialize_1<Protocol, F, Id
+    //        , boost::is_same<typename next_layer_t<Protocol>::type, Protocol>::value>
+    //{
+    //};
+
+    template <typename Protocol, typename F, typename Id>
+    struct has_initialize
+    {
         template <typename U>
-        static char _check(U*, impl<U, (&U::template initialize<F, Id>) >*);
+        static char _check(U*
+            , decltype(std::declval<U>().initialize<F, Id>(shared_ptr<options>(), std::declval<F>(), std::declval<Id>()))* = nullptr);
 
         template <typename U>
         static short _check(...);
 
-        static const bool value = (sizeof(_check<Protocol>(0, 0)) == sizeof(char));
-    };
-
-    template <typename Protocol, typename F, typename Id, bool>
-    struct has_initialize_1
-    {
-        typedef typename next_layer_t<Protocol>::type NextProtocol;
-        static const bool value = has_initialize_2<Protocol, F, Id>::value 
-            || has_initialize_1<NextProtocol, F, Id
-                , boost::is_same<typename next_layer_t<NextProtocol>::type, NextProtocol>::value>::value;
-    };
-
-    template <typename Protocol, typename F, typename Id>
-    struct has_initialize_1<Protocol, F, Id, true>
-        : has_initialize_2<Protocol, F, Id>
-    {};
-
-    /// Öð²ã¼ì²â
-    template <typename Protocol, typename F, typename Id>
-    struct has_initialize
-        : has_initialize_1<Protocol, F, Id
-            , boost::is_same<typename next_layer_t<Protocol>::type, Protocol>::value>
-    {
+        static const bool value = sizeof(_check<Protocol>(nullptr)) == sizeof(char);
     };
 
     template <typename Protocol, typename F, typename Id, bool>
