@@ -216,13 +216,13 @@ void start_server()
     opt.ssl_opts.reset(new ssl_options(ssl_options::server()));
 
     server s(opt);
-    s.set_handshake_error_callbcak(boost::BOOST_BIND(&on_handshake_error<server::endpoint>, ::_1, ::_2));
-    bool ok = s.startup(server::endpoint(ip::address::from_string("0.0.0.0"), 28087), 10);
+    s.set_handshake_error_callbcak(boost::BOOST_BIND(&on_handshake_error<typename server::endpoint>, ::_1, ::_2));
+    bool ok = s.startup(typename server::endpoint(ip::address::from_string("0.0.0.0"), 28087), 10);
     if (!ok)
         Dump("server startup error: " << s.get_error_code().message());
 
-    io_service::work worker(core<server::allocator>::getInstance().backfront());
-    core<server::allocator>::getInstance().run();
+    io_service::work worker(core<typename server::allocator>::getInstance().backfront());
+    core<typename server::allocator>::getInstance().run();
 }
 
 template <class Session>
@@ -232,13 +232,13 @@ void start_client()
     opt.ssl_opts.reset(new ssl_options(ssl_options::client()));
 
     client c(opt);
-    c.set_handshake_error_callbcak(boost::BOOST_BIND(&on_handshake_error<client::endpoint>, ::_1, ::_2));
-    bool ok = c.connect(client::endpoint(ip::address::from_string(remote_ip), 28087));
+    c.set_handshake_error_callbcak(boost::BOOST_BIND(&on_handshake_error<typename client::endpoint>, ::_1, ::_2));
+    bool ok = c.connect(typename client::endpoint(ip::address::from_string(remote_ip), 28087));
     if (!ok)
         Dump("connect error: " << c.get_error_code().message());
 
-    io_service::work worker(core<client::allocator>::getInstance().backfront());
-    core<client::allocator>::getInstance().run();
+    io_service::work worker(core<typename client::allocator>::getInstance().backfront());
+    core<typename client::allocator>::getInstance().run();
 }
 
 template <class Container>
@@ -280,21 +280,21 @@ void start_multi_client()
         origin.push_back(c);
     }
 
-    for (client_list::iterator it = origin.begin(); it != origin.end(); ++it)
+    for (typename client_list::iterator it = origin.begin(); it != origin.end(); ++it)
     {
         shared_ptr<client> & c = *it;
         c->set_async_connect_callback(boost::BOOST_BIND(&on_multiconnect_callback<client_list>
             , ::_1, it, boost::ref(origin), boost::ref(conn), boost::ref(lock)));
-        c->set_handshake_error_callbcak(boost::BOOST_BIND(&on_handshake_error<client::endpoint>, ::_1, ::_2));
+        c->set_handshake_error_callbcak(boost::BOOST_BIND(&on_handshake_error<typename client::endpoint>, ::_1, ::_2));
         //bool ok = c->async_connect(client::endpoint(ip::address::from_string(remote_ip), 28087));
-        bool ok = c->async_connect_timed(client::endpoint(ip::address::from_string(remote_ip), 28087)
+        bool ok = c->async_connect_timed(typename client::endpoint(ip::address::from_string(remote_ip), 28087)
             , boost::posix_time::milliseconds(10000));
         if (!ok)
             Dump("connect error: " << c->get_error_code().message());
     }
 
-    io_service::work worker(core<client::allocator>::getInstance().backfront());
-    core<client::allocator>::getInstance().run();
+    io_service::work worker(core<typename client::allocator>::getInstance().backfront());
+    core<typename client::allocator>::getInstance().run();
 }
 
 void handle_ctrl_c(error_code, int, signal_set * ss)
