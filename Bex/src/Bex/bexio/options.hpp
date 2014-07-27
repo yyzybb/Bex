@@ -5,6 +5,7 @@
 /// ø…—°≈‰÷√œÓ options
 #include <Bex/config.hpp>
 #include <boost/shared_ptr.hpp>
+#include "options_ssl.hpp"
 
 namespace Bex { namespace bexio
 {

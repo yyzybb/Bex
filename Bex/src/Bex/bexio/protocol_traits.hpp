@@ -13,29 +13,9 @@ namespace Bex { namespace bexio
     template <typename Addition, typename F>
     struct function_addition;
 
-    template <typename Addition, typename R>
-    struct function_addition<Addition, boost::function<R()> >
-        : boost::mpl::identity<boost::function<R(Addition)> >
-    {};
-
-    template <typename Addition, typename R, typename Arg1>
-    struct function_addition<Addition, boost::function<R(Arg1)> >
-        : boost::mpl::identity<boost::function<R(Addition, Arg1)> >
-    {};
-
-    template <typename Addition, typename R, typename Arg1, typename Arg2>
-    struct function_addition<Addition, boost::function<R(Arg1, Arg2)> >
-        : boost::mpl::identity<boost::function<R(Addition, Arg1, Arg2)> >
-    {};
-
-    template <typename Addition, typename R, typename Arg1, typename Arg2, typename Arg3>
-    struct function_addition<Addition, boost::function<R(Arg1, Arg2, Arg3)> >
-        : boost::mpl::identity<boost::function<R(Addition, Arg1, Arg2, Arg3)> >
-    {};
-
-    template <typename Addition, typename R, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
-    struct function_addition<Addition, boost::function<R(Arg1, Arg2, Arg3, Arg4)> >
-        : boost::mpl::identity<boost::function<R(Addition, Arg1, Arg2, Arg3, Arg4)> >
+    template <typename Addition, typename R, typename ... Args>
+    struct function_addition<Addition, boost::function<R(Args...)> >
+        : boost::mpl::identity<boost::function<R(Addition, Args...)> >
     {};
     /// @}
     //////////////////////////////////////////////////////////////////////////

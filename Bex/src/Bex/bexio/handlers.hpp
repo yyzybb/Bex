@@ -20,8 +20,7 @@ namespace Bex { namespace bexio
         typedef void result_type;
 
         template <typename ... Args>
-        inline void operator()(Args && ... args) const
-        {}
+        inline void operator()(Args && ... args) const {}
     };
 
     // »¥³âÊ½handler°ü×°Æ÷

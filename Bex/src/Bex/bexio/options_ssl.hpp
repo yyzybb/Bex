@@ -4,8 +4,6 @@
 //////////////////////////////////////////////////////////////////////////
 /// ssl可选配置项
 #include <Bex/config.hpp>
-#include <boost/asio/ssl/context_base.hpp>
-#include <boost/asio/ssl/verify_mode.hpp>
 #include <string>
 
 namespace Bex { namespace bexio
@@ -45,7 +43,7 @@ namespace Bex { namespace bexio
         //          ctx.use_private_key_file(pri_key_file.c_str(), file_fmt);
         //      @end code.
         std::string pri_key_file;
-        ssl::context_base::file_format file_fmt;
+        int file_fmt;
 
         // dh算法密钥文件
         // * 默认值: "dh512.pem"
@@ -69,36 +67,11 @@ namespace Bex { namespace bexio
 
 
         // 客户端默认配置
-        static ssl_options client()
-        {
-            static ssl_options opts = {
-                ssl::context_base::default_workarounds | ssl::context_base::no_sslv2,
-                ssl::verify_none,
-                "",
-                "",
-                ssl::context_base::pem,
-                "dh512.pem",
-                "RC4-MD5",
-                10 * 1000
-            };
-            return opts;
-        }
+        static ssl_options client();
 
         // 服务端默认配置
-        static ssl_options server()
-        {
-            static ssl_options opts = {
-                ssl::context_base::default_workarounds | ssl::context_base::no_sslv2,
-                ssl::verify_none,
-                "bexio.crt",
-                "bexio.pem",
-                ssl::context_base::pem,
-                "dh512.pem",
-                "RC4-MD5",
-                10 * 1000
-            };
-            return opts;
-        }
+        static ssl_options server();
+
         //////////////////////////////////////////////////////////////////////////
         /// @{ sample
         // @begin code: client peer

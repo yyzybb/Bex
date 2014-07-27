@@ -157,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\Bex\bexio\detail\multithread_strand.ipp" />
+    <None Include="..\src\Bex\bexio\detail\options_ssl.ipp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1740DA12-0A80-4E1E-A2FD-263E1BEDA000}</ProjectGuid>

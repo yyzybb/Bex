@@ -29,9 +29,9 @@ namespace Bex { namespace bexio
         typedef Allocator allocator;
 
     public:
-        template <typename Arg>
-        explicit multithread_strand(Arg & arg)
-            : next_layer_(arg)
+        template <typename ... Args>
+        explicit multithread_strand(Args && ... args)
+            : next_layer_(std::forward<Args>(args)...)
         {}
 
         // 获取下层strand引用

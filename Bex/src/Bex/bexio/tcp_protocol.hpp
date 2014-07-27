@@ -30,8 +30,8 @@ namespace Bex { namespace bexio
         static socket_ptr alloc_socket(io_service & ios, options & opts, error_code & ec)
         {
             ec.clear();
-            return make_shared_ptr<socket, allocator>(ios
-                , opts.receive_buffer_size, opts.send_buffer_size);
+            return make_shared_ptr<socket, allocator>(
+                opts.receive_buffer_size, opts.send_buffer_size, ios);
         }
 
     protected:

@@ -529,5 +529,8 @@
     <None Include="..\src\Bex\bexio\detail\multithread_strand.ipp">
       <Filter>src\bexio\detail</Filter>
     </None>
+    <None Include="..\src\Bex\bexio\detail\options_ssl.ipp">
+      <Filter>src\bexio\detail</Filter>
+    </None>
   </ItemGroup>
 </Project>

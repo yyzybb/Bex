@@ -5,6 +5,7 @@
 /// ssl–≠“È
 #include "bexio_fwd.hpp"
 #include "options_ssl.hpp"
+#include <Bex/bexio/detail/options_ssl.ipp>
 #include <boost/asio/ssl.hpp>
 
 #pragma comment(lib, "ssleay32.lib")
@@ -136,7 +137,7 @@ namespace Bex { namespace bexio
 
             if (!opts.ssl_opts->pri_key_file.empty())
             {
-                ctx->use_private_key_file(opts.ssl_opts->pri_key_file, opts.ssl_opts->file_fmt, ec);
+                ctx->use_private_key_file(opts.ssl_opts->pri_key_file, (ssl::context_base::file_format)opts.ssl_opts->file_fmt, ec);
                 if (ec)
                     return socket_ptr();
             }
@@ -151,8 +152,9 @@ namespace Bex { namespace bexio
             if (!opts.ssl_opts->cipher_list.empty())
                 SSL_CTX_set_cipher_list(ctx->native_handle(), opts.ssl_opts->cipher_list.c_str());
 
-            socket_ptr sp = make_shared_ptr<socket, allocator>(ios
-                , ctx, opts.receive_buffer_size, opts.send_buffer_size);
+            socket_ptr sp = make_shared_ptr<socket, allocator>(
+                opts.receive_buffer_size, opts.send_buffer_size
+                , ios, ctx);
 
             ec.clear();
             return sp;

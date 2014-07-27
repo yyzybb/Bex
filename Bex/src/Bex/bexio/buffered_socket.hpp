@@ -24,19 +24,9 @@ namespace Bex { namespace bexio
     public:
         // @rbsize : 接收缓冲区大小
         // @wbsize : 发送缓冲区大小
-        template <typename Arg>
-        buffered_socket(Arg & arg, std::size_t rbsize, std::size_t wbsize)
-            : socket_(arg)
-            , read_buffer_(alloc_t().allocate(rbsize), rbsize)
-            , write_buffer_(alloc_t().allocate(wbsize), wbsize)
-        {
-            read_storage_ = read_buffer_.address();
-            write_storage_ = write_buffer_.address();
-        }
-
-        template <typename Arg1, typename Arg2>
-        buffered_socket(Arg1 & arg1, Arg2 & arg2, std::size_t rbsize, std::size_t wbsize)
-            : socket_(arg1, arg2)
+        template <typename ... Args>
+        buffered_socket(std::size_t rbsize, std::size_t wbsize, Args && ... args)
+            : socket_(std::forward<Args>(args)...)
             , read_buffer_(alloc_t().allocate(rbsize), rbsize)
             , write_buffer_(alloc_t().allocate(wbsize), wbsize)
         {

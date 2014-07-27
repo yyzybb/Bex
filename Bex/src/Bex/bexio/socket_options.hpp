@@ -1,5 +1,5 @@
-#ifndef __BEX_IO_BEXIO_SOCKET_OPTIONS_HPP__
-#define __BEX_IO_BEXIO_SOCKET_OPTIONS_HPP__
+#ifndef __BEX_IO_SOCKET_OPTIONS_HPP__
+#define __BEX_IO_SOCKET_OPTIONS_HPP__
 
 //////////////////////////////////////////////////////////////////////////
 /// socket—°œÓ¿©’π
@@ -81,4 +81,4 @@ namespace Bex { namespace bexio { namespace pltf
 } //namespace bexio
 } //namespace Bex
 
-#endif //__BEX_IO_BEXIO_SOCKET_OPTIONS_HPP__
+#endif //__BEX_IO_SOCKET_OPTIONS_HPP__
