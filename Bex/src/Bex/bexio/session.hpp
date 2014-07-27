@@ -52,7 +52,7 @@ namespace Bex { namespace bexio
         typedef typename protocol_type::allocator allocator;
         typedef typename protocol_type::socket_ptr socket_ptr;
         typedef typename protocol_type::endpoint endpoint;
-        typedef typename protocol_traits<protocol_type> protocol_traits_type;
+        typedef protocol_traits<protocol_type> protocol_traits_type;
         typedef multithread_strand_service<allocator> mstrand_service_type;
 
         // Á¬½Óid

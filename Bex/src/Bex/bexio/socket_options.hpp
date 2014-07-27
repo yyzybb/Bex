@@ -4,6 +4,7 @@
 //////////////////////////////////////////////////////////////////////////
 /// socket—°œÓ¿©’π
 #include "bexio_fwd.hpp"
+#include <boost/asio/detail/socket_types.hpp>
 
 #if defined(BOOST_ASIO_MSVC)
 # include <MSTCPiP.h>
@@ -32,7 +33,7 @@ namespace Bex { namespace bexio { namespace pltf
     inline void set_keepalive_params(boost::asio::detail::socket_type s
         , int idle, int interval, boost::system::error_code & ec)
     {
-        clear_last_error();
+        errno = 0;
         if(::setsockopt(s, SOL_TCP, TCP_KEEPIDLE
             , (void*)&idle, sizeof(idle)) == SOCKET_ERROR)
         {

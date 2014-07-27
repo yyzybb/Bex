@@ -31,7 +31,7 @@ namespace Bex { namespace bexio
         typedef typename protocol_type::acceptor acceptor;
         typedef typename protocol_type::endpoint endpoint;
         typedef typename protocol_type::allocator allocator;
-        typedef typename protocol_traits<protocol_type> protocol_traits_type;
+        typedef protocol_traits<protocol_type> protocol_traits_type;
 
         typedef boost::function<void(error_code const&, endpoint const&)> OnHandshakeError;
 
