@@ -44,6 +44,9 @@ namespace Bex { namespace bexio
         typedef typename Allocator::template rebind<char>::other allocator;
         typedef boost::function<void(error_code const&, PacketHead*, char const*, std::size_t)> Callback;
 
+        // 包头长度
+        static const std::size_t head_size = sizeof(PacketHead);
+
         ~packet_parser()
         {
             if (init_.reset())
@@ -184,9 +187,6 @@ namespace Bex { namespace bexio
 
         // 解析结果回调
         Callback callback_;
-
-        // 包头长度
-        static const std::size_t head_size = sizeof(PacketHead);
     };
 
 
