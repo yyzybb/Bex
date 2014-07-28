@@ -313,17 +313,11 @@ void handle_ctrl_c(error_code, int, signal_set * ss)
     }
 }
 
-void config()
-{
-}
-
 int main()
 {
     // ≈‰÷√
-    config();
-
-    signal_set signal_proc(core<>::getInstance().backfront(), SIGINT);
-    signal_proc.async_wait(boost::bind(&handle_ctrl_c, ::_1, ::_2, &signal_proc));
+    //signal_set signal_proc(core<>::getInstance().backfront(), SIGINT);
+    //signal_proc.async_wait(boost::bind(&handle_ctrl_c, ::_1, ::_2, &signal_proc));
 
     int input = 0;
     do 
@@ -338,17 +332,27 @@ int main()
         int type = (input % 100) / 10;
         int point = input % 10;
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1800)
+#if defined(BEX_SUPPORT_CXX11)
         boost::thread th([point] {
             for (;;)
             {
+                static long s_c = s_count;
+                static long s_oc = s_obj_count;
                 long c = s_count;
                 long oc = s_obj_count;
+#if defined(_WIN32) || defined(_WIN64)
                 ::SetConsoleTitleA(Bex::format("%s (%d)(%d)", ((point == 0) ? "server" : "client"), oc, c).c_str());
+#else
+                if (s_c != c || s_oc != oc)
+                {
+                    Dump(Bex::format("%s (%d)(%d)", ((point == 0) ? "server" : "client"), oc, c));
+                    s_c = c, s_oc = oc;
+                }
+#endif
                 boost::this_thread::sleep(boost::posix_time::millisec(100));
             }
         });
-#endif
+#endif //defined(BEX_SUPPORT_CXX11)
 
         typedef tcp_protocol<> tcp_proto;
         typedef tcp_packet_protocol<> tcp_packet_proto;
