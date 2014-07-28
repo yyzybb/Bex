@@ -23,7 +23,7 @@ enum {
     t_ssl_shutdown = 5, // 测试优雅地关闭连接(发送后立即shutdown, 要保证对端可以接收完整, 不丢数据.)
 };
 
-std::string remote_ip = "127.0.0.1";
+std::string remote_ip = "192.168.1.105";
 std::atomic<long> s_count;
 std::atomic<long> s_obj_count;
 options opt = options::test();
@@ -336,13 +336,13 @@ int main()
         boost::thread th([point] {
             for (;;)
             {
-                static long s_c = s_count;
-                static long s_oc = s_obj_count;
                 long c = s_count;
                 long oc = s_obj_count;
 #if defined(_WIN32) || defined(_WIN64)
                 ::SetConsoleTitleA(Bex::format("%s (%d)(%d)", ((point == 0) ? "server" : "client"), oc, c).c_str());
 #else
+                static long s_c = c;
+                static long s_oc = oc;
                 if (s_c != c || s_oc != oc)
                 {
                     Dump(Bex::format("%s (%d)(%d)", ((point == 0) ? "server" : "client"), oc, c));
