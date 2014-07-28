@@ -45,7 +45,7 @@ namespace Bex { namespace bexio
         typedef boost::function<void(error_code const&, PacketHead*, char const*, std::size_t)> Callback;
 
         // 包头长度
-        static const std::size_t head_size = sizeof(PacketHead);
+        const std::size_t head_size { sizeof(PacketHead) };
 
         ~packet_parser()
         {
