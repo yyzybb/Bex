@@ -40,6 +40,9 @@ namespace Bex
             return (double)milli_elapsed() / 1000.0;
         }
     };
+
+    typedef high_resolution_timer timer;
+
 } // namespace Bex
 
 #endif //__BEX_TIMER_TIMER_HPP__

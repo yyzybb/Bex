@@ -49,36 +49,16 @@
     <ClInclude Include="..\src\Bex\config.hpp" />
     <ClInclude Include="..\src\Bex\config\config.hpp" />
     <ClInclude Include="..\src\Bex\config\stl.hpp" />
+    <ClInclude Include="..\src\Bex\config\windows.h" />
     <ClInclude Include="..\src\Bex\filesystem\filestream.hpp" />
     <ClInclude Include="..\src\Bex\math.hpp" />
     <ClInclude Include="..\src\Bex\math\compress_numeric.hpp" />
     <ClInclude Include="..\src\Bex\math\uint_3.hpp" />
     <ClInclude Include="..\src\Bex\math\utility.hpp" />
     <ClInclude Include="..\src\Bex\mpl\while.hpp" />
-    <ClInclude Include="..\src\Bex\network\cobwebs.h" />
-    <ClInclude Include="..\src\Bex\network\cobwebs\acceptor\acceptor_base.h" />
-    <ClInclude Include="..\src\Bex\network\cobwebs\acceptor\tcp_acceptor.h" />
-    <ClInclude Include="..\src\Bex\network\cobwebs\connector\connector_base.h" />
-    <ClInclude Include="..\src\Bex\network\cobwebs\connector\tcp_connector.h" />
-    <ClInclude Include="..\src\Bex\network\cobwebs\core\core.h" />
-    <ClInclude Include="..\src\Bex\network\cobwebs\core\error.hpp" />
-    <ClInclude Include="..\src\Bex\network\cobwebs\core\id.h" />
-    <ClInclude Include="..\src\Bex\network\cobwebs\core\options.h" />
-    <ClInclude Include="..\src\Bex\network\cobwebs\core\pool.hpp" />
-    <ClInclude Include="..\src\Bex\network\cobwebs\core\register.hpp" />
-    <ClInclude Include="..\src\Bex\network\cobwebs\core\deleter.hpp" />
-    <ClInclude Include="..\src\Bex\network\cobwebs\parser\packet_head_wrapper.hpp" />
-    <ClInclude Include="..\src\Bex\network\cobwebs\parser\tcp_packet_parser.h" />
-    <ClInclude Include="..\src\Bex\network\cobwebs\session\session_base.hpp" />
-    <ClInclude Include="..\src\Bex\network\cobwebs\session\session_factory.hpp" />
-    <ClInclude Include="..\src\Bex\network\cobwebs\session\tcp_session.h" />
-    <ClInclude Include="..\src\Bex\network\cobwebs\tcp_client.hpp" />
-    <ClInclude Include="..\src\Bex\network\cobwebs\udp\udp.h" />
-    <ClInclude Include="..\src\Bex\network\http\sync_client.h" />
     <ClInclude Include="..\src\Bex\platform\charset_cvt.h" />
     <ClInclude Include="..\src\Bex\platform\utility.h" />
-    <ClInclude Include="..\src\Bex\platform\win32\utility.h" />
-    <ClInclude Include="..\src\Bex\platform\win32\win32_service.h" />
+    <ClInclude Include="..\src\Bex\platform\win32\win32_service.hpp" />
     <ClInclude Include="..\src\Bex\signals\combine_accumulate_value.hpp" />
     <ClInclude Include="..\src\Bex\signals\combine_last_value.hpp" />
     <ClInclude Include="..\src\Bex\signals\signal.hpp" />
@@ -140,20 +120,7 @@
     <ClInclude Include="..\src\Bex\utility\type_name.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\Bex\bind\forward_bind.cpp" />
-    <ClCompile Include="..\src\Bex\network\cobwebs\acceptor\acceptor_base.cpp" />
-    <ClCompile Include="..\src\Bex\network\cobwebs\acceptor\tcp_acceptor.cpp" />
-    <ClCompile Include="..\src\Bex\network\cobwebs\connector\tcp_connector.cpp" />
-    <ClCompile Include="..\src\Bex\network\cobwebs\core\core.cpp" />
-    <ClCompile Include="..\src\Bex\network\cobwebs\core\id.cpp" />
-    <ClCompile Include="..\src\Bex\network\cobwebs\parser\tcp_packet_parser.cpp" />
-    <ClCompile Include="..\src\Bex\network\cobwebs\session\tcp_session.cpp" />
-    <ClCompile Include="..\src\Bex\network\cobwebs\udp\udp.cpp" />
-    <ClCompile Include="..\src\Bex\network\http\sync_client.cpp" />
-    <ClCompile Include="..\src\Bex\platform\win32\charset_cvt.cpp" />
-    <ClCompile Include="..\src\Bex\platform\win32\utility.cpp" />
-    <ClCompile Include="..\src\Bex\platform\win32\win32_service.cpp" />
-    <ClCompile Include="..\src\Bex\thread\thread_pool\thread_pool.cpp" />
+    <ClCompile Include="..\src\Bex\platform\win32\win32_service.ipp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\Bex\bexio\detail\multithread_strand.ipp" />

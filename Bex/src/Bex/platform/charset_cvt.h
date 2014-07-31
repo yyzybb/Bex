@@ -102,14 +102,23 @@ namespace Bex { namespace conv
         }
 
         std::string generate_id(std::string const& lc)
-#if defined(_WIN32) || defined(_WIN64)
-            ;   ///< defined in cpp
-#else
+#if defined(BEX_WINDOWS_API)
+        {
+
+            int cp = ::GetACP();
+            for (int i = 0; i < sizeof(all_windows_encodings) / sizeof(windows_encoding); ++i)
+                if (all_windows_encodings[i].codepage == cp)
+                {
+                    return lc + all_windows_encodings[i].name;
+                }
+ 
+            return lc + "utf8";
+        }
+#else //defined(BEX_WINDOWS_API)
         {
             return lc + "utf8";
         }
-
-#endif
+#endif //defined(BEX_WINDOWS_API)
     };
 
     // ansi -> unicode

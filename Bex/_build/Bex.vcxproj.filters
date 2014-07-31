@@ -22,12 +22,6 @@
     <Filter Include="src\math">
       <UniqueIdentifier>{15772deb-3b43-42e9-9f8f-305f486394c8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\network">
-      <UniqueIdentifier>{96a528d6-4d0a-4ddb-b39e-9b6f314f02ad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\network\http">
-      <UniqueIdentifier>{4e024861-4488-4966-8082-f6864ec38805}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\utility">
       <UniqueIdentifier>{de7b32c1-93a5-4be2-97b5-d0d1a34db10b}</UniqueIdentifier>
     </Filter>
@@ -55,29 +49,8 @@
     <Filter Include="src\filesystem">
       <UniqueIdentifier>{e21bf6f2-086d-4e67-baa2-bfee7b4d3c98}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\network\cobwebs">
-      <UniqueIdentifier>{6de56de8-5162-4c92-81b1-677b4a8e5f2d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\pool">
       <UniqueIdentifier>{7fd8bd81-c317-43ce-87d3-598a9e1e5c56}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\network\cobwebs\parser">
-      <UniqueIdentifier>{febdfac6-632c-40b9-a13e-d951fde6f8f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\network\cobwebs\acceptor">
-      <UniqueIdentifier>{69110f6f-44a3-4a62-917c-e6043cde1125}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\network\cobwebs\connector">
-      <UniqueIdentifier>{1c916615-5051-42dc-8af1-96064082df14}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\network\cobwebs\session">
-      <UniqueIdentifier>{ef9d4a1e-da32-41e7-9bf1-24dd6c2b9974}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\network\cobwebs\core">
-      <UniqueIdentifier>{c6035e76-99d9-4cec-bf76-f8337ee1bf46}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\network\cobwebs\udp">
-      <UniqueIdentifier>{09b40307-681e-458c-b0d8-8595faf4474a}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\bind">
       <UniqueIdentifier>{dd607f6a-42f8-47f2-9c7c-ab458026e1ea}</UniqueIdentifier>
@@ -123,14 +96,8 @@
     <ClInclude Include="..\src\Bex\math.hpp">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Bex\network\http\sync_client.h">
-      <Filter>src\network\http</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Bex\utility\singleton.hpp">
       <Filter>src\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Bex\platform\win32\win32_service.h">
-      <Filter>src\platform\win32</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Bex\signals\signal.hpp">
       <Filter>src\signals</Filter>
@@ -270,74 +237,17 @@
     <ClInclude Include="..\src\Bex\utility\lock_ptr.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs.h">
-      <Filter>src\network</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Bex\auto_link.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Bex\stream\multi_ringbuf.hpp">
       <Filter>src\stream</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs\parser\tcp_packet_parser.h">
-      <Filter>src\network\cobwebs\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs\parser\packet_head_wrapper.hpp">
-      <Filter>src\network\cobwebs\parser</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Bex\utility\format.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs\acceptor\tcp_acceptor.h">
-      <Filter>src\network\cobwebs\acceptor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs\acceptor\acceptor_base.h">
-      <Filter>src\network\cobwebs\acceptor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs\connector\tcp_connector.h">
-      <Filter>src\network\cobwebs\connector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs\connector\connector_base.h">
-      <Filter>src\network\cobwebs\connector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs\session\tcp_session.h">
-      <Filter>src\network\cobwebs\session</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs\session\session_base.hpp">
-      <Filter>src\network\cobwebs\session</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs\session\session_factory.hpp">
-      <Filter>src\network\cobwebs\session</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs\tcp_client.hpp">
-      <Filter>src\network\cobwebs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs\core\core.h">
-      <Filter>src\network\cobwebs\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs\core\options.h">
-      <Filter>src\network\cobwebs\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs\core\register.hpp">
-      <Filter>src\network\cobwebs\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs\core\error.hpp">
-      <Filter>src\network\cobwebs\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs\core\id.h">
-      <Filter>src\network\cobwebs\core</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Bex\platform\utility.h">
       <Filter>src\platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Bex\platform\win32\utility.h">
-      <Filter>src\platform\win32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs\core\pool.hpp">
-      <Filter>src\network\cobwebs\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs\udp\udp.h">
-      <Filter>src\network\cobwebs\udp</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Bex\stream\serialization\text_iarchive.hpp">
       <Filter>src\stream\serialization</Filter>
@@ -347,9 +257,6 @@
     </ClInclude>
     <ClInclude Include="..\src\Bex\stream\serialization\text_archive.hpp">
       <Filter>src\stream\serialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Bex\network\cobwebs\core\deleter.hpp">
-      <Filter>src\network\cobwebs\core</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Bex\bind\forward_bind.hpp">
       <Filter>src\bind</Filter>
@@ -480,48 +387,15 @@
     <ClInclude Include="..\src\Bex\bexio\socket_options.hpp">
       <Filter>src\bexio</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Bex\config\windows.h">
+      <Filter>src\config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\platform\win32\win32_service.hpp">
+      <Filter>src\platform\win32</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\Bex\thread\thread_pool\thread_pool.cpp">
-      <Filter>src\thread\thread_pool</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Bex\network\http\sync_client.cpp">
-      <Filter>src\network\http</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Bex\platform\win32\win32_service.cpp">
-      <Filter>src\platform\win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Bex\network\cobwebs\parser\tcp_packet_parser.cpp">
-      <Filter>src\network\cobwebs\parser</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Bex\network\cobwebs\acceptor\acceptor_base.cpp">
-      <Filter>src\network\cobwebs\acceptor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Bex\network\cobwebs\acceptor\tcp_acceptor.cpp">
-      <Filter>src\network\cobwebs\acceptor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Bex\network\cobwebs\connector\tcp_connector.cpp">
-      <Filter>src\network\cobwebs\connector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Bex\network\cobwebs\session\tcp_session.cpp">
-      <Filter>src\network\cobwebs\session</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Bex\network\cobwebs\core\core.cpp">
-      <Filter>src\network\cobwebs\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Bex\network\cobwebs\core\id.cpp">
-      <Filter>src\network\cobwebs\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Bex\platform\win32\utility.cpp">
-      <Filter>src\platform\win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Bex\network\cobwebs\udp\udp.cpp">
-      <Filter>src\network\cobwebs\udp</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Bex\bind\forward_bind.cpp">
-      <Filter>src\bind</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Bex\platform\win32\charset_cvt.cpp">
+    <ClCompile Include="..\src\Bex\platform\win32\win32_service.ipp">
       <Filter>src\platform\win32</Filter>
     </ClCompile>
   </ItemGroup>

@@ -217,12 +217,12 @@ void weight_cref_function(weight_param const&) {}
 void weight_function(weight_param) {}
 
 template <int>
-struct select;
+struct select_bind;
 
 enum { bind_bex, bind_std, bind_boost };
 
 template <>
-struct select<bind_bex>    // bex bind
+struct select_bind<bind_bex>    // bex bind
 {
     template <typename Arg>
     inline static Arg && invoke(Arg && arg)
@@ -232,7 +232,7 @@ struct select<bind_bex>    // bex bind
 };
 
 template <>
-struct select<bind_std>    // std bind
+struct select_bind<bind_std>    // std bind
 {
     template <typename PH, int I>
     struct rebind;
@@ -266,7 +266,7 @@ struct select<bind_std>    // std bind
 };
 
 template <>
-struct select<bind_boost>    // boost bind
+struct select_bind<bind_boost>    // boost bind
 {
     template <int I>
     inline static boost::arg<I> invoke(Bex::forward_bind::placeholder<I>)
@@ -297,9 +297,9 @@ static void do_one_test(int tc, std::string const& msg, F && f, Args && ... args
 template <typename ... BArgs, unsigned int ... S, typename ... CArgs>
 static void do_test_(int tc, std::string const& msg, std::tuple<BArgs...> & bargs, Bex::forward_bind::seq<S...>, CArgs && ... cargs)
 {
-    auto bex_f = Bex::bind(select<bind_bex>::invoke(std::forward<BArgs>(std::get<S>(bargs)))...);
-    auto std_f = std::bind(select<bind_std>::invoke(std::forward<BArgs>(std::get<S>(bargs)))...);
-    auto boost_f = boost::bind(select<bind_boost>::invoke(std::forward<BArgs>(std::get<S>(bargs)))...);
+    auto bex_f = Bex::bind(select_bind<bind_bex>::invoke(std::forward<BArgs>(std::get<S>(bargs)))...);
+    auto std_f = std::bind(select_bind<bind_std>::invoke(std::forward<BArgs>(std::get<S>(bargs)))...);
+    auto boost_f = boost::bind(select_bind<bind_boost>::invoke(std::forward<BArgs>(std::get<S>(bargs)))...);
     
 
     do_one_test(tc, std::string("Bex") + msg, bex_f, std::forward<CArgs>(cargs)...);
