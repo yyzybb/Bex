@@ -11,7 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\Bex\auto_link.h" />
     <ClInclude Include="..\src\Bex\base.hpp" />
     <ClInclude Include="..\src\Bex\base\bit.hpp" />
     <ClInclude Include="..\src\Bex\base\cstdtype.hpp" />

@@ -1,6 +1,5 @@
 #include "TestPCH.h"
 #include <boost/thread.hpp>
-#include <Bex/auto_link.h>
 #include <stdio.h>
 
 void pause()

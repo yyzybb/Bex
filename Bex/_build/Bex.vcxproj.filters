@@ -237,9 +237,6 @@
     <ClInclude Include="..\src\Bex\utility\lock_ptr.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Bex\auto_link.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Bex\stream\multi_ringbuf.hpp">
       <Filter>src\stream</Filter>
     </ClInclude>
