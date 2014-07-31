@@ -937,6 +937,56 @@ BOOST_AUTO_TEST_CASE(t_stream_case)
         }
     }
 
+    // vector<bool>
+    {
+        std::vector<bool> bvector(65535, true), check;
+
+        std::size_t save_len = binary_save(bvector, buf, sizeof(buf));
+        BOOST_CHECK( save_len > 0 );
+
+        std::size_t load_len = binary_load(check, buf, sizeof(buf));
+        BOOST_CHECK( load_len > 0 );
+
+        bool ok = (bvector.size() == check.size());
+        for (std::size_t i = 0; i < bvector.size() && ok; ++i)
+            if (bvector[i] != check[i])
+                ok = false;
+        
+        BOOST_CHECK(ok);
+
+        bvector.push_back(false), bvector.push_back(false);
+        save_len = binary_save(bvector, buf, sizeof(buf));
+        BOOST_CHECK( save_len > 0 );
+
+        load_len = binary_load(check, buf, sizeof(buf));
+        BOOST_CHECK( load_len > 0 );
+
+        ok = (bvector.size() == check.size());
+        for (std::size_t i = 0; i < bvector.size() && ok; ++i)
+            if (bvector[i] != check[i])
+                ok = false;
+        
+        BOOST_CHECK(ok);
+
+        const int tc = 100;
+
+        // test property
+        {
+            boost::progress_timer bpt;
+            for (int i = 0; i < tc; ++i)
+            {
+                binary_save(bvector, buf, sizeof(buf));
+            }
+        }
+        {
+            boost::progress_timer bpt;
+            for (int i = 0; i < tc; ++i)
+            {
+                binary_load(bvector, buf, sizeof(buf));
+            }
+        }
+    }
+
     {
         fake_pod_struct obj[10], check[10];
         BOOST_CHECK( BEX_STREAM_SERIALIZATION_IS_POD(fake_pod_struct) );
@@ -963,7 +1013,7 @@ BOOST_AUTO_TEST_CASE(t_stream_property_case)
 #ifdef _DEBUG
     const int tc = 10000;
 #else  //_DEBUG
-    const int tc = 10000 * 100;
+    const int tc = 10000 * 10;
 #endif //_DEBUG
 
     {

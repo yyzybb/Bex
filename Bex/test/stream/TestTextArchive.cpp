@@ -107,7 +107,7 @@ struct TestRollback
     }
 };
 
-BOOST_AUTO_TEST_SUITE(s_stream_suite)
+BOOST_AUTO_TEST_SUITE(s_stream_text_suite)
 
 /// ÕýÈ·ÐÔ²âÊÔ
 BOOST_AUTO_TEST_CASE(t_stream_text_archive_case)
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(t_stream_text_archive_case)
 #ifdef _DEBUG
     const int len = 3000000;
 #else //_DEBUG
-    const int len = 100000000;
+    const int len = 10000000;
 #endif //_DEBUG
 
     char buf[4096 * 10] = {};
@@ -331,7 +331,7 @@ BOOST_AUTO_TEST_CASE(t_stream_text_archive_property_case)
 #ifdef _DEBUG
     const int tc = 10000;
 #else  //_DEBUG
-    const int tc = 10000 * 100;
+    const int tc = 10000 * 10;
 #endif //_DEBUG
 
     {
