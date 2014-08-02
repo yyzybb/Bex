@@ -70,6 +70,9 @@
     <Filter Include="src\bexio\detail">
       <UniqueIdentifier>{aa79cd2b-228b-4a5b-b630-d3b75e0f23dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\functor">
+      <UniqueIdentifier>{41ade77e-1e37-4f6a-a9e4-a1459350062c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Bex\base\bit.hpp">
@@ -389,6 +392,12 @@
     </ClInclude>
     <ClInclude Include="..\src\Bex\platform\win32\win32_service.hpp">
       <Filter>src\platform\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\functor\functor.hpp">
+      <Filter>src\functor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\functor.hpp">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

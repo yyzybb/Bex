@@ -167,11 +167,11 @@ struct TestStreamStruct
         ret &= check_hashmap_container(map, rhs.map, pr_v2);
         ret &= check_hashmap_container(mmap, rhs.mmap, pr_v2);
 #if defined(_MSC_VER)
-        ret &= check_hashmap_container(hmap, rhs.hmap, std::equal_to<>() );
+        ret &= check_hashmap_container(hmap, rhs.hmap, Bex::equal_to<>() );
 #endif //defined(_MSC_VER)
 #if defined(BOOST_HAS_TR1_UNORDERED_MAP)
-        ret &= check_hashmap_container(umap, rhs.umap, std::equal_to<>() );
-        ret &= check_hashmultimap_container(ummap, rhs.ummap, std::equal_to<>() );
+        ret &= check_hashmap_container(umap, rhs.umap, Bex::equal_to<>() );
+        ret &= check_hashmultimap_container(ummap, rhs.ummap, Bex::equal_to<>() );
 #endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
 #if defined(BOOST_HAS_TR1_UNORDERED_SET)
         ret &= check_hashset_container(uset, rhs.uset);
@@ -181,7 +181,7 @@ struct TestStreamStruct
         ret &= check_container(sarray, rhs.sarray);
 #endif //defined(BEX_SUPPORT_CXX11)
         ret &= check_container(barray, rhs.barray);
-        ret &= check_hashmap_container(bbimap.left, rhs.bbimap.left, std::equal_to<>() );
+        ret &= check_hashmap_container(bbimap.left, rhs.bbimap.left, Bex::equal_to<>() );
         return ret;
     }
 

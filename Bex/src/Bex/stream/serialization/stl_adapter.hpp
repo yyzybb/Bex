@@ -347,8 +347,8 @@ struct adapter<Ar, std::pair<T1, T2> >
 
     inline static bool load(Pair & pairT, Ar & ar)
     {
-        return ar.load((boost::remove_cv<T1>::type&)pairT.first) 
-            && ar.load((boost::remove_cv<T2>::type&)pairT.second);
+        return ar.load((typename boost::remove_cv<T1>::type&)pairT.first) 
+            && ar.load((typename boost::remove_cv<T2>::type&)pairT.second);
     }
 };
 

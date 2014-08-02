@@ -1,4 +1,7 @@
+#define BOOST_TEST_MAIN
+#include <boost/test/unit_test.hpp>
 #include "TestPCH.h"
+//#include <boost/test/included/unit_test.hpp>
 #include <boost/thread.hpp>
 #include <stdio.h>
 
