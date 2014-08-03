@@ -3,7 +3,7 @@
 #include <Bex/auto_link.h>
 #include <stdio.h>
 
-void pause()
+void my_pause()
 {
 #ifdef __MSVC
     system("pause");
@@ -19,12 +19,12 @@ public:
     TestMain()
     {
         Dump("Bex Test Start...");
-        atexit(pause);
+        atexit(&my_pause);
     }
 
     ~TestMain()
     {
-        //pause();
+        //my_pause();
     }
 };
 
