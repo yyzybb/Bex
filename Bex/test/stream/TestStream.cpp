@@ -363,10 +363,14 @@ inline void assert_convert(T const&
     , bool is_convert, bool is_load, bool is_save, bool is_unkown)
 {
     typedef convert_traits<T> traits;
-    BOOST_CHECK_EQUAL(traits::is_convert, is_convert);
-    BOOST_CHECK_EQUAL(traits::is_load, is_load);
-    BOOST_CHECK_EQUAL(traits::is_save, is_save);
-    BOOST_CHECK_EQUAL(traits::is_unkown, is_unkown);
+    bool _is_convert = traits::is_convert;
+    bool _is_load = traits::is_load;
+    bool _is_save = traits::is_save;
+    bool _is_unkown = traits::is_unkown;
+    BOOST_CHECK_EQUAL(_is_convert, is_convert);
+    BOOST_CHECK_EQUAL(_is_load, is_load);
+    BOOST_CHECK_EQUAL(_is_save, is_save);
+    BOOST_CHECK_EQUAL(_is_unkown, is_unkown);
 }
 
 BOOST_AUTO_TEST_SUITE(s_stream_suite)

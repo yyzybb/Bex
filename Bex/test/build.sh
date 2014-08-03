@@ -1,0 +1,1 @@
+g++ -g -o test main/TestMain.cpp stream/TestStream.cpp -std=c++11 -Imain -I../src -I../../boost/include ../../boost/lib/libboost_unit_test_framework.a ../../boost/lib/libboost_system.a ../../boost/lib/libboost_thread.a ../../boost/lib/libboost_locale.a -lpthread 2>log
