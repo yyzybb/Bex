@@ -8,7 +8,7 @@ namespace Bex
 {
     // 当前执行的代码是否在Dll中.
     inline boost::tribool is_in_dll()
-#if defined(BEX_WINDOWS_API)
+#if defined(BEX_WINDOWS_API) && defined(_APISETLIBLOADER_)
     {
         HMODULE hBase = ::GetModuleHandleW(NULL), hThis = 0;
         BOOL bOk = ::GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS

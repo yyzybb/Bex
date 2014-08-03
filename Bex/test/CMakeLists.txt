@@ -19,3 +19,4 @@ link_directories(${bex_lib})
 file(GLOB_RECURSE SRC_LIST "*.cpp" )
 add_executable(test ${SRC_LIST})
 
+#g++ -o test.exe main/TestMain.cpp stream/TestStream.cpp -I"../src" -I"../../boost/include" -std=c++11 "../../boost/lib/libboost_system-mgw48-mt-s-1_55.a" "../../boost/lib/libboost_unit_test_framework-mgw48-mt-s-1_55.a" "../../boost/lib/libboost_thread-mgw48-mt-s-1_55.a" "../../boost/lib/libboost_locale-mgw48-mt-s-1_55.a" -I"main"
