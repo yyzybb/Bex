@@ -1,6 +1,8 @@
+#define BOOST_TEST_MAIN
+#include <boost/test/unit_test.hpp>
 #include "TestPCH.h"
+//#include <boost/test/included/unit_test.hpp>
 #include <boost/thread.hpp>
-#include <Bex/auto_link.h>
 #include <stdio.h>
 
 void my_pause()

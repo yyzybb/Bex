@@ -167,11 +167,11 @@ struct TestStreamStruct
         ret &= check_hashmap_container(map, rhs.map, pr_v2);
         ret &= check_hashmap_container(mmap, rhs.mmap, pr_v2);
 #if defined(_MSC_VER)
-        ret &= check_hashmap_container(hmap, rhs.hmap, std::equal_to<>() );
+        ret &= check_hashmap_container(hmap, rhs.hmap, Bex::equal_to<>() );
 #endif //defined(_MSC_VER)
 #if defined(BOOST_HAS_TR1_UNORDERED_MAP)
-        ret &= check_hashmap_container(umap, rhs.umap, std::equal_to<>() );
-        ret &= check_hashmultimap_container(ummap, rhs.ummap, std::equal_to<>() );
+        ret &= check_hashmap_container(umap, rhs.umap, Bex::equal_to<>() );
+        ret &= check_hashmultimap_container(ummap, rhs.ummap, Bex::equal_to<>() );
 #endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
 #if defined(BOOST_HAS_TR1_UNORDERED_SET)
         ret &= check_hashset_container(uset, rhs.uset);
@@ -181,7 +181,7 @@ struct TestStreamStruct
         ret &= check_container(sarray, rhs.sarray);
 #endif //defined(BEX_SUPPORT_CXX11)
         ret &= check_container(barray, rhs.barray);
-        ret &= check_hashmap_container(bbimap.left, rhs.bbimap.left, std::equal_to<>() );
+        ret &= check_hashmap_container(bbimap.left, rhs.bbimap.left, Bex::equal_to<>() );
         return ret;
     }
 
@@ -937,6 +937,56 @@ BOOST_AUTO_TEST_CASE(t_stream_case)
         }
     }
 
+    // vector<bool>
+    {
+        std::vector<bool> bvector(65535, true), check;
+
+        std::size_t save_len = binary_save(bvector, buf, sizeof(buf));
+        BOOST_CHECK( save_len > 0 );
+
+        std::size_t load_len = binary_load(check, buf, sizeof(buf));
+        BOOST_CHECK( load_len > 0 );
+
+        bool ok = (bvector.size() == check.size());
+        for (std::size_t i = 0; i < bvector.size() && ok; ++i)
+            if (bvector[i] != check[i])
+                ok = false;
+        
+        BOOST_CHECK(ok);
+
+        bvector.push_back(false), bvector.push_back(false);
+        save_len = binary_save(bvector, buf, sizeof(buf));
+        BOOST_CHECK( save_len > 0 );
+
+        load_len = binary_load(check, buf, sizeof(buf));
+        BOOST_CHECK( load_len > 0 );
+
+        ok = (bvector.size() == check.size());
+        for (std::size_t i = 0; i < bvector.size() && ok; ++i)
+            if (bvector[i] != check[i])
+                ok = false;
+        
+        BOOST_CHECK(ok);
+
+        const int tc = 100;
+
+        // test property
+        {
+            boost::progress_timer bpt;
+            for (int i = 0; i < tc; ++i)
+            {
+                binary_save(bvector, buf, sizeof(buf));
+            }
+        }
+        {
+            boost::progress_timer bpt;
+            for (int i = 0; i < tc; ++i)
+            {
+                binary_load(bvector, buf, sizeof(buf));
+            }
+        }
+    }
+
     {
         fake_pod_struct obj[10], check[10];
         BOOST_CHECK( BEX_STREAM_SERIALIZATION_IS_POD(fake_pod_struct) );
@@ -963,7 +1013,7 @@ BOOST_AUTO_TEST_CASE(t_stream_property_case)
 #ifdef _DEBUG
     const int tc = 10000;
 #else  //_DEBUG
-    const int tc = 10000 * 100;
+    const int tc = 10000 * 10;
 #endif //_DEBUG
 
     {

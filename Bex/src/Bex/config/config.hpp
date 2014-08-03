@@ -4,6 +4,7 @@
 #define BEX_LIB_VERSION "1_00"
 
 #include <boost/config.hpp>
+#include <boost/system/api_config.hpp>
 #include <Bex/config/stl.hpp>
 #include <boost/asio/detail/config.hpp>
 
@@ -30,6 +31,20 @@
 #else
 # define BEX_ENUM_CLASS class
 #endif
+
+#if defined(BOOST_WINDOWS_API)
+# define BEX_WINDOWS_API
+#endif //defined(BOOST_WINDOWS_API)
+
+#if defined(BOOST_POSIX_API)
+# define BEX_POSIX_API
+#endif //defined(BOOST_POSIX_API)
+
+#if defined(BOOST_NO_CXX11_CONSTEXPR)
+# define BEX_CONSTEXPR const
+#else
+# define BEX_CONSTEXPR constexpr
+#endif //defined(BOOST_NO_CXX11_CONSTEXPR)
 
 # define BEX_MOVE_ARG BOOST_ASIO_MOVE_ARG
 # define BEX_MOVE_CAST BOOST_ASIO_MOVE_CAST

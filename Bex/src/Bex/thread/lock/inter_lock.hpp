@@ -9,6 +9,9 @@
 # include <atomic>
 #endif //!defined(BEX_SUPPORT_CXX11)
 
+//////////////////////////////////////////////////////////////////////////
+/// 基于原子操作的自旋锁
+
 namespace Bex
 {
     class inter_lock
@@ -61,6 +64,11 @@ namespace Bex
         }
 #endif //!defined(BEX_SUPPORT_CXX11)
 
+        void lock()
+        {
+            while (!try_lock()) ;
+        }
+
     public:
         class try_scoped
         {
@@ -99,7 +107,7 @@ namespace Bex
             explicit scoped_lock(inter_lock& lock)
                 : lock_(lock), locked_(true)
             {
-                while (!lock.try_lock()) ;
+                lock_.lock();
             }
 
             inline bool is_locked() const
@@ -119,6 +127,8 @@ namespace Bex
             }
         };
     };
+
+    typedef inter_lock spin_lock;
 
 } //namespace Bex
 

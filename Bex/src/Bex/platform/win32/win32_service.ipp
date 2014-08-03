@@ -1,11 +1,3 @@
-#if defined(_WIN32)
-
-#include "win32_service.h"
-#include <boost/filesystem.hpp>
-#include <boost/bind.hpp>
-#include <boost/thread.hpp>
-#include <iostream>
-#include <Windows.h>
 
 namespace Bex
 {

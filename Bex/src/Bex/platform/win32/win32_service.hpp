@@ -1,12 +1,17 @@
 #ifndef __BEX_WIN32_SERVICE__
 #define __BEX_WIN32_SERVICE__
 
-#if defined(_WIN32)
+#include <Bex/config/windows.h>
+
+#if defined(BEX_WINDOWS_API)
 
 #include <boost/program_options.hpp>
 #include <boost/function.hpp>
 #include <boost/thread.hpp>
 #include <Bex/utility/singleton.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/bind.hpp>
+#include <iostream>
 
 //////////////////////////////////////////////////////////////////////////
 /// Win32·þÎñ³ÌÐò¿ò¼Ü
@@ -135,6 +140,8 @@ namespace Bex
     };
 }
 
-#endif //_WIN32
+#include "win32_service.ipp"
+
+#endif //defined(BEX_WINDOWS_API)
 
 #endif //__BEX_WIN32_SERVICE__

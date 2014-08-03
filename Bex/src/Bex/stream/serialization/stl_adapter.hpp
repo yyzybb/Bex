@@ -146,6 +146,68 @@ struct adapter<Ar, std::vector<bool, Alloc> >
     inline static bool save(Vector const& vecT, Ar & ar)
     {
         if (!sized_adapter::save(vecT, ar)) return false;
+        if (vecT.empty()) return true;
+
+        unsigned char byte[1024] = {};
+        for (std::size_t i = 0; i < vecT.size(); ++i)
+        {
+            if (vecT[i])
+                byte[(i >> 3) & (sizeof(byte) - 1)] |= (unsigned char)(1 << (i & 0x7));
+
+            if (((i + 1) & (8 * sizeof(byte) - 1)) == 0)
+            {
+                if (!ar.save((char*)byte, sizeof(byte)))
+                    return false;
+
+                memset(byte, 0, sizeof(byte));
+            }
+        }
+
+        std::size_t avail = bit_to_byte(vecT.size() & (8 * sizeof(byte) - 1));
+        if (avail)
+            return ar.save((char*)byte, avail);
+
+        return true;
+    }
+
+    inline static bool load(Vector & vecT, Ar & ar)
+    {
+        std::size_t bit_c;
+        if (!sized_adapter::load(bit_c, ar)) return false;
+
+        vecT.clear();
+        if (!bit_c) return true;
+
+        unsigned char byte[1024] = {};
+        while (bit_c)
+        {
+            std::size_t n = (std::min<std::size_t>)(1024 * 8, bit_c);
+            if (!ar.load((char*)byte, bit_to_byte(n))) return false;
+            bit_c -= n;
+
+            vecT.reserve(vecT.size() + n);
+            for (std::size_t i = 0; i < n; ++i)
+                vecT.push_back((byte[i >> 3] & (1 << (i & 0x7))) != 0);
+        }
+
+        return true;
+    }
+
+    inline static std::size_t bit_to_byte(std::size_t bit_c)
+    {
+        return (bit_c >> 3) + ((bit_c & 0x7) ? 1 : 0);
+    }
+};
+
+/*
+template <class Ar, typename Alloc>
+struct adapter<Ar, std::vector<bool, Alloc> >
+{
+    typedef std::vector<bool, Alloc> Vector;
+
+    inline static bool save(Vector const& vecT, Ar & ar)
+    {
+        if (!sized_adapter::save(vecT, ar)) return false;
 
         if (!vecT.empty())
         {
@@ -191,6 +253,7 @@ struct adapter<Ar, std::vector<bool, Alloc> >
 #endif //_MSC_VER
     }
 };
+*/
 
 //////////////////////////////////////////////////////////////////////////
 /// string
@@ -284,8 +347,8 @@ struct adapter<Ar, std::pair<T1, T2> >
 
     inline static bool load(Pair & pairT, Ar & ar)
     {
-        return ar.load((boost::remove_cv<T1>::type&)pairT.first) 
-            && ar.load((boost::remove_cv<T2>::type&)pairT.second);
+        return ar.load((typename boost::remove_cv<T1>::type&)pairT.first) 
+            && ar.load((typename boost::remove_cv<T2>::type&)pairT.second);
     }
 };
 

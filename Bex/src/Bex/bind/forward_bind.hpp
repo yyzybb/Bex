@@ -271,12 +271,15 @@ namespace Bex { namespace forward_bind
 
     using forward_bind::BEX_BIND;
 
+//////////////////////////////////////////////////////////////////////////
+// args (_1, _2, _3, ..., _32)
+
 #ifndef BEX_FORWARD_BIND_PARAMETER_COUNT
 #define BEX_FORWARD_BIND_PARAMETER_COUNT 32
 #endif
 
 #define BOOST_PP_LOCAL_MACRO(n) \
-    extern forward_bind::placeholder<n> _##n;
+    static forward_bind::placeholder<n> _##n;
 
 #define BOOST_PP_LOCAL_LIMITS (1, BEX_FORWARD_BIND_PARAMETER_COUNT)
 #include BOOST_PP_LOCAL_ITERATE()
