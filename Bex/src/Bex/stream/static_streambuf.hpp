@@ -4,6 +4,7 @@
 #include <iosfwd>
 #include <streambuf>
 #include <boost/noncopyable.hpp>
+#include <boost/static_assert.hpp>
 #include <Bex/config.hpp>
 
 //////////////////////////////////////////////////////////////////////////
