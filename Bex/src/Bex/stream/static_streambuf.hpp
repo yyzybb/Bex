@@ -5,6 +5,7 @@
 #include <streambuf>
 #include <boost/noncopyable.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/assert.hpp>
 #include <Bex/config.hpp>
 
 //////////////////////////////////////////////////////////////////////////
