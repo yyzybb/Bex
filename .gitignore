@@ -8,6 +8,7 @@ _output
 boost/include
 boost/lib
 boost/boost_1_*.7z
+openssl/openssl-1.0.1h
 openssl/VS2010/out32/*
 openssl/VS2013/out32/*
 !openssl/VS2010/out32/*.7z
