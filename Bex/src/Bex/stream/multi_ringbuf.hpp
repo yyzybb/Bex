@@ -2,7 +2,7 @@
 #define __BEX_STREAM_MULTI_RINGBUF_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// ¶à¸öring_buf×é³ÉÒ»¸ö¶¯Ì¬Ôö³¤µÄ»·ÐÎ»º³åÇø
+/// å¤šä¸ªring_bufç»„æˆä¸€ä¸ªåŠ¨æ€å¢žé•¿çš„çŽ¯å½¢ç¼“å†²åŒº
 
 #include "ring_buf.hpp"
 #include <list>

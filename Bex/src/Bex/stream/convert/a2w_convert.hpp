@@ -6,7 +6,7 @@
 #include <string>
 #include <boost/static_assert.hpp>
 //////////////////////////////////////////////////////////////////////////
-/// ansi -> unicode��洢
+/// ansi -> unicode后存储
 namespace Bex { namespace convert
 {
     // string -> wstring

@@ -6,7 +6,7 @@
 
 namespace Bex
 {
-    // µ±Ç°Ö´ĞĞµÄ´úÂëÊÇ·ñÔÚDllÖĞ.
+    // å½“å‰æ‰§è¡Œçš„ä»£ç æ˜¯å¦åœ¨Dllä¸­.
     inline boost::tribool is_in_dll()
 #if defined(BEX_WINDOWS_API) && defined(_APISETLIBLOADER_)
     {

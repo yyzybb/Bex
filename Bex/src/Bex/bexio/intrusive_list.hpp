@@ -2,7 +2,7 @@
 #define __BEX_IO_INTRUSIVE_LIST_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-// ÇÖÈëÊ½Ë«ÏòÁ´±íÈÝÆ÷
+// ä¾µå…¥å¼åŒå‘é“¾è¡¨å®¹å™¨
 
 #include <boost/operators.hpp>
 #include <boost/utility/swap.hpp>

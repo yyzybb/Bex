@@ -2,7 +2,7 @@
 #define __BEX_IO_MULTITHREAD_STRAND_SERVICE_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-// ¶àÏß³Ì->µ¥Ïß³Ì´®ĞĞ·şÎñ, ×éºÏÖÁio_serviceÖĞÒÔÔöÇ¿Æä¹¦ÄÜ¡£
+// å¤šçº¿ç¨‹->å•çº¿ç¨‹ä¸²è¡ŒæœåŠ¡, ç»„åˆè‡³io_serviceä¸­ä»¥å¢å¼ºå…¶åŠŸèƒ½ã€‚
 /*
 * @
 */
@@ -27,7 +27,7 @@ namespace Bex { namespace bexio
         }
 
     private:
-        // ¹Ø±Õ·şÎñ
+        // å…³é—­æœåŠ¡
         virtual void shutdown_service() BEX_OVERRIDE
         {
             base_type::shutdown();

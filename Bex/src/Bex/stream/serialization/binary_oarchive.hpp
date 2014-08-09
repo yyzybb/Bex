@@ -5,7 +5,7 @@
 #include "base_serializer.hpp"
 
 //////////////////////////////////////////////////////////////////////////
-/// ĞòÁĞ»¯ out
+/// åºåˆ—åŒ– out
 
 namespace Bex { namespace serialization
 {

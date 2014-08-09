@@ -12,10 +12,10 @@ using namespace Bex;
 
 BOOST_AUTO_TEST_SUITE(s_math)
 
-/// ÕıÈ·ĞÔ²âÊÔ
+/// æ­£ç¡®æ€§æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_math)
 {
-    XDump("¿ªÊ¼²âÊÔ math.CompressNumeric");
+    XDump("å¼€å§‹æµ‹è¯• math.CompressNumeric");
 
     cn32 cn;
     BOOST_CHECK_EQUAL(cn.get(), 0);
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(t_math)
         }
     }
 
-    XDump("½áÊø²âÊÔ math.CompressNumeric");
+    XDump("ç»“æŸæµ‹è¯• math.CompressNumeric");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

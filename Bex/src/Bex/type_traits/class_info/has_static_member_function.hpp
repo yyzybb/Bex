@@ -4,7 +4,7 @@
 #include <Bex/type_traits/defines.hpp>
 #include <Bex/type_traits/signature_traits.hpp>
 //////////////////////////////////////////////////////////////////////////
-/// ���Ƿ���ָ������ǩ���ľ�̬��Ա����
+/// 类是否有指定函数签名的静态成员函数
 
 namespace Bex
 {

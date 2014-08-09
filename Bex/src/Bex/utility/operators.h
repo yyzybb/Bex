@@ -2,67 +2,67 @@
 #define __BEX_UTILITY_OPERATORS_H__
 
 //////////////////////////////////////////////////////////////////////////
-/// ËùÓÐÔËËã·ûµÄºê¶¨Òå
+/// æ‰€æœ‰è¿ç®—ç¬¦çš„å®å®šä¹‰
 
 //////////////////////////////////////////////////////////////////////////
-/// ¿ÉÖØÔØÔËËã·û
+/// å¯é‡è½½è¿ç®—ç¬¦
 
-/// ÊýÑ§¼ÆËã
-#define BEX_OPERATOR_ADD                        +       ///< ¼Ó·¨
-#define BEX_OPERATOR_UNARY_PLUS                 +       ///< ÕýÊý·ûºÅ
-#define BEX_OPERATOR_INC                        ++      ///< Ôö1(ÓÐÇ°ÖÃºÍºóÖÃÁ½ÖÖ)
-#define BEX_OPERATOR_ADD_ASSIGN                 +=      ///< ¼Ó·¨ and ¸³Öµ
-#define BEX_OPERATOR_SUB                        -       ///< ¼õ·¨
-#define BEX_OPERATOR_UNARY_NEGATION             -       ///< ¸ºÊý·ûºÅ
-#define BEX_OPERATOR_DEC                        --      ///< ¼õ1(ÓÐÇ°ÖÃºÍºóÖÃÁ½ÖÖ)
-#define BEX_OPERATOR_SUB_ASSIGN                 -=      ///< ¼õ·¨ and ¸³Öµ
-#define BEX_OPERATOR_MULTI                      *       ///< ³Ë·¨
-#define BEX_OPERATOR_MULTI_ASSIGN               *=      ///< ³Ë·¨ and ¸³Öµ
-#define BEX_OPERATOR_DIV                        /       ///< ³ý·¨
-#define BEX_OPERATOR_DIV_ASSIGN                 /=      ///< ³ý·¨ and ¸³Öµ
-#define BEX_OPERATOR_MODULE                     %       ///< È¡Ä£
-#define BEX_OPERATOR_MODULE_ASSIGN              %=      ///< È¡Ä£ and ¸³Öµ
+/// æ•°å­¦è®¡ç®—
+#define BEX_OPERATOR_ADD                        +       ///< åŠ æ³•
+#define BEX_OPERATOR_UNARY_PLUS                 +       ///< æ­£æ•°ç¬¦å·
+#define BEX_OPERATOR_INC                        ++      ///< å¢ž1(æœ‰å‰ç½®å’ŒåŽç½®ä¸¤ç§)
+#define BEX_OPERATOR_ADD_ASSIGN                 +=      ///< åŠ æ³• and èµ‹å€¼
+#define BEX_OPERATOR_SUB                        -       ///< å‡æ³•
+#define BEX_OPERATOR_UNARY_NEGATION             -       ///< è´Ÿæ•°ç¬¦å·
+#define BEX_OPERATOR_DEC                        --      ///< å‡1(æœ‰å‰ç½®å’ŒåŽç½®ä¸¤ç§)
+#define BEX_OPERATOR_SUB_ASSIGN                 -=      ///< å‡æ³• and èµ‹å€¼
+#define BEX_OPERATOR_MULTI                      *       ///< ä¹˜æ³•
+#define BEX_OPERATOR_MULTI_ASSIGN               *=      ///< ä¹˜æ³• and èµ‹å€¼
+#define BEX_OPERATOR_DIV                        /       ///< é™¤æ³•
+#define BEX_OPERATOR_DIV_ASSIGN                 /=      ///< é™¤æ³• and èµ‹å€¼
+#define BEX_OPERATOR_MODULE                     %       ///< å–æ¨¡
+#define BEX_OPERATOR_MODULE_ASSIGN              %=      ///< å–æ¨¡ and èµ‹å€¼
 
-/// ¶þ½øÖÆÔËËã
-#define BEX_OPERATOR_BIT_AND                    &       ///< Î»Óë
-#define BEX_OPERATOR_BIT_AND_ASSIGN             &=      ///< Î»Óë and ¸³Öµ
-#define BEX_OPERATOR_BIT_OR                     |       ///< Î»»ò
-#define BEX_OPERATOR_BIT_OR_ASSIGN              |=      ///< Î»»ò and ¸³Öµ
-#define BEX_OPERATOR_BIT_NOT                    ~       ///< Î»·´
-#define BEX_OPERATOR_EXCLUSIVE_OR               ^       ///< Î»Òì»ò
-#define BEX_OPERATOR_EXCLUSIVE_OR_ASSIGN        ^=      ///< Î»Òì»ò and ¸³Öµ
-#define BEX_OPERATOR_LEFT_SHIFT                 <<      ///< °´Î»×óÒÆ
-#define BEX_OPERATOR_LEFT_SHIFT_ASSIGN          <<=     ///< °´Î»×óÒÆ and ¸³Öµ
-#define BEX_OPERATOR_RIGHT_SHIFT                >>      ///< °´Î»ÓÒÒÆ
-#define BEX_OPERATOR_RIGHT_SHIFT_ASSIGN         >>=     ///< °´Î»ÓÒÒÆ and ¸³Öµ
+/// äºŒè¿›åˆ¶è¿ç®—
+#define BEX_OPERATOR_BIT_AND                    &       ///< ä½ä¸Ž
+#define BEX_OPERATOR_BIT_AND_ASSIGN             &=      ///< ä½ä¸Ž and èµ‹å€¼
+#define BEX_OPERATOR_BIT_OR                     |       ///< ä½æˆ–
+#define BEX_OPERATOR_BIT_OR_ASSIGN              |=      ///< ä½æˆ– and èµ‹å€¼
+#define BEX_OPERATOR_BIT_NOT                    ~       ///< ä½å
+#define BEX_OPERATOR_EXCLUSIVE_OR               ^       ///< ä½å¼‚æˆ–
+#define BEX_OPERATOR_EXCLUSIVE_OR_ASSIGN        ^=      ///< ä½å¼‚æˆ– and èµ‹å€¼
+#define BEX_OPERATOR_LEFT_SHIFT                 <<      ///< æŒ‰ä½å·¦ç§»
+#define BEX_OPERATOR_LEFT_SHIFT_ASSIGN          <<=     ///< æŒ‰ä½å·¦ç§» and èµ‹å€¼
+#define BEX_OPERATOR_RIGHT_SHIFT                >>      ///< æŒ‰ä½å³ç§»
+#define BEX_OPERATOR_RIGHT_SHIFT_ASSIGN         >>=     ///< æŒ‰ä½å³ç§» and èµ‹å€¼
 
-/// Âß¼­ÔËËã
-#define BEX_OPERATOR_LOGICAL_NOT                !       ///< Âß¼­·Ç
-#define BEX_OPERATOR_LOGICAL_AND                &&      ///< Âß¼­Óë
-#define BEX_OPERATOR_LOGICAL_OR                 ||      ///< Âß¼­»ò
+/// é€»è¾‘è¿ç®—
+#define BEX_OPERATOR_LOGICAL_NOT                !       ///< é€»è¾‘éž
+#define BEX_OPERATOR_LOGICAL_AND                &&      ///< é€»è¾‘ä¸Ž
+#define BEX_OPERATOR_LOGICAL_OR                 ||      ///< é€»è¾‘æˆ–
 
-/// ±È½Ï
-#define BEX_OPERATOR_LESS                       <       ///< Ð¡ÓÚ
-#define BEX_OPERATOR_LESS_OR_EQUAL              <=      ///< Ð¡ÓÚorµÈÓÚ
-#define BEX_OPERATOR_EQUAL                      ==      ///< µÈÓÚ
-#define BEX_OPERATOR_GREATER                    >       ///< ´óÓÚ
-#define BEX_OPERATOR_GREATER_OR_EQUAL           >=      ///< ´óÓÚorµÈÓÚ
-#define BEX_OPERATOR_NOT_EQUAL                  !=      ///< ²»µÈÓÚ
+/// æ¯”è¾ƒ
+#define BEX_OPERATOR_LESS                       <       ///< å°äºŽ
+#define BEX_OPERATOR_LESS_OR_EQUAL              <=      ///< å°äºŽorç­‰äºŽ
+#define BEX_OPERATOR_EQUAL                      ==      ///< ç­‰äºŽ
+#define BEX_OPERATOR_GREATER                    >       ///< å¤§äºŽ
+#define BEX_OPERATOR_GREATER_OR_EQUAL           >=      ///< å¤§äºŽorç­‰äºŽ
+#define BEX_OPERATOR_NOT_EQUAL                  !=      ///< ä¸ç­‰äºŽ
 
-/// ÆäËûÔËËã·û
-#define BEX_OPERATOR_COMMA                      ,       ///< ¶ººÅ²Ù×÷·û
-#define BEX_OPERATOR_ADDRESS_OF                 &       ///< È¡µØÖ·²Ù×÷·û
-#define BEX_OPERATOR_INVOKE                     ()      ///< º¯Êýµ÷ÓÃ
-#define BEX_OPERATOR_DEREFERENCE                *       ///< ½âÒýÓÃ²Ù×÷·û
+/// å…¶ä»–è¿ç®—ç¬¦
+#define BEX_OPERATOR_COMMA                      ,       ///< é€—å·æ“ä½œç¬¦
+#define BEX_OPERATOR_ADDRESS_OF                 &       ///< å–åœ°å€æ“ä½œç¬¦
+#define BEX_OPERATOR_INVOKE                     ()      ///< å‡½æ•°è°ƒç”¨
+#define BEX_OPERATOR_DEREFERENCE                *       ///< è§£å¼•ç”¨æ“ä½œç¬¦
 #define BEX_OPERATOR_MEMBER_SELECT              ->
-#define BEX_OPERATOR_POINTER_MEMBER_SELECT      ->*     ///< µ÷ÓÃ³ÉÔ±º¯ÊýÖ¸Õë
-#define BEX_OPERATOR_ASSIGN                     =       ///< ¸³Öµ
-#define BEX_OPERATOR_SUBSCRIPT                  []      ///< ÏÂ±êÈ¡Öµ
-#define BEX_OPERATOR_NEW                        new     ///< ÉêÇëÄÚ´æ
-#define BEX_OPERATOR_DELETE                     delete  ///< ÊÍ·ÅÄÚ´æ
+#define BEX_OPERATOR_POINTER_MEMBER_SELECT      ->*     ///< è°ƒç”¨æˆå‘˜å‡½æ•°æŒ‡é’ˆ
+#define BEX_OPERATOR_ASSIGN                     =       ///< èµ‹å€¼
+#define BEX_OPERATOR_SUBSCRIPT                  []      ///< ä¸‹æ ‡å–å€¼
+#define BEX_OPERATOR_NEW                        new     ///< ç”³è¯·å†…å­˜
+#define BEX_OPERATOR_DELETE                     delete  ///< é‡Šæ”¾å†…å­˜
 
 //////////////////////////////////////////////////////////////////////////
-/// ²»¿ÉÖØÔØÔËËã·û
+/// ä¸å¯é‡è½½è¿ç®—ç¬¦
 #define BEX_OPERATOR_MEMBER                     .
 #define BEX_OPERATOR_POINT_MEMBER               .*
 #define BEX_OPERATOR_SCOPE                      ::

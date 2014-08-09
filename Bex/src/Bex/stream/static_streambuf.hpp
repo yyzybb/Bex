@@ -9,7 +9,7 @@
 #include <Bex/config.hpp>
 
 //////////////////////////////////////////////////////////////////////////
-/// 固定长度的streambuf
+/// 鍥哄畾闀垮害鐨剆treambuf
 
 namespace Bex { namespace stream
 {

@@ -2,7 +2,7 @@
 #define __BEX_IO_MULTITHREAD_STRAND_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-// ¶àÏß³Ì->µ¥Ïß³Ì´®ĞĞÆ÷
+// å¤šçº¿ç¨‹->å•çº¿ç¨‹ä¸²è¡Œå™¨
 /*
 * @par concept:
 *   io_service, Strand
@@ -34,61 +34,61 @@ namespace Bex { namespace bexio
             : next_layer_(std::forward<Args>(args)...)
         {}
 
-        // »ñÈ¡ÏÂ²ãstrandÒıÓÃ
+        // è·å–ä¸‹å±‚strandå¼•ç”¨
         next_layer_type & next_layer();
 
-        // »ñÈ¡×îµ×²ãstrandÒıÓÃ
+        // è·å–æœ€åº•å±‚strandå¼•ç”¨
         lowest_layer_type & lowest_layer();
 
-        // »ñÈ¡µ±Ç°²ãµÄio_service
+        // è·å–å½“å‰å±‚çš„io_service
         io_service & actor();
 
-        // postÍê³É»Øµ÷
+        // postå®Œæˆå›è°ƒ
         template <typename Handler>
         void post(Handler const& handler);
 
-        // ´¦ÀíÍê³É»Øµ÷(noexcept)
+        // å¤„ç†å®Œæˆå›è°ƒ(noexcept)
         std::pair<std::size_t, error_code> run();
 
-        // Æô¶¯Ïß³Ì³Ø¹¤×÷
-        // @thread_count: ¹¤×÷Ïß³ÌÊıÁ¿, µ±thread_count==0Ê±, ½«thread_count¸ÄĞ´Îªµ±Ç°cpuÏß³ÌÊı.
-        // @remarks: Èç¹ûµ±Ç°ÒÑÓĞ¹¤×÷Ïß³ÌÔÚ¹¤×÷, ÇÒ¹¤×÷Ïß³ÌÊıÁ¿Ğ¡ÓÚthread_count, ÔòÔö¼Ó¹¤×÷Ïß³ÌÊıÖÁthread_count.
+        // å¯åŠ¨çº¿ç¨‹æ± å·¥ä½œ
+        // @thread_count: å·¥ä½œçº¿ç¨‹æ•°é‡, å½“thread_count==0æ—¶, å°†thread_countæ”¹å†™ä¸ºå½“å‰cpuçº¿ç¨‹æ•°.
+        // @remarks: å¦‚æœå½“å‰å·²æœ‰å·¥ä½œçº¿ç¨‹åœ¨å·¥ä½œ, ä¸”å·¥ä½œçº¿ç¨‹æ•°é‡å°äºthread_count, åˆ™å¢åŠ å·¥ä½œçº¿ç¨‹æ•°è‡³thread_count.
         void startup(unsigned int thread_count);
 
-        // Í£Ö¹Ïß³Ì³Ø¹¤×÷
+        // åœæ­¢çº¿ç¨‹æ± å·¥ä½œ
         void stop();
 
-        // ÖØÆôÏß³Ì³Ø
+        // é‡å¯çº¿ç¨‹æ± 
         void reset();
 
-        // ÓÅÑÅµØ¹Ø±Õ
+        // ä¼˜é›…åœ°å…³é—­
         void shutdown();
 
-        // Ç¿ÖÆÖÕÖ¹
+        // å¼ºåˆ¶ç»ˆæ­¢
         void terminate();
 
-        // Ïß³Ì³ØÊÇ·ñÒÑÍ£Ö¹¹¤×÷
+        // çº¿ç¨‹æ± æ˜¯å¦å·²åœæ­¢å·¥ä½œ
         bool stopped();
 
     private:
-        // ÏÂ²ãstrand
+        // ä¸‹å±‚strand
         Strand next_layer_;
 
-        // ´®ĞĞ¶à¸ö¹¤×÷Ïß³ÌµÄ»Øµ÷
+        // ä¸²è¡Œå¤šä¸ªå·¥ä½œçº¿ç¨‹çš„å›è°ƒ
         io_service actor_;
 
-        // ¹¤×÷Ïß³ÌÊıÁ¿
+        // å·¥ä½œçº¿ç¨‹æ•°é‡
         unsigned int thread_count_;
 
-        // ÓÃÓÚ×èÈû¹¤×÷Ïß³ÌµÄworker
+        // ç”¨äºé˜»å¡å·¥ä½œçº¿ç¨‹çš„worker
         boost::shared_ptr<io_service::work> worker_;
 
-        // ¹¤×÷Ïß³ÌÁĞ±í
+        // å·¥ä½œçº¿ç¨‹åˆ—è¡¨
         typedef boost::shared_ptr<boost::thread> thread_ptr;
         typedef std::list<thread_ptr, Allocator> thread_list;
         thread_list threads_;
 
-        // ¹¤×÷Ïß³ÌÁĞ±íËø
+        // å·¥ä½œçº¿ç¨‹åˆ—è¡¨é”
         boost::recursive_mutex threads_mutex_;
     };
 

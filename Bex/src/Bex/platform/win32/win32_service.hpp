@@ -14,7 +14,7 @@
 #include <iostream>
 
 //////////////////////////////////////////////////////////////////////////
-/// Win32·şÎñ³ÌĞò¿ò¼Ü
+/// Win32æœåŠ¡ç¨‹åºæ¡†æ¶
 namespace Bex
 {
     class WinService;
@@ -30,72 +30,72 @@ namespace Bex
         win_svc_base();
         virtual ~win_svc_base();
 
-        /// »ñÈ¡·şÎñÃû
+        /// è·å–æœåŠ¡å
         virtual const char* GetServiceName() = 0;
 
-        /// »ñÈ¡·şÎñÃû(ÓÃÓÚÏÔÊ¾)
+        /// è·å–æœåŠ¡å(ç”¨äºæ˜¾ç¤º)
         virtual const char* GetShowName() = 0;
 
     protected:
-        /// ÈÎÎñ
+        /// ä»»åŠ¡
         virtual void Run() = 0;
 
     protected:
         //////////////////////////////////////////////////////////////////////////
-        /// ------ »Øµ÷´¦Àí
+        /// ------ å›è°ƒå¤„ç†
 
-        /// °²×°³É¹¦»Øµ÷
+        /// å®‰è£…æˆåŠŸå›è°ƒ
         virtual void OnInstall(bool bAutoStart);
 
-        /// ·şÎñÍ£Ö¹»Øµ÷
+        /// æœåŠ¡åœæ­¢å›è°ƒ
         virtual void ServiceStop() {}
 
-        /// ·şÎñÔİÍ£»Øµ÷
+        /// æœåŠ¡æš‚åœå›è°ƒ
         virtual void ServicePause() {}
 
-        /// ·şÎñ¼ÌĞø»Øµ÷
+        /// æœåŠ¡ç»§ç»­å›è°ƒ
         virtual void ServiceContinue() {}
 
-        /// ¸üĞÂ·şÎñ×´Ì¬»Øµ÷
+        /// æ›´æ–°æœåŠ¡çŠ¶æ€å›è°ƒ
         virtual void OnServiceUpdateStatus() {}
 
-        /// ÆäËû¿ØÖÆÂë´¦Àí
+        /// å…¶ä»–æ§åˆ¶ç å¤„ç†
         virtual void OnCtrlCode(unsigned long ulCtrlCode) { ulCtrlCode; }
         //////////////////////////////////////////////////////////////////////////
 
         //////////////////////////////////////////////////////////////////////////
-        /// ------ ÒÔÏÂº¯ÊıÈç¹ûÃ»ÓĞÌØÊâĞèÇó, ²»½¨ÒéÖØÔØ.
+        /// ------ ä»¥ä¸‹å‡½æ•°å¦‚æœæ²¡æœ‰ç‰¹æ®Šéœ€æ±‚, ä¸å»ºè®®é‡è½½.
     protected:
-        /// »ñÈ¡·şÎñÈë¿Úµãº¯ÊıÖ¸Õë
+        /// è·å–æœåŠ¡å…¥å£ç‚¹å‡½æ•°æŒ‡é’ˆ
         virtual PServiceStart GetServiceStartFunction();
 
-        /// »ñÈ¡·şÎñ¿ØÖÆº¯ÊıÖ¸Õë
+        /// è·å–æœåŠ¡æ§åˆ¶å‡½æ•°æŒ‡é’ˆ
         virtual PServiceCtrl GetServiceCtrlFunction();
 
-        /// °²×°·şÎñ
-        // @param bAutoStart ÊÇ·ñ×Ô¶¯Æô¶¯
+        /// å®‰è£…æœåŠ¡
+        // @param bAutoStart æ˜¯å¦è‡ªåŠ¨å¯åŠ¨
         virtual bool Install(bool bAutoStart);
 
-        /// Ğ¶ÔØ·şÎñ
+        /// å¸è½½æœåŠ¡
         virtual bool Uninstall();
 
-        /// »Ø±¨·şÎñ×´Ì¬
+        /// å›æŠ¥æœåŠ¡çŠ¶æ€
         bool ReportStatus(unsigned long dwCurrentState, unsigned long dwExitCode = 0
             , unsigned long dwCheckPoint = 0, unsigned long dwWaitHint = 0);
         //////////////////////////////////////////////////////////////////////////
 
     private:
-        /// Èë¿Úº¯Êı
+        /// å…¥å£å‡½æ•°
         int Main(int argc, char * argv[]);
 
-        /// Ä¬ÈÏ·şÎñÈë¿Úµãº¯Êı
+        /// é»˜è®¤æœåŠ¡å…¥å£ç‚¹å‡½æ•°
         static void __stdcall service_start(unsigned long argc, char ** argv);
 
-        /// Ä¬ÈÏ·şÎñ¿ØÖÆº¯Êı
+        /// é»˜è®¤æœåŠ¡æ§åˆ¶å‡½æ•°
         static void __stdcall service_ctrl(unsigned long ulCtrlCode);
 
     private:
-        boost::program_options::variables_map m_vm;         ///< ÃüÁîĞĞ²ÎÊımap
+        boost::program_options::variables_map m_vm;         ///< å‘½ä»¤è¡Œå‚æ•°map
         boost::thread           m_taskThread;
 
         struct WinStructImpl;
@@ -108,8 +108,8 @@ namespace Bex
     public:
         typedef boost::shared_ptr<win_svc_base> ServicePtr;
 
-        /// °ó¶¨·şÎñ¶ÔÏó
-        // @param pSvc Ö¸Ïò¶ÑÄÚ´æµÄÖ¸Õë, ½»ÓÉWinService¸ºÔğÔÚÎö¹¹Ê±ÊÍ·ÅÄÚ´æ.
+        /// ç»‘å®šæœåŠ¡å¯¹è±¡
+        // @param pSvc æŒ‡å‘å †å†…å­˜çš„æŒ‡é’ˆ, äº¤ç”±WinServiceè´Ÿè´£åœ¨ææ„æ—¶é‡Šæ”¾å†…å­˜.
         bool BindService(win_svc_base * pSvc)
         {
             BOOST_ASSERT( !m_pService );
@@ -120,7 +120,7 @@ namespace Bex
             return true;
         }
 
-        /// Èë¿Úº¯Êı
+        /// å…¥å£å‡½æ•°
         int Main(int argc, char * argv[])
         {
             if (m_pService)
@@ -129,7 +129,7 @@ namespace Bex
             return 0;
         }
 
-        /// »ñÈ¡·şÎñ¶ÔÏóÖ¸Õë
+        /// è·å–æœåŠ¡å¯¹è±¡æŒ‡é’ˆ
         inline ServicePtr GetServicePtr()
         {
             return m_pService;

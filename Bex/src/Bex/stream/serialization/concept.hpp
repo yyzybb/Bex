@@ -8,16 +8,16 @@
 
 namespace Bex { namespace serialization
 {
-    /// ÀàĞÍÊÇ·ñÓĞ°æ±¾ºÅÅĞ¶Ï
+    /// ç±»å‹æ˜¯å¦æœ‰ç‰ˆæœ¬å·åˆ¤æ–­
     BEX_TT_HAS_CONSTEXPR(has_version_base, BEX_STREAM_SERIALIZATION_VERSION_NAME);
     template <typename T>
     struct has_version : has_version_base<typename remove_all<T>::type> {};
 
-    /// ÊÇ·ñ¶¨ÒåÎªÄ£ºıµÄ¶ÁĞ´ÀàĞÍ
+    /// æ˜¯å¦å®šä¹‰ä¸ºæ¨¡ç³Šçš„è¯»å†™ç±»å‹
     //BEX_TT_HAS_TYPE(has_serialize_unkown_type, serialize_unkown_type);
 
     //////////////////////////////////////////////////////////////////////////
-    /// @{ ÀàĞÍ¶ÔÓ¦µÄ°æ±¾ºÅ
+    /// @{ ç±»å‹å¯¹åº”çš„ç‰ˆæœ¬å·
     template <typename T, bool _has_version>
     struct get_version_helper
     {
@@ -43,7 +43,7 @@ namespace Bex { namespace serialization
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
-    /// @{ ÅĞ¶ÏÀàĞÍÊÇ·ñÒÑÌØ»¯ÎªÅä½ÓÆ÷
+    /// @{ åˆ¤æ–­ç±»å‹æ˜¯å¦å·²ç‰¹åŒ–ä¸ºé…æ¥å™¨
     template <typename T>
     struct is_adapter_type_base
         : boost::false_type
@@ -148,8 +148,8 @@ namespace Bex { namespace serialization
     {};
 
     //////////////////////////////////////////////////////////////////////////
-    /// @{ concept×éºÏ
-    /// binaryÆ½·²ÀàĞÍÅĞ¶Ï(Ö±½Ó´¦Àí¶ş½øÖÆÁ÷)
+    /// @{ conceptç»„åˆ
+    /// binaryå¹³å‡¡ç±»å‹åˆ¤æ–­(ç›´æ¥å¤„ç†äºŒè¿›åˆ¶æµ)
     template <typename T>
     struct is_binary_trivial
     {
@@ -170,7 +170,7 @@ namespace Bex { namespace serialization
 #endif //!defined(BOOST_NO_CXX11_DECLTYPE)
 
     //////////////////////////////////////////////////////////////////////////
-    /// @{ ÅĞ¶ÏÊÇ·ñ¿ÉÅúÁ¿´¦ÀíÓÅ»¯
+    /// @{ åˆ¤æ–­æ˜¯å¦å¯æ‰¹é‡å¤„ç†ä¼˜åŒ–
     template <typename T, typename ModeTag>
     struct is_optimize_helper;
 

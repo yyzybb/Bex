@@ -35,14 +35,14 @@ namespace Bex { namespace bexio
         }
 
     protected:
-        /// ÓÃÓÚÈÃÓÃ»§×Ô¶¨ÒåsessionÖØĞ´µÄ½ÓÊÕÊı¾İº¯Êı
+        /// ç”¨äºè®©ç”¨æˆ·è‡ªå®šä¹‰sessioné‡å†™çš„æ¥æ”¶æ•°æ®å‡½æ•°
         virtual void on_receive(char const* /*data*/, std::size_t /*size*/) {}
 
 
         //////////////////////////////////////////////////////////////////////////
-        /// @{ Ö»ÓĞsession¿ÉÒÔµ÷ÓÃÕâ¸ö½Ó¿Ú
+        /// @{ åªæœ‰sessionå¯ä»¥è°ƒç”¨è¿™ä¸ªæ¥å£
     public:
-        /// ³õÊ¼»¯
+        /// åˆå§‹åŒ–
         template <typename F, typename Id>
         void initialize(shared_ptr<options> const& opts, F const& f, Id const& id)
         {
@@ -52,7 +52,7 @@ namespace Bex { namespace bexio
         }
 
     protected:
-        /// ÓÃÓÚ´«µİ½ÓÊÕµ½µÄÊı¾İÖÁ½âÎöÆ÷
+        /// ç”¨äºä¼ é€’æ¥æ”¶åˆ°çš„æ•°æ®è‡³è§£æå™¨
         inline void parse(const_buffer const& buffer)
         {
             if (opts_->mlpe_ == mlpe::mlp_derived || opts_->mlpe_ == mlpe::mlp_both)

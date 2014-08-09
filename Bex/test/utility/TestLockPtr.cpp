@@ -17,10 +17,10 @@ lock_ptr<A> getLockPtr(A & obj, boost::mutex & mu)
 
 BOOST_AUTO_TEST_SUITE(s_lock_ptr)
 
-/// ÕıÈ·ĞÔ²âÊÔ
+/// æ­£ç¡®æ€§æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_lock_ptr)
 {
-    XDump("¿ªÊ¼²âÊÔ lock_ptr");
+    XDump("å¼€å§‹æµ‹è¯• lock_ptr");
 
     boost::mutex mu;
     A obj;
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(t_lock_ptr)
     BOOST_CHECK(mu.try_lock());
     mu.unlock();
 
-    XDump("½áÊø²âÊÔ lock_ptr");
+    XDump("ç»“æŸæµ‹è¯• lock_ptr");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -2,9 +2,9 @@
 #define __BEX_IO_NONBLOCKING_CIRCULARBUFFER_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-// »·ĞÎ»º³åÇø
+// ç¯å½¢ç¼“å†²åŒº
 /*
-* Ò»¸ö¶ÁÒ»¸öĞ´Ê±, ÎŞĞèËø¼´¿ÉÏß³Ì°²È«µÄ»·ĞÎ»º³åÇø.
+* ä¸€ä¸ªè¯»ä¸€ä¸ªå†™æ—¶, æ— éœ€é”å³å¯çº¿ç¨‹å®‰å…¨çš„ç¯å½¢ç¼“å†²åŒº.
 */
 
 #include <cstdio>
@@ -29,13 +29,13 @@ namespace Bex { namespace bexio
             reset(buffer, capacity);
         }
 
-        // »º³åÇøÆğÊ¼µØÖ·
+        // ç¼“å†²åŒºèµ·å§‹åœ°å€
         const_pointer address() const
         {
             return buffer_;
         }
 
-        // »º³åÇø×Ü´óĞ¡
+        // ç¼“å†²åŒºæ€»å¤§å°
         size_type capacity() const
         {
             return capacity_;
@@ -43,26 +43,26 @@ namespace Bex { namespace bexio
 
         //////////////////////////////////////////////////////////////////////////
         // @{ only one thread methods
-        // ÖØÖÃ¶ÁĞ´Ö¸Õë
+        // é‡ç½®è¯»å†™æŒ‡é’ˆ
         void reset()
         {
             get_ = buffer_, put_ = buffer_ + 1;
         }
 
-        // ÖØÉè»º³åÇø¼°¶ÁĞ´Ö¸Õë
+        // é‡è®¾ç¼“å†²åŒºåŠè¯»å†™æŒ‡é’ˆ
         void reset(pointer buffer, size_type capacity)
         {
             buffer_ = buffer, capacity_ = capacity;
             reset();
         }
 
-        // ÊÇ·ñ¿Õ
+        // æ˜¯å¦ç©º
         bool empty() const
         {
             return (gbegin() == gend());
         }
 
-        // ÊÇ·ñÂú
+        // æ˜¯å¦æ»¡
         bool full() const
         {
             return (pbegin() == pend());
@@ -72,32 +72,32 @@ namespace Bex { namespace bexio
 
         //////////////////////////////////////////////////////////////////////////
         // @{ put thread methods
-        // Ğ´Ö¸Õë
+        // å†™æŒ‡é’ˆ
         pointer pptr() const
         {
             return put_;
         }
 
-        // Á¬ĞøµÄ¿ÉĞ´³¤¶È
+        // è¿ç»­çš„å¯å†™é•¿åº¦
         size_type pcount() const
         {
             pointer pb = pbegin(), pe = pend();
             return (pb > pe) ? distance(pb, end()) : distance(pb, pe);
         }
 
-        // Ğ´Ö¸ÕëÏòºóÒÆ¶¯offset¸öÎ»ÖÃ
+        // å†™æŒ‡é’ˆå‘åç§»åŠ¨offsetä¸ªä½ç½®
         void pbump(difference_type offset)
         {
             put_ = advance(put_, offset);
         }
 
-        // ×Ü¼ÆµÄ¿ÉĞ´³¤¶È
+        // æ€»è®¡çš„å¯å†™é•¿åº¦
         size_type psize() const
         {
             return distance(pbegin(), pend());
         }
 
-        // Ğ´ÈëÊı¾İ
+        // å†™å…¥æ•°æ®
         size_type sputn(const_pointer data, size_type size)
         {
             const_pointer pos = data;
@@ -116,7 +116,7 @@ namespace Bex { namespace bexio
             return (size - put_size);
         }
 
-        // Ğ´ÈëÊı¾İ
+        // å†™å…¥æ•°æ®
         template <typename ConstBufferSequence>
         size_type sputn_to_buffers(ConstBufferSequence const& buffers)
         {
@@ -133,7 +133,7 @@ namespace Bex { namespace bexio
             return count;
         }
 
-        // ¿ÉĞ´»º³åÇøÌáÈ¡³ÉMutableBufferSequence concept
+        // å¯å†™ç¼“å†²åŒºæå–æˆMutableBufferSequence concept
         template <typename MutableBuffer>
         size_type put_buffers(boost::array<MutableBuffer, 2> & out) const
         {
@@ -151,32 +151,32 @@ namespace Bex { namespace bexio
 
         //////////////////////////////////////////////////////////////////////////
         // @{ get thread methods
-        // ¶ÁÖ¸Õë
+        // è¯»æŒ‡é’ˆ
         const_pointer gptr() const
         {
             return increment(get_);
         }
 
-        // Á¬ĞøµÄ¿É¶Á³¤¶È
+        // è¿ç»­çš„å¯è¯»é•¿åº¦
         size_type gcount() const
         {
             const_pointer gb = increment(gbegin()), ge = increment(gend());
             return (gb > ge) ? distance(gb, end()) : distance(gb, ge);
         }
 
-        // ¶ÁÖ¸ÕëÏòºóÒÆ¶¯offset¸öÎ»ÖÃ
+        // è¯»æŒ‡é’ˆå‘åç§»åŠ¨offsetä¸ªä½ç½®
         void gbump(difference_type offset)
         {
             get_ = advance(get_, offset);
         }
 
-        // ×Ü¼ÆµÄ¿É¶Á³¤¶È
+        // æ€»è®¡çš„å¯è¯»é•¿åº¦
         size_type gsize() const
         {
             return distance(gbegin(), gend());
         }
 
-        // ¶ÁÈ¡Êı¾İ
+        // è¯»å–æ•°æ®
         size_type sgetn(pointer data, size_type size)
         {
             pointer pos = data;
@@ -195,7 +195,7 @@ namespace Bex { namespace bexio
             return (size - get_size);
         }
 
-        // ¶ÁÈ¡Êı¾İ
+        // è¯»å–æ•°æ®
         template <typename MutableBufferSequence>
         size_type sgetn_to_buffers(MutableBufferSequence & buffers)
         {
@@ -212,7 +212,7 @@ namespace Bex { namespace bexio
             return count;
         }
 
-        // ¿ÉĞ´»º³åÇøÌáÈ¡³ÉConstBufferSequence concept
+        // å¯å†™ç¼“å†²åŒºæå–æˆConstBufferSequence concept
         template <typename ConstBuffer>
         size_type get_buffers(boost::array<ConstBuffer, 2> & out) const
         {
@@ -284,16 +284,16 @@ namespace Bex { namespace bexio
         }
 
     private:
-        // »º³åÇøÊ×µØÖ·
+        // ç¼“å†²åŒºé¦–åœ°å€
         pointer buffer_;
 
-        // »º³åÇøÈİÁ¿
+        // ç¼“å†²åŒºå®¹é‡
         size_type capacity_;
 
-        // Ğ´Ö¸Õë [pbegin, pend)
+        // å†™æŒ‡é’ˆ [pbegin, pend)
         pointer volatile put_;
 
-        // ¶ÁÖ¸Õë [gbegin, gend)
+        // è¯»æŒ‡é’ˆ [gbegin, gend)
         pointer volatile get_;
     };
 

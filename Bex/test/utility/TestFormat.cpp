@@ -4,10 +4,10 @@ using namespace Bex;
 
 BOOST_AUTO_TEST_SUITE(s_format)
 
-/// ÕıÈ·ĞÔ²âÊÔ
+/// æ­£ç¡®æ€§æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_format)
 {
-    XDump("¿ªÊ¼²âÊÔ format");
+    XDump("å¼€å§‹æµ‹è¯• format");
 
     std::string str = format("%d %s", 2, 4);
     BOOST_CHECK(str == "2 4");
@@ -15,7 +15,7 @@ BOOST_AUTO_TEST_CASE(t_format)
     std::wstring wstr = format(L"%s %s", 2, L"X");
     BOOST_CHECK(wstr == L"2 X");
     
-    XDump("½áÊø²âÊÔ format");
+    XDump("ç»“æŸæµ‹è¯• format");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -2,16 +2,16 @@
 #define __BEX_STREAM_SERIALIZATION_SERIALIZATION_FWD_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// stream.serialization¿âÇ°ÖÃÉùÃ÷ÎÄ¼ş
+/// stream.serializationåº“å‰ç½®å£°æ˜æ–‡ä»¶
 
 #ifndef BEX_STREAM_SERIALIZATION_VERSION_NAME
 #define BEX_STREAM_SERIALIZATION_VERSION_NAME bex_serialization_version
 #endif //BEX_STREAM_SERIALIZATION_VERSION_NAME
 
-/// ÓÃÓÚ¶¨Òå½á¹¹ÌåĞòÁĞ»¯°æ±¾ºÅµÄÀàÄÚÃ¶¾ÙÃû
+/// ç”¨äºå®šä¹‰ç»“æ„ä½“åºåˆ—åŒ–ç‰ˆæœ¬å·çš„ç±»å†…æšä¸¾å
 #define BEX_SS_VERSION BEX_STREAM_SERIALIZATION_VERSION_NAME
 
-/// Ïû³ı´Ó»ùÀà¼Ì³Ğ¹ıÀ´µÄ°æ±¾ºÅ
+/// æ¶ˆé™¤ä»åŸºç±»ç»§æ‰¿è¿‡æ¥çš„ç‰ˆæœ¬å·
 #define BEX_SS_UNDEF_BASE_VERSION(Base) private: using Base::BEX_SS_VERSION;
 
 namespace Bex { namespace serialization
@@ -21,13 +21,13 @@ namespace Bex { namespace serialization
     enum archive_mark_bit
     {
         amb_none = 0x0,
-        amb_rollback = 0x1,        ///< Èç¹ûreback±»ÉèÖÃ, ¶Á/Ğ´Ê§°ÜÊ±, Êı¾İÁ÷»á»¹Ô­ÖÁ²Ù×÷Ç°µÄ×´Ì¬ºÍÎ»ÖÃ.
+        amb_rollback = 0x1,        ///< å¦‚æœrebackè¢«è®¾ç½®, è¯»/å†™å¤±è´¥æ—¶, æ•°æ®æµä¼šè¿˜åŸè‡³æ“ä½œå‰çš„çŠ¶æ€å’Œä½ç½®.
     };
     typedef int archive_mark;
     static const archive_mark default_mark = amb_none;
 
     //////////////////////////////////////////////////////////////////////////
-    /// @{ ArchiveÀàĞÍÃ¶¾Ù
+    /// @{ Archiveç±»å‹æšä¸¾
     enum BEX_ENUM_CLASS archive_mode_enum
     {
         archive_mode_binary,
@@ -41,7 +41,7 @@ namespace Bex { namespace serialization
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
-    /// @{ Archive²Ù×÷ÀàĞÍÃ¶¾Ù
+    /// @{ Archiveæ“ä½œç±»å‹æšä¸¾
     enum BEX_ENUM_CLASS archive_oper_enum
     { 
         archive_oper_load, 
@@ -55,11 +55,11 @@ namespace Bex { namespace serialization
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
-    /// @{ Êı¾İ°ü×°Àà
-    /// ¶ş½øÖÆÊı¾İÁ÷°ü×°Àà
+    /// @{ æ•°æ®åŒ…è£…ç±»
+    /// äºŒè¿›åˆ¶æ•°æ®æµåŒ…è£…ç±»
     struct binary_wrapper;
 
-    /// ÎÄ±¾Êı¾İÁ÷°ü×°Àà
+    /// æ–‡æœ¬æ•°æ®æµåŒ…è£…ç±»
     template <typename T>
     struct text_wrapper;
     /// @}
@@ -80,7 +80,7 @@ namespace Bex { namespace serialization
     template <class Archive>
     struct archive_traits;
 
-    /// ÅĞ¶ÏÀàĞÍÊÇ·ñÒÑÌØ»¯ÎªÅä½ÓÆ÷
+    /// åˆ¤æ–­ç±»å‹æ˜¯å¦å·²ç‰¹åŒ–ä¸ºé…æ¥å™¨
     template <typename T>
     struct is_adapter_type;
     //////////////////////////////////////////////////////////////////////////

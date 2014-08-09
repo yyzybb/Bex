@@ -8,13 +8,13 @@
 #include <boost/type_traits/is_base_of.hpp>
 
 //////////////////////////////////////////////////////////////////////////
-/// Êı¾İ×ª»»Æ÷(¿ÉÓëserialization¿âÅäºÏÊ¹ÓÃ)
+/// æ•°æ®è½¬æ¢å™¨(å¯ä¸serializationåº“é…åˆä½¿ç”¨)
 namespace Bex { namespace convert
 {
-    /// convert¿Õ»ùÀà
+    /// convertç©ºåŸºç±»
     class empty_base_convert {};
 
-    /// convert»ùÀà
+    /// convertåŸºç±»
     template <class Archive, class Convert>
     class basic_serialize_convert
         : public empty_base_convert

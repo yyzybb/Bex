@@ -2,12 +2,13 @@
 #define __BEX_TEST_COMMON__
 
 #include <memory>
+#include <Bex/locale/charset_cvt.h>
 
-#define DumpC(x) std::cout << x << std::flush;
-#define DumpR std::cout << std::endl;
-#define Dump(x) std::cout << x << std::endl;
-#define DumpX(x) std::cout << #x << " = " << x << std::endl;
-#define XDump(x) Dump(std::string(20, '-') << x << std::string(20, '-'))
+#define DumpC(x) do { std::cout << x << std::flush; } while(0)
+#define DumpR do { std::cout << std::endl; } while(0)
+#define Dump(x) do { std::cout << x << std::endl; } while(0)
+#define DumpX(x) do { std::cout << #x << " = " << x << std::endl; } while(0)
+#define XDump(x) do { std::cout << std::string(20, '-') << conv::u82a(x) << std::string(20, '-') << std::endl; } while(0)
 
 #define FOR(n) for( int i = 0; i < n; ++i )
 #define UFOR(n) for( unsigned int ui = 0; ui < n; ++ui )

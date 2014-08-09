@@ -2,7 +2,7 @@
 #define __BEX_IO_BEXIO_CORE_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// ºËĞÄ²ã(¶Ôio_serviceµÄ·â×°)
+/// æ ¸å¿ƒå±‚(å¯¹io_serviceçš„å°è£…)
 #include "bexio_fwd.hpp"
 #include "multithread_strand_service.hpp"
 
@@ -21,28 +21,28 @@ namespace Bex { namespace bexio
     public:
         typedef multithread_strand_service<Allocator> ServiceType;
 
-        // Ö÷Ñ­»·ÍÆ½ø
+        // ä¸»å¾ªç¯æ¨è¿›
         std::pair<std::size_t, error_code> run()
         {
             return mts_srv_.run();
         }
 
-        // »ñµÃºó¶Ëio_service. 
-        // * ÍøÂç²ãÊ¹ÓÃµÄ, 
-        // * ³õÊ¼»¯server/clientÊ±, ÇëÎñ±ØÊ¹ÓÃÕâ¸ö½Ó¿Ú·µ»ØµÄio_service, ÇÒAllocator±ØĞëÒ»ÖÂ!
+        // è·å¾—åç«¯io_service. 
+        // * ç½‘ç»œå±‚ä½¿ç”¨çš„, 
+        // * åˆå§‹åŒ–server/clientæ—¶, è¯·åŠ¡å¿…ä½¿ç”¨è¿™ä¸ªæ¥å£è¿”å›çš„io_service, ä¸”Allocatorå¿…é¡»ä¸€è‡´!
         io_service & backend()
         {
             return ios_;
         }
 
-        // »ñµÃÇ°¶Ëio_service. 
-        // * Ó¦ÓÃ²ãÊ¹ÓÃµÄ
+        // è·å¾—å‰ç«¯io_service. 
+        // * åº”ç”¨å±‚ä½¿ç”¨çš„
         io_service & backfront()
         {
             return mts_srv_.actor();
         }
 
-        // ·µ»Ø·şÎñ
+        // è¿”å›æœåŠ¡
         ServiceType & get_service()
         {
             return mts_srv_;

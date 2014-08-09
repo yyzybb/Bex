@@ -2,24 +2,24 @@
 #define __BEX_IO_SESSION_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// Á¬½Ó
+/// è¿æ¥
 
 /*
-* @½öÓÃÓÚÓĞÁ¬½ÓĞ­Òé
+* @ä»…ç”¨äºæœ‰è¿æ¥åè®®
 *
-* @functions: ´øÓĞ_cbºÍ_lºó×ºµÄ½Ó¿Ú±ØĞëÔÚÂß¼­Ïß³ÌÖ´ĞĞ¡£
+* @functions: å¸¦æœ‰_cbå’Œ_låç¼€çš„æ¥å£å¿…é¡»åœ¨é€»è¾‘çº¿ç¨‹æ‰§è¡Œã€‚
 *
-* @ÓÅÑÅµØ¹Ø±ÕÁ¬½ÓÁ÷³Ì:
-*   \Ö÷¶¯·½: ÇëÇó¹Ø±Õ(µ÷ÓÃshutdown½Ó¿Ú) -> ½ûÖ¹·¢ËÍ(sendÈ«²¿·µ»Øfalse) -> ¼ÇÂ¼´íÎóÂë
-*       -> µÈ´ıÓ¦ÓÃ²ã·¢ËÍ»º³åÇøÊı¾İÈ«²¿¸´ÖÆµ½µ×²ãsocket»º³åÇø -> ¹Ø±Õ·¢ËÍÍ¨µÀ
-*       -> µÈ´ı¶Ô·½¹Ø±ÕÁíÍâÒ»¸öÍ¨µÀ -> ...
-*   \±»¶¯·½: È«²¿Êı¾İ½ÓÊÕÍê±ÏÖ±µ½eof -> ¼ÇÂ¼´íÎóÂë -> mark±»¶¯ÓÅÑÅµØ¹Ø±Õ -> ½ûÖ¹·¢ËÍ(sendÈ«²¿·µ»Øfalse)
-*       -> µÈ´ıÓ¦ÓÃ²ã·¢ËÍ»º³åÇøÊı¾İÈ«²¿¸´ÖÆµ½µ×²ãsocket»º³åÇø -> if(mark) ¹Ø±Õ·¢ËÍÍ¨µÀ
-*       -> do_shutdown_lowest -> ¹Ø±ÕÍê³É
-*   \Ö÷¶¯·½: È«²¿Êı¾İ½ÓÊÕÍê±ÏÖ±µ½eof -> do_shutdown_lowest -> ¹Ø±ÕÍê³É
+* @ä¼˜é›…åœ°å…³é—­è¿æ¥æµç¨‹:
+*   \ä¸»åŠ¨æ–¹: è¯·æ±‚å…³é—­(è°ƒç”¨shutdownæ¥å£) -> ç¦æ­¢å‘é€(sendå…¨éƒ¨è¿”å›false) -> è®°å½•é”™è¯¯ç 
+*       -> ç­‰å¾…åº”ç”¨å±‚å‘é€ç¼“å†²åŒºæ•°æ®å…¨éƒ¨å¤åˆ¶åˆ°åº•å±‚socketç¼“å†²åŒº -> å…³é—­å‘é€é€šé“
+*       -> ç­‰å¾…å¯¹æ–¹å…³é—­å¦å¤–ä¸€ä¸ªé€šé“ -> ...
+*   \è¢«åŠ¨æ–¹: å…¨éƒ¨æ•°æ®æ¥æ”¶å®Œæ¯•ç›´åˆ°eof -> è®°å½•é”™è¯¯ç  -> markè¢«åŠ¨ä¼˜é›…åœ°å…³é—­ -> ç¦æ­¢å‘é€(sendå…¨éƒ¨è¿”å›false)
+*       -> ç­‰å¾…åº”ç”¨å±‚å‘é€ç¼“å†²åŒºæ•°æ®å…¨éƒ¨å¤åˆ¶åˆ°åº•å±‚socketç¼“å†²åŒº -> if(mark) å…³é—­å‘é€é€šé“
+*       -> do_shutdown_lowest -> å…³é—­å®Œæˆ
+*   \ä¸»åŠ¨æ–¹: å…¨éƒ¨æ•°æ®æ¥æ”¶å®Œæ¯•ç›´åˆ°eof -> do_shutdown_lowest -> å…³é—­å®Œæˆ
 *
 *
-* @log 2014-07-10: double pingpong²âÊÔÊ±, Êı¾İÁ´¶ÏµµÊÇwait»úÖÆµ¼ÖÂµÄ, ²»ÊÇbug...
+* @log 2014-07-10: double pingpongæµ‹è¯•æ—¶, æ•°æ®é“¾æ–­æ¡£æ˜¯waitæœºåˆ¶å¯¼è‡´çš„, ä¸æ˜¯bug...
 *
 */
 
@@ -56,7 +56,7 @@ namespace Bex { namespace bexio
         typedef protocol_traits<protocol_type> protocol_traits_type;
         typedef multithread_strand_service<allocator> mstrand_service_type;
 
-        // Á¬½Óid
+        // è¿æ¥id
         class id
             : boost::totally_ordered<id>
         {
@@ -82,16 +82,16 @@ namespace Bex { namespace bexio
         };
         friend class id;
 
-        /// »Øµ÷ÀàĞÍ
+        /// å›è°ƒç±»å‹
         enum BEX_ENUM_CLASS callback_em
         {
-            cb_connect = 0,         ///< Á¬½Ó³É¹¦
-            cb_disconnect = 1,      ///< ¶Ï¿ªÁ¬½Ó
-            cb_receive = 2,         ///< ÊÕµ½Êı¾İ
+            cb_connect = 0,         ///< è¿æ¥æˆåŠŸ
+            cb_disconnect = 1,      ///< æ–­å¼€è¿æ¥
+            cb_receive = 2,         ///< æ”¶åˆ°æ•°æ®
         };
         typedef callback_em cbe;
 
-        /// ¸ù¾İProtocol::FÌí¼Óid²ÎÊı, ÍÆµ¼³öF
+        /// æ ¹æ®Protocol::Fæ·»åŠ idå‚æ•°, æ¨å¯¼å‡ºF
         typedef boost::function<void(id)> OnConnectF;
         typedef boost::function<void(id, error_code const&)> OnDisconnectF;
         typedef typename function_addition<id, typename Protocol::OnReceiveF>::type OnReceiveF;
@@ -102,8 +102,8 @@ namespace Bex { namespace bexio
         typedef shared_ptr<callback_type> callback_ptr;
 
     public:
-        // @remarks: ÎªÓÃ»§×Ô¶¨ÒåµÄ×ÓÀàÊéĞ´·½±ã, ½«±¾¸Ã¹¹ÔìÊ±´«ÈëµÄ²ÎÊıÑÓ³ÙÖÁinitializeÖĞ¡£
-        //           ÔÚinitializeÖ®Ç°sessionÊÇ²»°²È«µÄ, Ç§Íò²»ÒªÊ¹ÓÃ!
+        // @remarks: ä¸ºç”¨æˆ·è‡ªå®šä¹‰çš„å­ç±»ä¹¦å†™æ–¹ä¾¿, å°†æœ¬è¯¥æ„é€ æ—¶ä¼ å…¥çš„å‚æ•°å»¶è¿Ÿè‡³initializeä¸­ã€‚
+        //           åœ¨initializeä¹‹å‰sessionæ˜¯ä¸å®‰å…¨çš„, åƒä¸‡ä¸è¦ä½¿ç”¨!
         basic_session()
             : id_(svlid++), service_(0)
         {
@@ -132,7 +132,7 @@ namespace Bex { namespace bexio
             post_receive();
         }
 
-        // ·¢ËÍÊı¾İ
+        // å‘é€æ•°æ®
         bool send(char const* data, std::size_t size)
         {
             if (shutdowning_.is_set())
@@ -140,7 +140,7 @@ namespace Bex { namespace bexio
 
             if (socket_->putable_write() < size)
             {
-                /// ·¢ËÍ»º³åÇøÒç³ö
+                /// å‘é€ç¼“å†²åŒºæº¢å‡º
                 if (!on_sendbuffer_overflow())
                     return false;
             }
@@ -163,7 +163,7 @@ namespace Bex { namespace bexio
 
             if (socket_->putable_write() < size)
             {
-                /// ·¢ËÍ»º³åÇøÒç³ö
+                /// å‘é€ç¼“å†²åŒºæº¢å‡º
                 if (!on_sendbuffer_overflow())
                     return false;
             }
@@ -173,7 +173,7 @@ namespace Bex { namespace bexio
             return true;
         }
 
-        // ÓÅÑÅµØ¹Ø±ÕÁ¬½Ó
+        // ä¼˜é›…åœ°å…³é—­è¿æ¥
         virtual void shutdown()
         {
             shutdown_handshaking_.set();
@@ -192,9 +192,9 @@ namespace Bex { namespace bexio
                 protocol_traits_type::async_shutdown(socket_, handler);
         }
 
-        // Ç¿ÖÆ¹Ø±ÕÁ¬½Ó(É÷ÓÃ)
-        //   ·¢ËÍRST, ²»µ«»á¶ªÊ§±¾µØÉÏ²ãºÍµ×²ãsocket·¢ËÍ»º³åÇøÖĞÎ´·¢ËÍµÄÊı¾İ, 
-        //   Ò²»á¶ªÊ§Ô¶¶Ëµ×²ãsocket½ÓÊÕ»º³åÇøÖĞÎ´¶ÁÈ¡µÄÊı¾İ¡£
+        // å¼ºåˆ¶å…³é—­è¿æ¥(æ…ç”¨)
+        //   å‘é€RST, ä¸ä½†ä¼šä¸¢å¤±æœ¬åœ°ä¸Šå±‚å’Œåº•å±‚socketå‘é€ç¼“å†²åŒºä¸­æœªå‘é€çš„æ•°æ®, 
+        //   ä¹Ÿä¼šä¸¢å¤±è¿œç«¯åº•å±‚socketæ¥æ”¶ç¼“å†²åŒºä¸­æœªè¯»å–çš„æ•°æ®ã€‚
         virtual void terminate()
         {
             if (!terminating_.set())
@@ -206,43 +206,43 @@ namespace Bex { namespace bexio
             do_shutdown_lowest();
         }
 
-        // Á¬½ÓÊÇ·ñÒÑ¶Ï¿ª
+        // è¿æ¥æ˜¯å¦å·²æ–­å¼€
         bool is_disconnected() const
         {
             return disconencted_.is_set();
         }
 
-        // ±¾µØÍøÂçµØÖ·
+        // æœ¬åœ°ç½‘ç»œåœ°å€
         endpoint local_endpoint() const
         {
             return socket_->lowest_layer().local_endpoint();
         }
 
-        // Ô¶¶ËÍøÂçµØÖ·
+        // è¿œç«¯ç½‘ç»œåœ°å€
         endpoint remote_endpoint() const
         {
             return socket_->lowest_layer().remote_endpoint();
         }
 
-        // »ñÈ¡ÅäÖÃĞÅÏ¢
+        // è·å–é…ç½®ä¿¡æ¯
         shared_ptr<options const> get_options() const
         {
             return opts_;
         }
 
-        // »ñÈ¡socket
+        // è·å–socket
         socket_ptr get_socket()
         {
             return socket_;
         }
 
-        // »ñÈ¡id
+        // è·å–id
         id get_id()
         {
             return id(shared_this());
         }
 
-        // ÉèÖÃ»Øµ÷
+        // è®¾ç½®å›è°ƒ
         template <callback_em CallbackType, typename F>
         static void set_callback(callback_type & cb, F const& f)
         {
@@ -250,14 +250,14 @@ namespace Bex { namespace bexio
         }
 
     protected:
-        // Á¬½Ó»Øµ÷(mlp_derived || mlp_both ÉúĞ§)
+        // è¿æ¥å›è°ƒ(mlp_derived || mlp_both ç”Ÿæ•ˆ)
         virtual void on_connect() {}
         
-        // ¶Ï¿ªÁ¬½Ó»Øµ÷(mlp_derived || mlp_both ÉúĞ§)
+        // æ–­å¼€è¿æ¥å›è°ƒ(mlp_derived || mlp_both ç”Ÿæ•ˆ)
         virtual void on_disconnect(error_code const& ec) {}
 
     private:
-        // ·¢ÆğÒì²½·¢ËÍÇëÇó
+        // å‘èµ·å¼‚æ­¥å‘é€è¯·æ±‚
         void post_send(bool reply = false)
         {
             if (!reply && !sending_.set())
@@ -267,22 +267,22 @@ namespace Bex { namespace bexio
                 BEX_IO_BIND(&this_type::on_async_send, this, BEX_IO_PH_ERROR, BEX_IO_PH_BYTES_TRANSFERRED, shared_this())
                 );
 
-            if (!sendok)    ///< ·¢ËÍ»º³åÇøÒÑ¿Õ
+            if (!sendok)    ///< å‘é€ç¼“å†²åŒºå·²ç©º
             {
                 sending_.reset();
 
                 if (shutdowning_.is_set() 
                     && !shutdown_handshaking_.is_set()
-                    && !socket_->getable_write())   // ÒÑ×¼±¸¹Ø±Õ
+                    && !socket_->getable_write())   // å·²å‡†å¤‡å…³é—­
                 {
-                    close_send();   // ¹Ø±Õ·¢ËÍÍ¨µÀ
+                    close_send();   // å…³é—­å‘é€é€šé“
                 }
-                else if (socket_->getable_write()) // double check (·ÀÖ¹·¢ËÍ»º³åÇøÖĞ»ı´æÊı¾İÎ´ÄÜ¼°Ê±·¢ËÍ)
+                else if (socket_->getable_write()) // double check (é˜²æ­¢å‘é€ç¼“å†²åŒºä¸­ç§¯å­˜æ•°æ®æœªèƒ½åŠæ—¶å‘é€)
                     post_send();
             }
         }
 
-        // ·¢ÆğÒì²½½ÓÊÕÇëÇó
+        // å‘èµ·å¼‚æ­¥æ¥æ”¶è¯·æ±‚
         void post_receive(bool reply = false)
         {
             if (!reply && !receiving_.set())
@@ -296,19 +296,19 @@ namespace Bex { namespace bexio
             {
                 receiving_.reset();
 
-                /// ½ÓÊÕ»º³åÇøÒÑÂú
+                /// æ¥æ”¶ç¼“å†²åŒºå·²æ»¡
                 if (on_receivebuffer_overflow())
                     post_receive();
             }
         }
-        // Í¨ÖªÂß¼­Ïß³Ì·¢ÆğÒì²½½ÓÊÕÇëÇóµÄ½Ó¿Ú
+        // é€šçŸ¥é€»è¾‘çº¿ç¨‹å‘èµ·å¼‚æ­¥æ¥æ”¶è¯·æ±‚çš„æ¥å£
         void post_receive_cb(shared_ptr<this_type>)
         {
             post_receive();
         }
 
     private:
-        // Òì²½·¢ËÍ»Øµ÷
+        // å¼‚æ­¥å‘é€å›è°ƒ
         void on_async_send(error_code ec, std::size_t bytes, shared_ptr<this_type>)
         {
             //Dump("on_async_send, ec:" << ec.value() << " bytes:" << bytes);
@@ -323,7 +323,7 @@ namespace Bex { namespace bexio
             post_send(true);
         }
 
-        // Òì²½½ÓÊÕ»Øµ÷
+        // å¼‚æ­¥æ¥æ”¶å›è°ƒ
         void on_async_receive(error_code ec, std::size_t bytes, shared_ptr<this_type>)
         {
             //Dump("on_async_receive, ec:" << ec.value() << " bytes:" << bytes);
@@ -332,7 +332,7 @@ namespace Bex { namespace bexio
             {
                 close_receive();
 
-                // eof ¶Ô·½µ÷ÓÃshutdown, ³¢ÊÔÒÔÓÅÑÅµØ·½Ê½¹Ø±ÕÁ¬½Ó.
+                // eof å¯¹æ–¹è°ƒç”¨shutdown, å°è¯•ä»¥ä¼˜é›…åœ°æ–¹å¼å…³é—­è¿æ¥.
                 if (ec.value() == 2)
                 {
                     shutdowning_.set();
@@ -344,14 +344,14 @@ namespace Bex { namespace bexio
                 return ;
             }
 
-            // on_receive_run»Øµ÷ÒªÔÚpost_receiveÇ°Ãæ, ²ÅÄÜÈ·±£waitÄ£Ê½ÏÂ²»ÀË·Ñ×ÊÔ´.
+            // on_receive_runå›è°ƒè¦åœ¨post_receiveå‰é¢, æ‰èƒ½ç¡®ä¿waitæ¨¡å¼ä¸‹ä¸æµªè´¹èµ„æº.
             if (notify_receive_.set())
                 mstrand_service()->post(BEX_IO_BIND(&this_type::on_receive_cb, this, shared_this()));
 
             post_receive(true);
         }
 
-        // ¹Ø±ÕÎÕÊÖ»Øµ÷
+        // å…³é—­æ¡æ‰‹å›è°ƒ
         void on_async_shutdown(error_code const& ec, shared_ptr<this_type>)
         {
             shutdown_handshaking_.reset();
@@ -367,7 +367,7 @@ namespace Bex { namespace bexio
             }
         }
 
-        // ¹Ø±ÕÁ¬½Ó
+        // å…³é—­è¿æ¥
         void do_shutdown_lowest()
         {
             if (shutdown_dt_)
@@ -384,19 +384,19 @@ namespace Bex { namespace bexio
             notify_ondisconnect();
         }
 
-        // shutdown³¬Ê±ºóÖ±½Ó¹Ø±ÕÁ¬½Ó
+        // shutdownè¶…æ—¶åç›´æ¥å…³é—­è¿æ¥
         void on_shutdown_overtime(error_code const& ec, shared_ptr<this_type>)
         {
             if (ec)
                 return ;
 
             shutdown_dt_.reset();
-            ec_ = generate_error(bee::shutdown_overtime);   // Ç¿ÖÆĞŞ¸Ä¶Ï¿ª´íÎóÔ­Òò
+            ec_ = generate_error(bee::shutdown_overtime);   // å¼ºåˆ¶ä¿®æ”¹æ–­å¼€é”™è¯¯åŸå› 
             terminate();
         }
 
     private:
-        // ½ÓÊÕÊı¾İ»Øµ÷(½öÔÚÂß¼­Ïß³ÌÖ´ĞĞ!)
+        // æ¥æ”¶æ•°æ®å›è°ƒ(ä»…åœ¨é€»è¾‘çº¿ç¨‹æ‰§è¡Œ!)
         void on_receive_l()
         {
             boost::array<const_buffer, 2> buffers;
@@ -413,10 +413,10 @@ namespace Bex { namespace bexio
             on_receive_l();
         }
 
-        // ´íÎó´¦Àí
+        // é”™è¯¯å¤„ç†
         void on_error(error_code ec)
         {
-            if (ec && !ec_)  //Ö»Ğè¼ÇÂ¼µÚÒ»¸ö´íÎóÔ­Òò
+            if (ec && !ec_)  //åªéœ€è®°å½•ç¬¬ä¸€ä¸ªé”™è¯¯åŸå› 
                 ec_ = ec;
 
             /// shutdown is ok?
@@ -424,11 +424,11 @@ namespace Bex { namespace bexio
             {
                 if (receiveclosed_.is_set())
                 {
-                    if (sendclosed_.is_set())   //·¢ËÍÍ¨µÀÒÑ¹Ø±Õ, ¿ÉÒÔ¹Ø±ÕsocketÁË.
+                    if (sendclosed_.is_set())   //å‘é€é€šé“å·²å…³é—­, å¯ä»¥å…³é—­socketäº†.
                         do_shutdown_lowest();
-                    else if (!sending_.is_set())    //·¢ËÍÒÑÍ£Ö¹, ¿ÉÒÔ¹Ø±Õ·¢ËÍÍ¨µÀÁË.
+                    else if (!sending_.is_set())    //å‘é€å·²åœæ­¢, å¯ä»¥å…³é—­å‘é€é€šé“äº†.
                         close_send();
-                    else if (!socket_->getable_write())  //·¢ËÍÍ¨µÀÎ´¹Ø±Õµ«·¢ËÍ»º³åÇøÒÑ¿Õ, ¿ÉÒÔ¹Ø±Õ·¢ËÍÍ¨µÀÁË.
+                    else if (!socket_->getable_write())  //å‘é€é€šé“æœªå…³é—­ä½†å‘é€ç¼“å†²åŒºå·²ç©º, å¯ä»¥å…³é—­å‘é€é€šé“äº†.
                         close_send();
                 }
             }
@@ -439,7 +439,7 @@ namespace Bex { namespace bexio
         }
 
     private:
-        /// ¹Ø±Õ·¢ËÍÍ¨µÀ(·¢ËÍ»º³åÇø·¢ËÍÍê±ÏºóÔÙÖ´ĞĞ)
+        /// å…³é—­å‘é€é€šé“(å‘é€ç¼“å†²åŒºå‘é€å®Œæ¯•åå†æ‰§è¡Œ)
         void close_send()
         {
             sendclosed_.set();
@@ -447,7 +447,7 @@ namespace Bex { namespace bexio
             socket_->lowest_layer().shutdown(socket_base::shutdown_send, ec);
         }
 
-        /// ¹Ø±Õ½ÓÊÕÍ¨µÀ(¹Ø±ÕºóÒª´¦ÀíÍê½ÓÊÕ»º³åÇøÖĞÒÑ½ÓÊÕµ½µÄÊı¾İ²Å¿ÉÒÔ¹Ø±Õ)
+        /// å…³é—­æ¥æ”¶é€šé“(å…³é—­åè¦å¤„ç†å®Œæ¥æ”¶ç¼“å†²åŒºä¸­å·²æ¥æ”¶åˆ°çš„æ•°æ®æ‰å¯ä»¥å…³é—­)
         void close_receive()
         {
             receiveclosed_.set();
@@ -456,7 +456,7 @@ namespace Bex { namespace bexio
         }
 
     private:
-        /// Í¨ÖªÂß¼­Ïß³Ì(ÔÚÂß¼­Ïß³ÌÖ´ĞĞ, ÄÚ²¿¸ù¾İÍ¨Öª·½°¸×öÂ·ÓÉ)
+        /// é€šçŸ¥é€»è¾‘çº¿ç¨‹(åœ¨é€»è¾‘çº¿ç¨‹æ‰§è¡Œ, å†…éƒ¨æ ¹æ®é€šçŸ¥æ–¹æ¡ˆåšè·¯ç”±)
         void do_onconnect_l()
         {
             if (opts_->mlpe_ == mlpe::mlp_derived || opts_->mlpe_ == mlpe::mlp_both)
@@ -500,8 +500,8 @@ namespace Bex { namespace bexio
             mstrand_service()->post(BEX_IO_BIND(&this_type::do_ondisconnect_cb, this, shared_this()));
         }
 
-        /// »º³åÇøÒç³ö´¦Àí
-        // @return: ÊÇ·ñ¿ÉÒÔ¼ÌĞø²Ù×÷
+        /// ç¼“å†²åŒºæº¢å‡ºå¤„ç†
+        // @return: æ˜¯å¦å¯ä»¥ç»§ç»­æ“ä½œ
         bool on_sendbuffer_overflow()
         {
             if (opts_->sboe_ == sboe::sbo_interrupt)
@@ -563,48 +563,48 @@ namespace Bex { namespace bexio
         /// multithread_strand service reference.
         mstrand_service_type * service_;
 
-        /// ·¢ËÍÇëÇóÊÇ·ñÒÑÍ¶µİ
+        /// å‘é€è¯·æ±‚æ˜¯å¦å·²æŠ•é€’
         sentry<inter_lock> sending_;
         
-        /// ½ÓÊÕÇëÇóÊÇ·ñÒÑÍ¶µİ
+        /// æ¥æ”¶è¯·æ±‚æ˜¯å¦å·²æŠ•é€’
         sentry<inter_lock> receiving_;
 
-        /// ¶ÏÏßÊÇ·ñÒÑÍ¨Öª
+        /// æ–­çº¿æ˜¯å¦å·²é€šçŸ¥
         sentry<bool> disconect_notified_;
 
-        /// ·¢ËÍÍ¨µÀÊÇ·ñ¹Ø±Õ
+        /// å‘é€é€šé“æ˜¯å¦å…³é—­
         sentry<bool> sendclosed_;
 
-        /// ½ÓÊÕÍ¨µÀÊÇ·ñ¹Ø±Õ
+        /// æ¥æ”¶é€šé“æ˜¯å¦å…³é—­
         sentry<bool> receiveclosed_;
 
-        /// ÊÇ·ñÓÅÑÅµØ¹Ø±ÕÖĞ
-        // ×´Ì¬±êÖ¾Ğ§¹û: 1.½ûÓÃsend 2.·¢ËÍ»º³åÇøÖĞµÄÊı¾İ·¢ËÍÍê±Ïºó¹Ø±Õsocket·¢ËÍÍ¨µÀ
+        /// æ˜¯å¦ä¼˜é›…åœ°å…³é—­ä¸­
+        // çŠ¶æ€æ ‡å¿—æ•ˆæœ: 1.ç¦ç”¨send 2.å‘é€ç¼“å†²åŒºä¸­çš„æ•°æ®å‘é€å®Œæ¯•åå…³é—­socketå‘é€é€šé“
         sentry<bool> shutdowning_;
 
-        /// ¹Ø±ÕÎÕÊÖÖĞ
+        /// å…³é—­æ¡æ‰‹ä¸­
         sentry<bool> shutdown_handshaking_;
 
-        /// ÓÅÑÅµØ¹Ø±Õ³¬Ê±¼ÆÊ±Æ÷
+        /// ä¼˜é›…åœ°å…³é—­è¶…æ—¶è®¡æ—¶å™¨
         shared_ptr<deadline_timer> shutdown_dt_;
 
-        /// ÊÇ·ñÇ¿ÖÆ¹Ø±ÕÖĞ
+        /// æ˜¯å¦å¼ºåˆ¶å…³é—­ä¸­
         sentry<inter_lock> terminating_;
 
-        /// ´íÎóÂë
-        // Ö»¼ÇÂ¼µÚÒ»¸ö´íÎóÔ­Òò
+        /// é”™è¯¯ç 
+        // åªè®°å½•ç¬¬ä¸€ä¸ªé”™è¯¯åŸå› 
         error_code ec_;
 
-        /// Á¬½ÓÊÇ·ñ¶Ï¿ª
+        /// è¿æ¥æ˜¯å¦æ–­å¼€
         sentry<bool> disconencted_;
 
-        /// Ñ¡Ïî
+        /// é€‰é¡¹
         options_ptr opts_;
 
-        /// »Øµ÷
+        /// å›è°ƒ
         callback_ptr callbacks_;
 
-        /// reactor·½Ê½, Í¨ÖªÂß¼­²ãreceiveÏûÏ¢
+        /// reactoræ–¹å¼, é€šçŸ¥é€»è¾‘å±‚receiveæ¶ˆæ¯
         sentry<inter_lock> notify_receive_;
 
         /// session id

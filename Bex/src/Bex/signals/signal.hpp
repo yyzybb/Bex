@@ -6,7 +6,7 @@
 #include "combine_accumulate_value.hpp"
 
 //////////////////////////////////////////////////////////////////////////
-/// »ùÓÚsignals2µÄ¹Û²ìÕßÄ£Ê½¿ò¼Ü
+/// åŸºäºsignals2çš„è§‚å¯Ÿè€…æ¨¡å¼æ¡†æ¶
 
 namespace Bex
 {
@@ -36,21 +36,21 @@ namespace Bex
 
     namespace
     {
-        /// È¡×îºóÒ»¸ö·µ»ØÖµµÄºÏ²¢Æ÷
+        /// å–æœ€åä¸€ä¸ªè¿”å›å€¼çš„åˆå¹¶å™¨
         using detail::combine_last_value;
 
-        /// ÀÛ¼ÓËùÓĞ·µ»ØÖµµÄºÏ²¢Æ÷
+        /// ç´¯åŠ æ‰€æœ‰è¿”å›å€¼çš„åˆå¹¶å™¨
         using detail::combine_accumulate_value;
     }
 }
 
-/// »ñÈ¡Ö¸¶¨(×é, ±àºÅ)µÄsignal.
-// @Group ×éË÷Òı, ±ØĞëÊÇ±àÒëÆ÷³£Á¿, Èç const int, enumµÈ.
-// @Index ×éÖĞµÄ±àºÅË÷Òı, ±ØĞëÊÇ±àÒëÆ÷³£Á¿, Èç const int, enumµÈ.
+/// è·å–æŒ‡å®š(ç»„, ç¼–å·)çš„signal.
+// @Group ç»„ç´¢å¼•, å¿…é¡»æ˜¯ç¼–è¯‘å™¨å¸¸é‡, å¦‚ const int, enumç­‰.
+// @Index ç»„ä¸­çš„ç¼–å·ç´¢å¼•, å¿…é¡»æ˜¯ç¼–è¯‘å™¨å¸¸é‡, å¦‚ const int, enumç­‰.
 #define BEX_GET_SIGNAL(Group, Index) (::Bex::SignalHolder<Group, Index>::get_signal())
 
-/// ¶¨Òåsignal
-// @Signature »Øµ÷º¯ÊıÀàĞÍ, Èç: void(), int(double, void) µÈ.
+/// å®šä¹‰signal
+// @Signature å›è°ƒå‡½æ•°ç±»å‹, å¦‚: void(), int(double, void) ç­‰.
 #define BEX_DEFINE_SIGNAL(Group, Index, signature)                              \
 namespace Bex {                                                                 \
     template <>                                                                 \
@@ -62,7 +62,7 @@ namespace Bex {                                                                 
     };                                                                          \
 }
 
-/// ¶¨ÒåÊ¹ÓÃÖ¸¶¨ºÏ²¢Æ÷µÄsignal
+/// å®šä¹‰ä½¿ç”¨æŒ‡å®šåˆå¹¶å™¨çš„signal
 #define BEX_DEFINE_COMBINE_SIGNAL(Group, Index, signature, combiner)            \
 namespace Bex {                                                                 \
     template <>                                                                 \

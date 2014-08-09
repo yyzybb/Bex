@@ -23,10 +23,10 @@ struct Full
 
 BOOST_AUTO_TEST_SUITE(s_bexio)
 
-/// ÕıÈ·ĞÔ²âÊÔ
+/// æ­£ç¡®æ€§æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_bexio_layer_meta)
 {
-    XDump("¿ªÊ¼²âÊÔ bexio_layer");
+    XDump("å¼€å§‹æµ‹è¯• bexio_layer");
 
     typedef next_layer_t<Empty>::type next_Empty;
     typedef lowest_layer_t<Empty>::type lowest_Empty;
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(t_bexio_layer_meta)
     BOOST_CHECK(sizeof(lowest_layer(f)) == sizeof(int));
     (void)e, (void)f;
 
-    XDump("½áÊø²âÊÔ bexio_layer");
+    XDump("ç»“æŸæµ‹è¯• bexio_layer");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

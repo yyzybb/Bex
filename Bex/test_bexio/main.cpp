@@ -15,12 +15,12 @@ using namespace Bex::bexio;
 
 
 enum {
-    t_simple = 0,       // ¼òµ¥²âÊÔ
-    t_pingpong = 1,     // pingpong²âÊÔÍÌÍÂÁ¿
-    t_multiconn = 2,    // ´óÁ¿²¢·¢Á¬½Ó
-    t_packet = 3,       // ½â°ü²âÊÔ
-    t_tcp_shutdown = 4, // ²âÊÔÓÅÑÅµØ¹Ø±ÕÁ¬½Ó(·¢ËÍºóÁ¢¼´shutdown, Òª±£Ö¤¶Ô¶Ë¿ÉÒÔ½ÓÊÕÍêÕû, ²»¶ªÊı¾İ.)
-    t_ssl_shutdown = 5, // ²âÊÔÓÅÑÅµØ¹Ø±ÕÁ¬½Ó(·¢ËÍºóÁ¢¼´shutdown, Òª±£Ö¤¶Ô¶Ë¿ÉÒÔ½ÓÊÕÍêÕû, ²»¶ªÊı¾İ.)
+    t_simple = 0,       // ç®€å•æµ‹è¯•
+    t_pingpong = 1,     // pingpongæµ‹è¯•ååé‡
+    t_multiconn = 2,    // å¤§é‡å¹¶å‘è¿æ¥
+    t_packet = 3,       // è§£åŒ…æµ‹è¯•
+    t_tcp_shutdown = 4, // æµ‹è¯•ä¼˜é›…åœ°å…³é—­è¿æ¥(å‘é€åç«‹å³shutdown, è¦ä¿è¯å¯¹ç«¯å¯ä»¥æ¥æ”¶å®Œæ•´, ä¸ä¸¢æ•°æ®.)
+    t_ssl_shutdown = 5, // æµ‹è¯•ä¼˜é›…åœ°å…³é—­è¿æ¥(å‘é€åç«‹å³shutdown, è¦ä¿è¯å¯¹ç«¯å¯ä»¥æ¥æ”¶å®Œæ•´, ä¸ä¸¢æ•°æ®.)
 };
 
 std::string remote_ip = "192.168.1.105";
@@ -266,7 +266,7 @@ template <class Session>
 void start_multi_client()
 {
     int count = 1;
-    std::cout << "ÇëÊäÈë¿Í»§¶ËÊıÁ¿:" << std::endl;
+    std::cout << "è¯·è¾“å…¥å®¢æˆ·ç«¯æ•°é‡:" << std::endl;
     std::cin >> count;
 
     opt.ssl_opts.reset(new ssl_options(ssl_options::client()));
@@ -315,14 +315,14 @@ void handle_ctrl_c(error_code, int, signal_set * ss)
 
 int main()
 {
-    // ÅäÖÃ
+    // é…ç½®
     //signal_set signal_proc(core<>::getInstance().backfront(), SIGINT);
     //signal_proc.async_wait(boost::bind(&handle_ctrl_c, ::_1, ::_2, &signal_proc));
 
     int input = 0;
     do 
     {
-        std::cout << "ÇëÊäÈë¶ËÀàĞÍ"
+        std::cout << "è¯·è¾“å…¥ç«¯ç±»å‹"
             "\n\t(0:tcp, 1:ssl_tcp)"
             "\n\t(0:simple, 1:pingpong, 2:multiconn, 3:packet, 4:tcp_shutdown)"
             "\n\t(0:server, 1:client):" << std::endl;

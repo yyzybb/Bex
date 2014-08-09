@@ -2,7 +2,7 @@
 #define __BEX_IO_SENTRY_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// ±ê¼Ç
+/// æ ‡è®°
 
 namespace Bex { namespace bexio
 {
@@ -15,19 +15,19 @@ namespace Bex { namespace bexio
             if (bset) set();
         }
 
-        // ÉèÖÃ±ê¼Ç
+        // è®¾ç½®æ ‡è®°
         inline bool set()
         {
             return native_.try_lock();
         }
 
-        // Çå³ı±ê¼Ç
+        // æ¸…é™¤æ ‡è®°
         inline bool reset()
         {
             return native_.unlock();
         }
 
-        // ÊÇ·ñÒÑÉèÖÃ
+        // æ˜¯å¦å·²è®¾ç½®
         inline bool is_set() const
         {
             return native_.is_locked();
@@ -46,7 +46,7 @@ namespace Bex { namespace bexio
         {
         }
 
-        // ÉèÖÃ±ê¼Ç
+        // è®¾ç½®æ ‡è®°
         inline bool set()
         {
             bool ret = (native_ != true);
@@ -54,7 +54,7 @@ namespace Bex { namespace bexio
             return ret;
         }
 
-        // Çå³ı±ê¼Ç
+        // æ¸…é™¤æ ‡è®°
         inline bool reset()
         {
             bool ret = (native_ != false);
@@ -62,7 +62,7 @@ namespace Bex { namespace bexio
             return ret;
         }
 
-        // ÊÇ·ñÒÑÉèÖÃ
+        // æ˜¯å¦å·²è®¾ç½®
         inline bool is_set() const
         {
             return native_;

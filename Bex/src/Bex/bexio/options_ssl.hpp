@@ -2,7 +2,7 @@
 #define __BEX_IO_OPTIONS_SSL_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// ssl¿ÉÑ¡ÅäÖÃÏî
+/// sslå¯é€‰é…ç½®é¡¹
 #include <Bex/config.hpp>
 #include <string>
 
@@ -12,64 +12,64 @@ namespace Bex { namespace bexio
 
     struct ssl_options
     {
-        // ÉÏÏÂÎÄÑ¡Ïî
-        // * Ä¬ÈÏÖµ: boost::asio::ssl::context_base::default_workarounds | boost::asio::ssl::context_base::no_sslv2
-        // * Ê¹ÓÃ·½·¨:
+        // ä¸Šä¸‹æ–‡é€‰é¡¹
+        // * é»˜è®¤å€¼: boost::asio::ssl::context_base::default_workarounds | boost::asio::ssl::context_base::no_sslv2
+        // * ä½¿ç”¨æ–¹æ³•:
         //      @begin code:
         //          ctx.set_options(ctx_opt);
         //      @end code.
         long ctx_opt;
 
-        // ÈÏÖ¤ÒªÇó
-        // * Ä¬ÈÏÖµ: boost::asio::ssl::verify_none
-        // * Ê¹ÓÃ·½·¨:
+        // è®¤è¯è¦æ±‚
+        // * é»˜è®¤å€¼: boost::asio::ssl::verify_none
+        // * ä½¿ç”¨æ–¹æ³•:
         //      @begin code:
         //          ctx.set_verify_mode(verify_mode);
         //      @end code.
         long verify_mode;
 
-        // Ö¤ÊéÎÄ¼ş (server¶Ë±ØĞë, client¶Ë¿ÉÑ¡)
-        // * Ä¬ÈÏÖµ: "server.pem"
-        // * Ê¹ÓÃ·½·¨:
+        // è¯ä¹¦æ–‡ä»¶ (serverç«¯å¿…é¡», clientç«¯å¯é€‰)
+        // * é»˜è®¤å€¼: "server.pem"
+        // * ä½¿ç”¨æ–¹æ³•:
         //      @begin code:
         //          ctx.use_certificate_chain_file(crt_file);
         //      @end code.
         std::string crt_file;
 
-        // Ë½Ô¿ÎÄ¼ş & Ë½Ô¿ÎÄ¼şÀàĞÍ
-        // * Ä¬ÈÏÖµ: "server.pem", boost::asio::ssl::context_base::pem
-        // * Ê¹ÓÃ·½·¨:
+        // ç§é’¥æ–‡ä»¶ & ç§é’¥æ–‡ä»¶ç±»å‹
+        // * é»˜è®¤å€¼: "server.pem", boost::asio::ssl::context_base::pem
+        // * ä½¿ç”¨æ–¹æ³•:
         //      @begin code:
         //          ctx.use_private_key_file(pri_key_file.c_str(), file_fmt);
         //      @end code.
         std::string pri_key_file;
         int file_fmt;
 
-        // dhËã·¨ÃÜÔ¿ÎÄ¼ş
-        // * Ä¬ÈÏÖµ: "dh512.pem"
-        // * Ê¹ÓÃ·½·¨:
+        // dhç®—æ³•å¯†é’¥æ–‡ä»¶
+        // * é»˜è®¤å€¼: "dh512.pem"
+        // * ä½¿ç”¨æ–¹æ³•:
         //      @begin code:
         //          ctx.use_tmp_dh_file(dh_file);
         //      @end code.
         std::string dh_file;
 
-        // ¼ÓÃÜËã·¨Á´
-        // * Ä¬ÈÏÖµ: "RC4-MD5"
-        // * Ê¹ÓÃ·½·¨:
+        // åŠ å¯†ç®—æ³•é“¾
+        // * é»˜è®¤å€¼: "RC4-MD5"
+        // * ä½¿ç”¨æ–¹æ³•:
         //      @begin code:
         //    SSL_CTX_set_cipher_list(ctx.native_handle(), cipher_list.c_str());
         //      @end code.
         std::string cipher_list;
 
-        // ÎÕÊÖ³¬Ê±Ê±³¤(ºÁÃë ms)
-        // * Ä¬ÈÏÖµ: "60 * 1000"
+        // æ¡æ‰‹è¶…æ—¶æ—¶é•¿(æ¯«ç§’ ms)
+        // * é»˜è®¤å€¼: "60 * 1000"
         unsigned int handshake_overtime;
 
 
-        // ¿Í»§¶ËÄ¬ÈÏÅäÖÃ
+        // å®¢æˆ·ç«¯é»˜è®¤é…ç½®
         static ssl_options client();
 
-        // ·şÎñ¶ËÄ¬ÈÏÅäÖÃ
+        // æœåŠ¡ç«¯é»˜è®¤é…ç½®
         static ssl_options server();
 
         //////////////////////////////////////////////////////////////////////////

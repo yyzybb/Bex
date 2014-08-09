@@ -74,7 +74,7 @@ struct MoveA
     MoveA(MoveA&&) { ++g_MoveAmove; /*Dump("MoveA::move");*/ }
     ~MoveA() = default;
 
-    /// TODO: Ö§³Övs2013 ctp
+    /// TODO: æ”¯æŒvs2013 ctp
     MoveA(MoveA const&)
     {
         ++g_MoveAcopy;
@@ -95,7 +95,7 @@ void void_move_func(MoveA const& a)
 void test()
 {
     {
-        /// ×ÔÓÉº¯Êı×ª·¢²âÊÔ (ĞÎ²Î: Öµ´«µİ, ×óÖµÒıÓÃ, ³£Á¿×óÖµÒıÓÃ, ÓÒÖµÒıÓÃ)
+        /// è‡ªç”±å‡½æ•°è½¬å‘æµ‹è¯• (å½¢å‚: å€¼ä¼ é€’, å·¦å€¼å¼•ç”¨, å¸¸é‡å·¦å€¼å¼•ç”¨, å³å€¼å¼•ç”¨)
         reset_counter();
         A a(1), b(2), c(3), d(4);
         auto f = Bex::bind(&func, Bex::_1, Bex::_2, Bex::_3, /*Bex::_5*/std::ref(c), Bex::_4);
@@ -111,7 +111,7 @@ void test()
     }
 
     //////////////////////////////////////////////////////////////////////////
-    /// @{ ·Ç¾²Ì¬³ÉÔ±º¯Êı (cv)
+    /// @{ éé™æ€æˆå‘˜å‡½æ•° (cv)
     {
         reset_counter();
         A a(1);
@@ -149,7 +149,7 @@ void test()
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
-    /// @{ ·Âº¯Êı
+    /// @{ ä»¿å‡½æ•°
     {
         object_func obj;
         auto f = Bex::bind(obj, Bex::_1, 3);
@@ -161,7 +161,7 @@ void test()
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
-    /// @{ °ó¶¨·Ç¾²Ì¬³ÉÔ±±äÁ¿
+    /// @{ ç»‘å®šéé™æ€æˆå‘˜å˜é‡
     {
         reset_counter();
         A a(2);
@@ -176,7 +176,7 @@ void test()
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
-    /// @{ ÒÆ¶¯ÓïÒå°ó¶¨²ÎÊı
+    /// @{ ç§»åŠ¨è¯­ä¹‰ç»‘å®šå‚æ•°
     {
         reset_counter();
         MoveA a;
@@ -316,11 +316,12 @@ static void do_test(int tc, std::string const& msg, std::tuple<BArgs...> & bargs
 
 static void test_property()
 {
-    XDump("ÇáÁ¿¼¶ĞÔÄÜ²âÊÔ");
+    XDump("è½»é‡çº§æ€§èƒ½æµ‹è¯•");
 
     //////////////////////////////////////////////////////////////////////////
     /// @{ free function
-    Dump("free_func\t\t\tBex\tstd\tboost")
+    Dump("free_func\t\t\tBex\tstd\tboost");
+
     {
         /// empty function       
         DumpC("empty_function\t\t");
@@ -350,10 +351,11 @@ static void test_property()
     /// @}
     //////////////////////////////////////////////////////////////////////////
 
-    XDump("ÖØÁ¿¼¶ĞÔÄÜ²âÊÔ");
+    XDump("é‡é‡çº§æ€§èƒ½æµ‹è¯•");
     //////////////////////////////////////////////////////////////////////////
     /// @{ free function
-    Dump("free_func\t\t\tBex\tstd\tboost")
+    Dump("free_func\t\t\tBex\tstd\tboost");
+
     {
         /// weight function
         DumpC("weight(bind)\t\t");
@@ -416,13 +418,13 @@ static void test_property()
 
 BOOST_AUTO_TEST_SUITE(s_forward_bind)
 
-/// ÕıÈ·ĞÔ²âÊÔ
+/// æ­£ç¡®æ€§æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_forward_bind)
 {
-    XDump("¿ªÊ¼²âÊÔ forward_bind");
+    XDump("å¼€å§‹æµ‹è¯• forward_bind");
     test();
     test_property();
-    XDump("½áÊø²âÊÔ forward_bind");
+    XDump("ç»“æŸæµ‹è¯• forward_bind");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

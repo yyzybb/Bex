@@ -16,7 +16,7 @@
 #include "serialize_adl.hpp"
 
 //////////////////////////////////////////////////////////////////////////
-/// ���л��ӿڻ���
+/// 序列化接口基类
 
 #if defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 # define BEX_SERIALIZATION_INTERFACE_REFERENCE(type) type &

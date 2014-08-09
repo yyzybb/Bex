@@ -55,7 +55,7 @@ namespace Bex { namespace bexio
 
     //////////////////////////////////////////////////////////////////////////
     /// @{ meta functions
-    /// ÀàĞÍ¶¨Òåconcept¼ì²â
+    /// ç±»å‹å®šä¹‰conceptæ£€æµ‹
     template <class T>
     struct has_next_layer
     {
@@ -80,7 +80,7 @@ namespace Bex { namespace bexio
         static const bool value = (sizeof(_check<T>(0)) == sizeof(short));
     };
 
-    /// ·Ö²ãÀàĞÍÖĞµÄÏÂÒ»²ãÀàĞÍ
+    /// åˆ†å±‚ç±»å‹ä¸­çš„ä¸‹ä¸€å±‚ç±»å‹
     template <class T>
     typename T::next_layer_type& next_layer(T& object)
     {
@@ -93,7 +93,7 @@ namespace Bex { namespace bexio
         return object;
     }
 
-    /// ·Ö²ãÀàĞÍÖĞµÄ×îµ×²ãÀàĞÍ
+    /// åˆ†å±‚ç±»å‹ä¸­çš„æœ€åº•å±‚ç±»å‹
     template <class T>
     typename T::lowest_layer_type& lowest_layer(T& object)
     {
@@ -106,7 +106,7 @@ namespace Bex { namespace bexio
         return object;
     }
 
-    /// İÍÈ¡·Ö²ãÀàĞÍÖĞµÄÏÂÒ»²ãÀàĞÍ
+    /// èƒå–åˆ†å±‚ç±»å‹ä¸­çš„ä¸‹ä¸€å±‚ç±»å‹
     template <class T, bool>
     struct next_layer_t_helper
         : boost::mpl::identity<typename T::next_layer_type>
@@ -122,7 +122,7 @@ namespace Bex { namespace bexio
         : next_layer_t_helper<T, has_next_layer<T>::value >
     {};
 
-    /// İÍÈ¡·Ö²ãÀàĞÍÖĞµÄ×îµ×²ãÀàĞÍ
+    /// èƒå–åˆ†å±‚ç±»å‹ä¸­çš„æœ€åº•å±‚ç±»å‹
     template <class T, bool>
     struct lowest_layer_t_helper
         : boost::mpl::identity<typename T::lowest_layer_type>

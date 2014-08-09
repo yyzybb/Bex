@@ -4,10 +4,10 @@ using namespace Bex;
 
 BOOST_AUTO_TEST_SUITE(s_lexical_cast)
 
-/// ÕýÈ·ÐÔ²âÊÔ
+/// æ­£ç¡®æ€§æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_lexical_cast)
 {
-    XDump("¿ªÊ¼²âÊÔ lexical_cast");
+    XDump("å¼€å§‹æµ‹è¯• lexical_cast");
 
     int x = lexical_cast_noexcept<int>(std::string("abc"), 1);
     BOOST_CHECK_EQUAL(x, 1);
@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE(t_lexical_cast)
     x = lexical_cast_noexcept_d<int>("abc", 3);
     BOOST_CHECK_EQUAL(x, 0);
 
-    XDump("½áÊø²âÊÔ lexical_cast");
+    XDump("ç»“æŸæµ‹è¯• lexical_cast");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

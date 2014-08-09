@@ -7,12 +7,12 @@
 #include <Bex/utility/singleton.hpp>
 
 //////////////////////////////////////////////////////////////////////////
-/// ×Ö·û±àÂë×ª»»
+/// å­—ç¬¦ç¼–ç è½¬æ¢
 namespace Bex { namespace conv
 {
     using boost::locale::conv::between;
 
-    /// windows´úÂëÒ³¶¨Òå
+    /// windowsä»£ç é¡µå®šä¹‰
     struct windows_encoding {
         char const *name;
         unsigned codepage;

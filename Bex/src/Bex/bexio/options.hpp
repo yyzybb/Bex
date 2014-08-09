@@ -2,7 +2,7 @@
 #define __BEX_IO_OPTIONS_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// ¿ÉÑ¡ÅäÖÃÏî options
+/// å¯é€‰é…ç½®é¡¹ options
 #include <Bex/config.hpp>
 #include <boost/shared_ptr.hpp>
 #include "options_ssl.hpp"
@@ -12,31 +12,31 @@ namespace Bex { namespace bexio
     using namespace boost::asio;
 
     //////////////////////////////////////////////////////////////////////////
-    /// @{ Ñ¡Ïî
-    // Á¬½Ó³É¹¦\¶Ï¿ªÁ¬½Ó\ÊÕµ½Êı¾İ ÈıÖÖÏûÏ¢Âß¼­Ïß³ÌµÄÏìÓ¦·½Ê½
+    /// @{ é€‰é¡¹
+    // è¿æ¥æˆåŠŸ\æ–­å¼€è¿æ¥\æ”¶åˆ°æ•°æ® ä¸‰ç§æ¶ˆæ¯é€»è¾‘çº¿ç¨‹çš„å“åº”æ–¹å¼
     enum BEX_ENUM_CLASS message_logic_process_em
     {
-        mlp_callback,       ///< ×¢²á»Øµ÷º¯Êı
-        mlp_derived,        ///< ¼Ì³Ğsessioin²¢ÖØĞ´ÏûÏ¢ÏìÓ¦º¯Êı
-        mlp_both,           ///< ËùÓĞ·½Ê½Ò»ÆğÉúĞ§
+        mlp_callback,       ///< æ³¨å†Œå›è°ƒå‡½æ•°
+        mlp_derived,        ///< ç»§æ‰¿sessioinå¹¶é‡å†™æ¶ˆæ¯å“åº”å‡½æ•°
+        mlp_both,           ///< æ‰€æœ‰æ–¹å¼ä¸€èµ·ç”Ÿæ•ˆ
     };
     typedef message_logic_process_em mlpe;
 
-    // ·¢ËÍ»º³åÇøÒç³ö´¦Àí·½·¨
+    // å‘é€ç¼“å†²åŒºæº¢å‡ºå¤„ç†æ–¹æ³•
     enum BEX_ENUM_CLASS send_buffer_overflow_em
     {
-        sbo_interrupt,      ///< ¶Ï¿ªÁ¬½Ó
-        sbo_wait,           ///< Âß¼­²ãµÈ´ı
-        //sbo_extend,         ///< À©Õ¹·¢ËÍ»º³åÇø(Ôİ²»Ö§³Ö)
+        sbo_interrupt,      ///< æ–­å¼€è¿æ¥
+        sbo_wait,           ///< é€»è¾‘å±‚ç­‰å¾…
+        //sbo_extend,         ///< æ‰©å±•å‘é€ç¼“å†²åŒº(æš‚ä¸æ”¯æŒ)
     };
     typedef send_buffer_overflow_em sboe;
 
-    // ½ÓÊÕ»º³åÇøÒç³ö´¦Àí·½·¨
+    // æ¥æ”¶ç¼“å†²åŒºæº¢å‡ºå¤„ç†æ–¹æ³•
     enum BEX_ENUM_CLASS receive_buffer_overflow_em
     {
-        rbo_interrupt,      ///< ¶Ï¿ªÁ¬½Ó
-        rbo_wait,           ///< Âß¼­²ãµÈ´ı
-        //rbo_extend,         ///< À©Õ¹½ÓÊÕ»º³åÇø(Ôİ²»Ö§³Ö)
+        rbo_interrupt,      ///< æ–­å¼€è¿æ¥
+        rbo_wait,           ///< é€»è¾‘å±‚ç­‰å¾…
+        //rbo_extend,         ///< æ‰©å±•æ¥æ”¶ç¼“å†²åŒº(æš‚ä¸æ”¯æŒ)
     };
     typedef receive_buffer_overflow_em rboe;
     /// @}
@@ -46,56 +46,56 @@ namespace Bex { namespace bexio
 
     struct options
     {
-        // ·¢ËÍ»º³åÇøÒç³ö´¦Àí·½·¨
+        // å‘é€ç¼“å†²åŒºæº¢å‡ºå¤„ç†æ–¹æ³•
         send_buffer_overflow_em sboe_;
 
-        // ½ÓÊÕ»º³åÇøÒç³ö´¦Àí·½·¨
+        // æ¥æ”¶ç¼“å†²åŒºæº¢å‡ºå¤„ç†æ–¹æ³•
         receive_buffer_overflow_em rboe_;
 
-        // Á¬½Ó³É¹¦\¶Ï¿ªÁ¬½Ó\ÊÕµ½Êı¾İ ÈıÖÖÏûÏ¢Âß¼­Ïß³ÌµÄÏìÓ¦·½Ê½
+        // è¿æ¥æˆåŠŸ\æ–­å¼€è¿æ¥\æ”¶åˆ°æ•°æ® ä¸‰ç§æ¶ˆæ¯é€»è¾‘çº¿ç¨‹çš„å“åº”æ–¹å¼
         message_logic_process_em mlpe_;
 
-        // ¹¤×÷Ïß³ÌÊıÁ¿(0±íÊ¾´¦ÀíÆ÷ºËĞÄÏß³ÌÊı)
+        // å·¥ä½œçº¿ç¨‹æ•°é‡(0è¡¨ç¤ºå¤„ç†å™¨æ ¸å¿ƒçº¿ç¨‹æ•°)
         std::size_t workthread_count;
 
-        // ·¢ËÍ»º³åÇø
+        // å‘é€ç¼“å†²åŒº
         std::size_t send_buffer_size;
         static const std::size_t default_sbsize = 1024 * 64;
         static const std::size_t large_sbsize = 1024 * 1024 * 8;
 
-        // ·¢ËÍ»º³åÇø
+        // å‘é€ç¼“å†²åŒº
         std::size_t receive_buffer_size;
         static const std::size_t default_rbsize = 1024 * 64;
         static const std::size_t large_rbsize = 1024 * 1024 * 8;
 
-        // Ã¿¸ö·â°ü×î´ó³¤¶È(½ö¶Ôtcp packet/ssl packetĞ­ÒéÉúĞ§)
+        // æ¯ä¸ªå°åŒ…æœ€å¤§é•¿åº¦(ä»…å¯¹tcp packet/ssl packetåè®®ç”Ÿæ•ˆ)
         std::size_t mtu;
         static const std::size_t default_mtu = 1024 * 8;
 
-        // ÓÅÑÅµØ¹Ø±ÕÁ¬½Ó¿ÉµÈ´ı×î´óÊ±³¤(ºÁÃë ms)
+        // ä¼˜é›…åœ°å…³é—­è¿æ¥å¯ç­‰å¾…æœ€å¤§æ—¶é•¿(æ¯«ç§’ ms)
         unsigned int shutdown_timeout;
 
         //////////////////////////////////////////////////////////////////////////
-        // keepalive(tcpµ×²ãĞÄÌø»úÖÆ)
-        // ÊÇ·ñÆôÓÃ
+        // keepalive(tcpåº•å±‚å¿ƒè·³æœºåˆ¶)
+        // æ˜¯å¦å¯ç”¨
         bool use_keepalive;
 
-        // ÊÇ·ñºöÂÔkeepaliveÆôÓÃÊ§°Ü
+        // æ˜¯å¦å¿½ç•¥keepaliveå¯ç”¨å¤±è´¥
         bool ignore_keepalive_startup_fail;
 
-        // ¿ÕÏĞNÃëºó¿ªÊ¼ĞÄÌø¼ì²â(µ¥Î»:Ãë)
+        // ç©ºé—²Nç§’åå¼€å§‹å¿ƒè·³æ£€æµ‹(å•ä½:ç§’)
         int keepalive_idle;
 
-        // Ã¿´Î¼ì²â¼ä¸ô(µ¥Î»:Ãë)
+        // æ¯æ¬¡æ£€æµ‹é—´éš”(å•ä½:ç§’)
         int keepalive_interval;
         //////////////////////////////////////////////////////////////////////////
 
         //////////////////////////////////////////////////////////////////////////
-        // sslÅäÖÃ
+        // sslé…ç½®
         boost::shared_ptr<ssl_options> ssl_opts;
         //////////////////////////////////////////////////////////////////////////
 
-        /// ²âÊÔÅäÖÃ·½°¸(Test)
+        /// æµ‹è¯•é…ç½®æ–¹æ¡ˆ(Test)
         static options test()
         {
             static options const opts = {
@@ -115,7 +115,7 @@ namespace Bex { namespace bexio
             return opts;
         }
 
-        /// ¸ß²¢·¢¡¢¸ßÁ¬½ÓÊı·şÎñ¶ËÍÆ¼öÅäÖÃ·½°¸
+        /// é«˜å¹¶å‘ã€é«˜è¿æ¥æ•°æœåŠ¡ç«¯æ¨èé…ç½®æ–¹æ¡ˆ
         static options multi_session_server()
         {
             static options const opts = {

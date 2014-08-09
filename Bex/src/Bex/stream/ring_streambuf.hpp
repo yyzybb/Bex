@@ -6,10 +6,10 @@
 #include <boost/noncopyable.hpp>
 
 //////////////////////////////////////////////////////////////////////////
-/// 环形streambuf.
+/// 鐜舰streambuf.
 
 /*
-* @ 在只有一个reader和一个writer的情况下是线程安全的.
+* @ 鍦ㄥ彧鏈変竴涓猺eader鍜屼竴涓獁riter鐨勬儏鍐典笅鏄嚎绋嬪畨鍏ㄧ殑.
 */
 
 namespace Bex { namespace stream

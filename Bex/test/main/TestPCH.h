@@ -3,6 +3,7 @@
 
 #pragma warning(disable:4996)
 #pragma warning(disable:4101)
+#pragma warning(disable:4819)
 
 #include <iostream>
 #include <stdio.h>

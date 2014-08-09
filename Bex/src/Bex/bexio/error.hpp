@@ -2,7 +2,7 @@
 #define __BEX_IO_ERROR_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// ×Ô¶¨Òåerrorcode
+/// è‡ªå®šä¹‰errorcode
 #include <Bex/config.hpp>
 #include <boost/system/error_code.hpp>
 
@@ -10,17 +10,17 @@ namespace Bex { namespace bexio
 {
     enum BEX_ENUM_CLASS bexio_error_em
     {
-        initiative_terminate,   ///< Ç¿ÖÆÖ÷¶¯¶Ï¿ªÁ¬½Ó
-        initiative_shutdown,    ///< ÓÅÑÅµØÖ÷¶¯¶Ï¿ªÁ¬½Ó
-        passive_shutdown,       ///< ÓÅÑÅµØ±»¶¯¶Ï¿ªÁ¬½Ó
-        sendbuffer_overflow,    ///< ·¢ËÍ»º³åÇøÒç³ö
-        receivebuffer_overflow, ///< ½ÓÊÕ»º³åÇøÒç³ö
-        connect_overtime,       ///< Á¬½Ó³¬Ê±
-        parse_error,            ///< Êý¾Ý½âÎö³ö´í
-        reconnect_error,        ///< ÖØÁ¬Ê§°Ü
-        miss_ssl_options,       ///< SSLÑ¡ÏîÎ´ÉèÖÃ
-        handshake_overtime,     ///< SSLÎÕÊÖ³¬Ê±
-        shutdown_overtime,      ///< ÓÅÑÅµØ¹Ø±ÕÁ¬½Ó³¬Ê±
+        initiative_terminate,   ///< å¼ºåˆ¶ä¸»åŠ¨æ–­å¼€è¿žæŽ¥
+        initiative_shutdown,    ///< ä¼˜é›…åœ°ä¸»åŠ¨æ–­å¼€è¿žæŽ¥
+        passive_shutdown,       ///< ä¼˜é›…åœ°è¢«åŠ¨æ–­å¼€è¿žæŽ¥
+        sendbuffer_overflow,    ///< å‘é€ç¼“å†²åŒºæº¢å‡º
+        receivebuffer_overflow, ///< æŽ¥æ”¶ç¼“å†²åŒºæº¢å‡º
+        connect_overtime,       ///< è¿žæŽ¥è¶…æ—¶
+        parse_error,            ///< æ•°æ®è§£æžå‡ºé”™
+        reconnect_error,        ///< é‡è¿žå¤±è´¥
+        miss_ssl_options,       ///< SSLé€‰é¡¹æœªè®¾ç½®
+        handshake_overtime,     ///< SSLæ¡æ‰‹è¶…æ—¶
+        shutdown_overtime,      ///< ä¼˜é›…åœ°å…³é—­è¿žæŽ¥è¶…æ—¶
     };
     typedef bexio_error_em bee;
 
@@ -90,7 +90,7 @@ namespace Bex { namespace bexio
         return err;
     }
 
-    /// Éú³Ébexio_errorÀàÐÍµÄerror_code
+    /// ç”Ÿæˆbexio_errorç±»åž‹çš„error_code
     inline boost::system::error_code generate_error(bexio_error_em ev)
     {
         return boost::system::error_code((int)ev, get_bexio_category());

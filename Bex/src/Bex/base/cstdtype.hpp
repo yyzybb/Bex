@@ -8,7 +8,7 @@
 #include <boost/static_assert.hpp>
 
 //////////////////////////////////////////////////////////////////////////
-/// ------ 类型定义
+/// ------ 绫诲瀷瀹氫箟
 
 namespace Bex {
     namespace cstdint

@@ -109,10 +109,10 @@ struct TestRollback
 
 BOOST_AUTO_TEST_SUITE(s_stream_text_suite)
 
-/// ÕıÈ·ĞÔ²âÊÔ
+/// æ­£ç¡®æ€§æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_stream_text_archive_case)
 {
-    XDump("¿ªÊ¼²âÊÔ stream.serialization.text_archive");
+    XDump("å¼€å§‹æµ‹è¯• stream.serialization.text_archive");
 
     BOOST_STATIC_ASSERT((Bex::serialization::has_serialize<Bex::cn32>::value));
 
@@ -320,13 +320,13 @@ BOOST_AUTO_TEST_CASE(t_stream_text_archive_case)
         BOOST_CHECK(memcmp(obj, check, sizeof(obj)) == 0);
     }
 
-    XDump("½áÊø²âÊÔ stream.serialization.text_archive");
+    XDump("ç»“æŸæµ‹è¯• stream.serialization.text_archive");
 }
 
-/// ĞÔÄÜ²âÊÔ
+/// æ€§èƒ½æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_stream_text_archive_property_case)
 {
-    XDump("¿ªÊ¼²âÊÔ stream.serialization.text_archiveĞÔÄÜ");
+    XDump("å¼€å§‹æµ‹è¯• stream.serialization.text_archiveæ€§èƒ½");
 
 #ifdef _DEBUG
     const int tc = 10000;
@@ -400,7 +400,7 @@ BOOST_AUTO_TEST_CASE(t_stream_text_archive_property_case)
         BOOST_CHECK_EQUAL(ssb.size(), 0);
     }
 
-    XDump("½áÊø²âÊÔ stream.serialization.text_archiveĞÔÄÜ");
+    XDump("ç»“æŸæµ‹è¯• stream.serialization.text_archiveæ€§èƒ½");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

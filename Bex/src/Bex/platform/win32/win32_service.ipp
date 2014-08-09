@@ -19,7 +19,7 @@ namespace Bex
 
     }
 
-    /// °²×°³É¹¦»Øµ÷
+    /// å®‰è£…æˆåŠŸå›è°ƒ
     void win_svc_base::OnInstall( bool bAutoStart )
     {
         if ( bAutoStart )
@@ -27,14 +27,14 @@ namespace Bex
             SC_HANDLE schSCMgr = ::OpenSCManagerA(NULL, NULL, SC_MANAGER_ALL_ACCESS);
             if (!schSCMgr)
             {
-                std::cout << "·şÎñ¹ÜÀíÊı¾İ¿â´ò¿ªÊ§°Ü!" << std::endl;
+                std::cout << "æœåŠ¡ç®¡ç†æ•°æ®åº“æ‰“å¼€å¤±è´¥!" << std::endl;
                 return ;
             }
 
             SC_HANDLE schService = ::OpenServiceA(schSCMgr, GetServiceName(), SERVICE_ALL_ACCESS);
             if (!schService)
             {
-                std::cout << "·şÎñ´ò¿ªÊ§°Ü!" << std::endl;
+                std::cout << "æœåŠ¡æ‰“å¼€å¤±è´¥!" << std::endl;
                 ::CloseServiceHandle(schSCMgr);
                 return ;
             }
@@ -48,7 +48,7 @@ namespace Bex
     int win_svc_base::Main( int argc, char * argv[] )
     {
         //////////////////////////////////////////////////////////////////////////
-        /// ÃüÁîĞĞ²ÎÊı½âÎö
+        /// å‘½ä»¤è¡Œå‚æ•°è§£æ
         boost::program_options::options_description opts;
         opts.add_options()
             ("help", "options: --install --uninstall")
@@ -61,7 +61,7 @@ namespace Bex
             , m_vm );
 
         //////////////////////////////////////////////////////////////////////////
-        /// ¶¨ÒåSERVICE_TABLE_ENTRY DispatchTable[] ½á¹¹
+        /// å®šä¹‰SERVICE_TABLE_ENTRY DispatchTable[] ç»“æ„
         SERVICE_TABLE_ENTRYA DispatchTable[2] = 
         {
             {(char*)GetServiceName(), (LPSERVICE_MAIN_FUNCTIONA)GetServiceStartFunction()},                  
@@ -70,37 +70,37 @@ namespace Bex
 
         if ( m_vm.count("help") )
         {
-            /// °ïÖú
+            /// å¸®åŠ©
             std::cout << opts << std::endl;
         }
         else if ( m_vm.count("install") )
         {
             bool bAutoStart = (m_vm.count("auto-start") > 0);
-            /// °²×°·şÎñ
+            /// å®‰è£…æœåŠ¡
             if ( Install(bAutoStart) )
             {
-                std::cout << "°²×°³É¹¦!" << std::endl;
+                std::cout << "å®‰è£…æˆåŠŸ!" << std::endl;
                 OnInstall(bAutoStart);
             }
             else
-                std::cout << "°²×°Ê§°Ü!" << std::endl;
+                std::cout << "å®‰è£…å¤±è´¥!" << std::endl;
         }
         else if ( m_vm.count("uninstall") )
         {
-            /// Ğ¶ÔØ·şÎñ
+            /// å¸è½½æœåŠ¡
             if ( Uninstall() )
-                std::cout << "Ğ¶ÔØ³É¹¦!" << std::endl;
+                std::cout << "å¸è½½æˆåŠŸ!" << std::endl;
             else
-                std::cout << "Ğ¶ÔØÊ§°Ü!" << std::endl;
+                std::cout << "å¸è½½å¤±è´¥!" << std::endl;
         }
         else
         {
-            /// OSÆô¶¯¸Ã³ÌĞò
+            /// OSå¯åŠ¨è¯¥ç¨‹åº
             BOOL bSuccessed = ::StartServiceCtrlDispatcherA(DispatchTable);
             //if (bSuccessed)
-            //    LOG << "·şÎñÈë¿Úº¯Êı×¢²á³É¹¦!" << std::endl;
+            //    LOG << "æœåŠ¡å…¥å£å‡½æ•°æ³¨å†ŒæˆåŠŸ!" << std::endl;
             //else
-            //    LOG << "·şÎñÈë¿Úº¯Êı×¢²áÊ§°Ü!" << std::endl;
+            //    LOG << "æœåŠ¡å…¥å£å‡½æ•°æ³¨å†Œå¤±è´¥!" << std::endl;
         }
         return 0;
     }
@@ -122,33 +122,33 @@ namespace Bex
         if (!::GetModuleFileNameA(NULL, szPath, sizeof(szPath)))
             return false;
 
-        /// ´ò¿ª·şÎñ¹ÜÀíÊı¾İ¿â
+        /// æ‰“å¼€æœåŠ¡ç®¡ç†æ•°æ®åº“
         schSCMgr = ::OpenSCManagerA(NULL, NULL, SC_MANAGER_ALL_ACCESS);
         if (!schSCMgr)
         {
-            std::cout << "·şÎñ¹ÜÀíÊı¾İ¿â´ò¿ªÊ§°Ü!" << std::endl;
+            std::cout << "æœåŠ¡ç®¡ç†æ•°æ®åº“æ‰“å¼€å¤±è´¥!" << std::endl;
             return false;
         }
 
         schService = ::CreateServiceA(
-            schSCMgr,                           ///< ·şÎñ¹ÜÀíÊı¾İ¿â¾ä±ú
-            GetServiceName(),                   ///< ·şÎñÃû
-            GetShowName(),                      ///< ÓÃÓÚÏÔÊ¾·şÎñµÄ±êÊ¶
-            SERVICE_ALL_ACCESS,                 ///< ÏìÓ¦ËùÓĞµÄ·ÃÎÊÇëÇó
-            SERVICE_WIN32_OWN_PROCESS,          ///< ·şÎñÀàĞÍ(¶ÀÕ¼Ò»¸ö½ø³Ì)
+            schSCMgr,                           ///< æœåŠ¡ç®¡ç†æ•°æ®åº“å¥æŸ„
+            GetServiceName(),                   ///< æœåŠ¡å
+            GetShowName(),                      ///< ç”¨äºæ˜¾ç¤ºæœåŠ¡çš„æ ‡è¯†
+            SERVICE_ALL_ACCESS,                 ///< å“åº”æ‰€æœ‰çš„è®¿é—®è¯·æ±‚
+            SERVICE_WIN32_OWN_PROCESS,          ///< æœåŠ¡ç±»å‹(ç‹¬å ä¸€ä¸ªè¿›ç¨‹)
             bAutoStart ? SERVICE_AUTO_START
-                : SERVICE_DEMAND_START,         ///< Æô¶¯ÀàĞÍ(ÊÖ¶¯Æô¶¯)
-            SERVICE_ERROR_NORMAL,               ///< ´íÎó¿ØÖÆÀàĞÍ
-            szPath,                             ///< ·şÎñ³ÌĞòÂ·¾¶
-            NULL,                               ///< ·şÎñ²»ÊôÓÚÈÎºÎ×é
-            NULL,                               ///< Ã»ÓĞtag±êÊ¶·û
-            NULL,                               ///< Æô¶¯·şÎñËùÒÀÀµµÄ·şÎñ»ò·şÎñ×é,ÕâÀï½ö½öÊÇÒ»¸ö¿Õ×Ö·û´®
-            NULL,                               ///< LocalSystem ÕÊºÅ
+                : SERVICE_DEMAND_START,         ///< å¯åŠ¨ç±»å‹(æ‰‹åŠ¨å¯åŠ¨)
+            SERVICE_ERROR_NORMAL,               ///< é”™è¯¯æ§åˆ¶ç±»å‹
+            szPath,                             ///< æœåŠ¡ç¨‹åºè·¯å¾„
+            NULL,                               ///< æœåŠ¡ä¸å±äºä»»ä½•ç»„
+            NULL,                               ///< æ²¡æœ‰tagæ ‡è¯†ç¬¦
+            NULL,                               ///< å¯åŠ¨æœåŠ¡æ‰€ä¾èµ–çš„æœåŠ¡æˆ–æœåŠ¡ç»„,è¿™é‡Œä»…ä»…æ˜¯ä¸€ä¸ªç©ºå­—ç¬¦ä¸²
+            NULL,                               ///< LocalSystem å¸å·
             NULL );
 
         if (!schService)
         {
-            std::cout << "·şÎñ´´½¨Ê§°Ü!" << std::endl;
+            std::cout << "æœåŠ¡åˆ›å»ºå¤±è´¥!" << std::endl;
             ::CloseServiceHandle(schSCMgr);
             return false;
         }
@@ -163,14 +163,14 @@ namespace Bex
         SC_HANDLE schSCMgr = ::OpenSCManagerA(NULL, NULL, SC_MANAGER_ALL_ACCESS);
         if (!schSCMgr)
         {
-            std::cout << "·şÎñ¹ÜÀíÊı¾İ¿â´ò¿ªÊ§°Ü!" << std::endl;
+            std::cout << "æœåŠ¡ç®¡ç†æ•°æ®åº“æ‰“å¼€å¤±è´¥!" << std::endl;
             return false;
         }
 
         SC_HANDLE schService = ::OpenServiceA(schSCMgr, GetServiceName(), SERVICE_ALL_ACCESS);
         if (!schService)
         {
-            std::cout << "·şÎñ´ò¿ªÊ§°Ü!" << std::endl;
+            std::cout << "æœåŠ¡æ‰“å¼€å¤±è´¥!" << std::endl;
             ::CloseServiceHandle(schSCMgr);
             return false;
         }
@@ -181,32 +181,32 @@ namespace Bex
         return (bDeleted ? true : false);
     }
 
-    /// ·şÎñÈë¿Úµãº¯Êı
+    /// æœåŠ¡å…¥å£ç‚¹å‡½æ•°
     void __stdcall win_svc_base::service_start( unsigned long argc, char ** argv )
     {
         WinService::ServicePtr pSvc = WinService::getInstance().GetServicePtr();
 
         //LOG << "call " << __FUNCTION__ << std::endl;
 
-        /// ×¢²áCtrlº¯Êı
+        /// æ³¨å†ŒCtrlå‡½æ•°
         pSvc->m_pWinStructImpl->m_ssh = ::RegisterServiceCtrlHandlerA(
             pSvc->GetServiceName(), pSvc->GetServiceCtrlFunction());
         if (!pSvc->m_pWinStructImpl->m_ssh)
         {
-            //LOG << "Ctrlº¯Êı×¢²áÊ§°Ü!" << std::endl;
+            //LOG << "Ctrlå‡½æ•°æ³¨å†Œå¤±è´¥!" << std::endl;
             return ;
         }
 
-        /// ³õÊ¼»¯·şÎñ×´Ì¬
+        /// åˆå§‹åŒ–æœåŠ¡çŠ¶æ€
         pSvc->ReportStatus(SERVICE_START_PENDING, 0, 0, 1000);
 
-        /// Æô¶¯ÈÎÎñÏß³Ì
+        /// å¯åŠ¨ä»»åŠ¡çº¿ç¨‹
         pSvc->m_taskThread = boost::thread(boost::bind(&win_svc_base::Run, pSvc));
 
         pSvc->ReportStatus(SERVICE_RUNNING);
     }
 
-    /// »Ø±¨·şÎñ×´Ì¬
+    /// å›æŠ¥æœåŠ¡çŠ¶æ€
     bool win_svc_base::ReportStatus(unsigned long dwCurrentState, unsigned long dwExitCode
         , unsigned long dwCheckPoint, unsigned long dwWaitHint)
     {
@@ -234,36 +234,36 @@ namespace Bex
 
         //LOG << "call " << __FUNCTION__ << " uiCtrlCode=" << ulCtrlCode << std::endl;
 
-        //´¦Àí¿ØÖÆÇëÇóÂë
+        //å¤„ç†æ§åˆ¶è¯·æ±‚ç 
         switch(ulCtrlCode)
         {
-            //ÏÈ¸üĞÂ·şÎñ×´Ì¬Îª SERVICDE_STOP_PENDING,ÔÙÍ£Ö¹·şÎñ¡£
+            //å…ˆæ›´æ–°æœåŠ¡çŠ¶æ€ä¸º SERVICDE_STOP_PENDING,å†åœæ­¢æœåŠ¡ã€‚
         case SERVICE_CONTROL_STOP:
             pSvc->ReportStatus(SERVICE_STOP_PENDING,NO_ERROR,0,500);
-            pSvc->ServiceStop();     //ÓÉ¾ßÌåµÄ·şÎñ³ÌĞòÊµÏÖ
+            pSvc->ServiceStop();     //ç”±å…·ä½“çš„æœåŠ¡ç¨‹åºå®ç°
             pSvc->m_pWinStructImpl->m_ssStatus.dwCurrentState = SERVICE_STOPPED;
             break;
 
-            //ÔİÍ£·şÎñ
+            //æš‚åœæœåŠ¡
         case SERVICE_CONTROL_PAUSE:
             pSvc->ReportStatus(SERVICE_PAUSE_PENDING,NO_ERROR,0,500);
-            pSvc->ServicePause();    //ÓÉ¾ßÌåµÄ·şÎñ³ÌĞòÊµÏÖ
+            pSvc->ServicePause();    //ç”±å…·ä½“çš„æœåŠ¡ç¨‹åºå®ç°
             pSvc->m_pWinStructImpl->m_ssStatus.dwCurrentState = SERVICE_PAUSED;
             break;
 
-            //¼ÌĞø·şÎñ
+            //ç»§ç»­æœåŠ¡
         case SERVICE_CONTROL_CONTINUE:
             pSvc->ReportStatus(SERVICE_CONTINUE_PENDING,NO_ERROR,0,500);
-            pSvc->ServiceContinue(); //ÓÉ¾ßÌåµÄ·şÎñ³ÌĞòÊµÏÖ
+            pSvc->ServiceContinue(); //ç”±å…·ä½“çš„æœåŠ¡ç¨‹åºå®ç°
             pSvc->m_pWinStructImpl->m_ssStatus.dwCurrentState = SERVICE_RUNNING;
             break;
 
-            //¸üĞÂ·şÎñ×´Ì¬
+            //æ›´æ–°æœåŠ¡çŠ¶æ€
         case SERVICE_CONTROL_INTERROGATE:
             pSvc->OnServiceUpdateStatus();
             break;
 
-            //ÎŞĞ§»ò×Ô¶¨Òå¿ØÖÆÂë
+            //æ— æ•ˆæˆ–è‡ªå®šä¹‰æ§åˆ¶ç 
         default:
             pSvc->OnCtrlCode(ulCtrlCode);
             break;

@@ -10,7 +10,7 @@
 namespace Bex { namespace forward_bind
 {
     //////////////////////////////////////////////////////////////////////////
-    /// ·µ»ØÀàĞÍ·Çvoid
+    /// è¿”å›ç±»å‹évoidçš„æƒ…å†µ
     template <typename R, typename F, typename ... BArgs>
     class bind_t
     {
@@ -150,7 +150,7 @@ namespace Bex { namespace forward_bind
     };
 
     //////////////////////////////////////////////////////////////////////////
-    /// ·µ»ØÀàĞÍvoidÌØ»¯
+    /// è¿”å›ç±»å‹voidç‰¹åŒ–
     template <typename F, typename ... BArgs>
     class bind_t<void, F, BArgs...>
     {

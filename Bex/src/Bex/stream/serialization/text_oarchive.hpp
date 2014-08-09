@@ -6,7 +6,7 @@
 #include <boost/lexical_cast.hpp>
 
 //////////////////////////////////////////////////////////////////////////
-/// 文本式序列化 out
+/// 鏂囨湰寮忓簭鍒楀寲 out
 
 namespace Bex { namespace serialization
 {
