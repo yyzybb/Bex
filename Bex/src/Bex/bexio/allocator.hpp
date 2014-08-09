@@ -94,6 +94,18 @@ namespace Bex { namespace bexio
         }
     };
 
+    template <typename T, typename U>
+    inline bool operator==(::Bex::bexio::allocator<T> const&, ::Bex::bexio::allocator<U> const&)
+    {
+        return true;
+    }
+
+    template <typename T, typename U>
+    inline bool operator!=(::Bex::bexio::allocator<T> const& lhs, ::Bex::bexio::allocator<U> const& rhs)
+    {
+        return !(lhs == rhs);
+    }
+
     template <typename T, class Allocator, typename ... Args>
     T * allocate(Args && ... args)
     {

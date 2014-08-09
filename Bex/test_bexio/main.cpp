@@ -6,12 +6,12 @@
 
 // @todo: Test keepalive.
 
-
 #include <Bex/bexio/bexio.hpp>
 #include <Bex/bexio/ssl_protocol.hpp>
-#include <Bex/auto_link.h>
 #include <Bex/utility/format.hpp>
+#include <Bex/locale/charset_cvt.h>
 using namespace Bex::bexio;
+using namespace Bex::conv;
 
 
 enum {
@@ -23,7 +23,7 @@ enum {
     t_ssl_shutdown = 5, // 测试优雅地关闭连接(发送后立即shutdown, 要保证对端可以接收完整, 不丢数据.)
 };
 
-std::string remote_ip = "192.168.1.105";
+std::string remote_ip = "127.0.0.1"; //"192.168.1.105";
 std::atomic<long> s_count;
 std::atomic<long> s_obj_count;
 options opt = options::test();
@@ -266,7 +266,7 @@ template <class Session>
 void start_multi_client()
 {
     int count = 1;
-    std::cout << "请输入客户端数量:" << std::endl;
+    std::cout << u82a("请输入客户端数量:") << std::endl;
     std::cin >> count;
 
     opt.ssl_opts.reset(new ssl_options(ssl_options::client()));
@@ -322,10 +322,10 @@ int main()
     int input = 0;
     do 
     {
-        std::cout << "请输入端类型"
+        std::cout << u82a("请输入端类型"
             "\n\t(0:tcp, 1:ssl_tcp)"
             "\n\t(0:simple, 1:pingpong, 2:multiconn, 3:packet, 4:tcp_shutdown)"
-            "\n\t(0:server, 1:client):" << std::endl;
+            "\n\t(0:server, 1:client):") << std::endl;
         std::cin >> input;
 
         int proto = input / 100;
