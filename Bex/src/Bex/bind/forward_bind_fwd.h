@@ -9,24 +9,24 @@ namespace Bex
     namespace forward_bind
     {
         //////////////////////////////////////////////////////////////////////////
-        /// ÉùÃ÷
+        /// å£°æ˜
         template <typename ... Args>
         using Tuple = std::tuple<Args...>;
 
-        // Õ¼Î»·û
+        // å ä½ç¬¦
         template <int I>
         struct placeholder;
 
-        // ¿É°ó¶¨callable¶ÔÏóµÄÀàĞÍÃ¶¾Ù
+        // å¯ç»‘å®šcallableå¯¹è±¡çš„ç±»å‹æšä¸¾
         enum class callable_type : int
         {
-            free_function,      // ×ÔÓÉº¯Êı
-            mem_function,       // Àà³ÉÔ±º¯Êı
-            object_function,    // ·Âº¯Êı¶ÔÏó
-            mem_variable,       // Àà³ÉÔ±±äÁ¿
+            free_function,      // è‡ªç”±å‡½æ•°
+            mem_function,       // ç±»æˆå‘˜å‡½æ•°
+            object_function,    // ä»¿å‡½æ•°å¯¹è±¡
+            mem_variable,       // ç±»æˆå‘˜å˜é‡
         };
 
-        // µ÷ÓÃ·½Ê½(ÓÃÓÚÖØÔØµÄÀàĞÍ¶¨Òå)
+        // è°ƒç”¨æ–¹å¼(ç”¨äºé‡è½½çš„ç±»å‹å®šä¹‰)
         template <callable_type Ct>
         using call_t = std::integral_constant<callable_type, Ct>;
 
@@ -35,29 +35,29 @@ namespace Bex
         using object_function_calltype = call_t<callable_type::object_function>;
         using mem_variable_calltype = call_t<callable_type::mem_variable>;
 
-        // bind½á¹ûÀà
+        // bindç»“æœç±»
         template <typename R, typename F, typename ... BArgs>
         class bind_t;
 
-        // callable¶ÔÏóÀàĞÍİÍÈ¡
-        // Ìá¹©: 1.callable_typeÃ¶¾ÙÖµ
-        //      2.callable_typeµ÷ÓÃ·½Ê½ÀàĞÍ
+        // callableå¯¹è±¡ç±»å‹èƒå–
+        // æä¾›: 1.callable_typeæšä¸¾å€¼
+        //      2.callable_typeè°ƒç”¨æ–¹å¼ç±»å‹
         //      3.result_type
-        //      4.Êµ²Î¸öÊı
+        //      4.å®å‚ä¸ªæ•°
         template <typename F>
         struct callable_traits;
 
-        // Õ¼Î»·ûÀàĞÍİÍÈ¡
-        // Ìá¹©: 1.ÊÇ·ñÊÇÕ¼Î»·ûµÄÅĞ¶Ï
-        //      2.Õ¼Î»·ûË÷ÒıºÅ
+        // å ä½ç¬¦ç±»å‹èƒå–
+        // æä¾›: 1.æ˜¯å¦æ˜¯å ä½ç¬¦çš„åˆ¤æ–­
+        //      2.å ä½ç¬¦ç´¢å¼•å·
         template <typename T>
         struct placeholder_traits;
 
-        // Ñ¡ÔñÊµ²Î
+        // é€‰æ‹©å®å‚
         template <typename BindArgs, typename CallArgs, unsigned int N>
         struct select;
 
-        // ÕûÊı³£Á¿×ª»»Îª²ÎÊı°ü¸öÊıµÄĞÎÊ½
+        // æ•´æ•°å¸¸é‡è½¬æ¢ä¸ºå‚æ•°åŒ…ä¸ªæ•°çš„å½¢å¼
         template <unsigned int ... N> struct seq {};
         template <unsigned int N, unsigned int ... S> struct gen;
         template <unsigned int N, unsigned int ... S> struct gen : gen<N - 1, N - 1, S...> {};

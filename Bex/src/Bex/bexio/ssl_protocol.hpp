@@ -2,7 +2,7 @@
 #define __BEX_IO_SSL_PROTOCOL_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// ssl–≠“È
+/// sslÂçèËÆÆ
 #include "bexio_fwd.hpp"
 #include "options_ssl.hpp"
 #include <Bex/bexio/detail/options_ssl.ipp>

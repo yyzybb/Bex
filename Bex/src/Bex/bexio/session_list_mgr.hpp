@@ -2,9 +2,9 @@
 #define __BEX_IO_SESSION_LIST_MGR_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// Á¬½Ó¹ÜÀíÆ÷(ÇÖÈëÊ½Ë«ÏòÁ´±í´æ´¢)
+/// è¿æ¥ç®¡ç†å™¨(ä¾µå…¥å¼åŒå‘é“¾è¡¨å­˜å‚¨)
 /*
-* @ ²»Ğ£Ñésession¹éÊô, Ê¹ÓÃÕßÒªµ±ĞÄ!
+* @ ä¸æ ¡éªŒsessionå½’å±, ä½¿ç”¨è€…è¦å½“å¿ƒ!
 */
 #include "bexio_fwd.hpp"
 #include "intrusive_list.hpp"
@@ -30,13 +30,13 @@ namespace Bex { namespace bexio
             list_.clear();
         }
 
-        /// ´´½¨Á¬½Óid
+        /// åˆ›å»ºè¿æ¥id
         static session_id create_id(session_ptr sp)
         {
             return session_id(sp);
         }
 
-        /// ²åÈë
+        /// æ’å…¥
         void insert(session_ptr sp)
         {
             if (!sp) return ;
@@ -46,7 +46,7 @@ namespace Bex { namespace bexio
             list_.push_back(sp.get());
         }
 
-        /// É¾³ı
+        /// åˆ é™¤
         void erase(session_id id)
         {
             session_ptr sp = id.get();
@@ -55,7 +55,7 @@ namespace Bex { namespace bexio
             erase(sp.get());
         }
 
-        /// É¾³ı
+        /// åˆ é™¤
         void erase(session_type * sp)
         {
             -- size_;
@@ -63,13 +63,13 @@ namespace Bex { namespace bexio
             list_.erase(sp);
         }
 
-        /// ²éÕÒ
+        /// æŸ¥æ‰¾
         session_ptr find(session_id id) const
         {
             return id.get();
         }
 
-        /// ÊıÁ¿
+        /// æ•°é‡
         std::size_t size() const
         {
             return size_;

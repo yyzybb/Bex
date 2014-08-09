@@ -2,7 +2,7 @@
 #define __BEX_IO_ALLOCATOR_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-// �ڴ������
+// 内存分配器
 /*
 * @Concept:
 *   Allocator
@@ -19,7 +19,7 @@
 
 namespace Bex { namespace bexio
 {
-    // @todo: �ڲ��ĳ��ڴ�� or ʹ��tcmalloc
+    // @todo: 内部改成内存池 or 使用tcmalloc
 
     template <typename T>
     class allocator

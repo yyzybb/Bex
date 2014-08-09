@@ -5,7 +5,7 @@
 #include <boost/static_assert.hpp>
 //////////////////////////////////////////////////////////////////////////
 /// Signature Traits
-/// 函数签名类型特征定义
+/// 鍑芥暟绛惧悕绫诲瀷鐗瑰緛瀹氫箟
 
 namespace Bex
 {

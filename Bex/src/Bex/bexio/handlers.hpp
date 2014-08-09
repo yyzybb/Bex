@@ -2,7 +2,7 @@
 #define __BEX_IO_HANDLERS_HPP__
 
 ///////////////////////////////////////////////////////////////////////////
-// ¸÷ÖÖhandler°ü×°Æ÷
+// å„ç§handleråŒ…è£…å™¨
 #include "bexio_fwd.hpp"
 
 namespace Bex { namespace bexio
@@ -23,7 +23,7 @@ namespace Bex { namespace bexio
         inline void operator()(Args && ... args) const {}
     };
 
-    // »¥³âÊ½handler°ü×°Æ÷
+    // äº’æ–¥å¼handleråŒ…è£…å™¨
     template <typename Handler>
     class mutex_handler_t
     {
@@ -58,7 +58,7 @@ namespace Bex { namespace bexio
         return mutex_handler_t<Handler>(handler, token);
     }
 
-    // Ìõ¼şÊ½handler°ü×°Æ÷
+    // æ¡ä»¶å¼handleråŒ…è£…å™¨
     template <typename IfHandler, typename ElseHandler>
     class condition_handler_t
     {
@@ -101,7 +101,7 @@ namespace Bex { namespace bexio
         return condition_handler_t<IfHandler, EmptyHandler>(cond, ifhandler, EmptyHandler());
     }
 
-    // ´ø³¬Ê±µÄhandler
+    // å¸¦è¶…æ—¶çš„handler
     template <typename Handler, typename Allocator = allocator<int> >
     class timer_handler_t
     {

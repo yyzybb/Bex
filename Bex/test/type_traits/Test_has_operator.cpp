@@ -6,7 +6,7 @@ using namespace Bex;
 #define TTT template <typename T>
 
 //////////////////////////////////////////////////////////////////////////
-/// ÖØÔØ²Ù×÷·û(Ä£°åÊ½, ¶şÔª, ºóÖÃ)
+/// é‡è½½æ“ä½œç¬¦(æ¨¡æ¿å¼, äºŒå…ƒ, åç½®)
 struct TemplateTwoPostfix
 {
     typedef TemplateTwoPostfix this_type;
@@ -49,7 +49,7 @@ struct TemplateTwoPostfix
 #endif //defined(_MSC_VER)
 };
 
-/// ÖØÔØ²Ù×÷·û(ÆÕÍ¨, ¶şÔª, ºóÖÃ)
+/// é‡è½½æ“ä½œç¬¦(æ™®é€š, äºŒå…ƒ, åç½®)
 struct NormalTwoPostfix
 {
     typedef NormalTwoPostfix this_type;
@@ -92,7 +92,7 @@ struct NormalTwoPostfix
 #endif //defined(_MSC_VER)
 };
 
-/// ÖØÔØ²Ù×÷·û(Ä£°åÊ½, Ò»Ôª, Ç°ÖÃ)
+/// é‡è½½æ“ä½œç¬¦(æ¨¡æ¿å¼, ä¸€å…ƒ, å‰ç½®)
 struct TemplateUnaryPrefix
 {
     TTT TemplateUnaryPrefix operator BEX_OPERATOR_UNARY_PLUS();
@@ -107,7 +107,7 @@ struct TemplateUnaryPrefix
     TTT void operator BEX_OPERATOR_INVOKE();
 };
 
-/// ÖØÔØ²Ù×÷·û(ÆÕÍ¨, Ò»Ôª, Ç°ÖÃ)
+/// é‡è½½æ“ä½œç¬¦(æ™®é€š, ä¸€å…ƒ, å‰ç½®)
 struct NormalUnaryPrefix
 {
     NormalUnaryPrefix operator BEX_OPERATOR_UNARY_PLUS();
@@ -151,12 +151,12 @@ typedef int IntervalType;
 
 BOOST_AUTO_TEST_SUITE(s_has_operator)
 
-/// ÕıÈ·ĞÔ²âÊÔ
+/// æ­£ç¡®æ€§æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_has_operator)
 {
 #if !defined(BEX_SUPPORT_CXX11)
 
-    XDump("¿ªÊ¼²âÊÔ has_operator. C++98");
+    XDump("å¼€å§‹æµ‹è¯• has_operator. C++98");
 
     CHECK_HAS_OPERATOR(has_template_operator_add, 1, 0, 1, 0, 0, 0);
     CHECK_HAS_OPERATOR(has_template_operator_inc, 1, 0, 1, 0, 0, 0);
@@ -208,11 +208,11 @@ BOOST_AUTO_TEST_CASE(t_has_operator)
 
 #else //!defined(BEX_SUPPORT_CXX11)
 
-    XDump("¿ªÊ¼²âÊÔ has_operator. C++11");
+    XDump("å¼€å§‹æµ‹è¯• has_operator. C++11");
 
 // <TemplateTwoPostfix> <NormalTwoPostfix> <TemplateUnaryPrefix> <NormalUnaryPrefix> <Empty> <int>
 
-    /// Ò»ÔªÔËËã·û
+    /// ä¸€å…ƒè¿ç®—ç¬¦
     CHECK_HAS_OPERATOR(can_unary_plus,              0, 0, 0, 1, 0, 1);
     CHECK_HAS_OPERATOR(can_unary_minus,             0, 0, 0, 1, 0, 1);
     CHECK_HAS_OPERATOR(can_prefix_increment,        0, 0, 0, 1, 0, 1);
@@ -227,7 +227,7 @@ BOOST_AUTO_TEST_CASE(t_has_operator)
     CHECK_HAS_OPERATOR(has_postfix_increment,       0, 1, 0, 0, 0, 0);
     CHECK_HAS_OPERATOR(has_postfix_decrement,       0, 1, 0, 0, 0, 0);
 
-    /// ÊıÑ§¼ÆËã
+    /// æ•°å­¦è®¡ç®—
     CHECK_HAS_OPERATOR_TWO(can_plus,                    1, 1, 0, 0, 0, 1);
     CHECK_HAS_OPERATOR_TWO(can_plus_assign,             1, 1, 0, 0, 0, 1);
     CHECK_HAS_OPERATOR_TWO(can_minus,                   1, 1, 0, 0, 0, 1);
@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_CASE(t_has_operator)
     CHECK_HAS_OPERATOR_TWO(has_modulo,                  1, 1, 0, 0, 0, 0);
     CHECK_HAS_OPERATOR_TWO(has_modulo_assign,           1, 1, 0, 0, 0, 0);
 
-    /// ¶ş½øÖÆÔËËã
+    /// äºŒè¿›åˆ¶è¿ç®—
     CHECK_HAS_OPERATOR_TWO(can_bitwise_and,                 1, 1, 0, 0, 0, 1);
     CHECK_HAS_OPERATOR_TWO(can_bitwise_and_assign,          1, 1, 0, 0, 0, 1);
     CHECK_HAS_OPERATOR_TWO(can_bitwise_or,                  1, 1, 0, 0, 0, 1);
@@ -275,7 +275,7 @@ BOOST_AUTO_TEST_CASE(t_has_operator)
     CHECK_HAS_OPERATOR_TWO(has_bitwise_right_shift,         1, 1, 0, 0, 0, 0);
     CHECK_HAS_OPERATOR_TWO(has_bitwise_right_shift_assign,  1, 1, 0, 0, 0, 0);
 
-    /// Âß¼­ÔËËã
+    /// é€»è¾‘è¿ç®—
     CHECK_HAS_OPERATOR    (can_logical_not,             0, 0, 0, 1, 0, 1);
     CHECK_HAS_OPERATOR_TWO(can_logical_and,             1, 1, 0, 0, 0, 1);
     CHECK_HAS_OPERATOR_TWO(can_logical_or,              1, 1, 0, 0, 0, 1);
@@ -284,7 +284,7 @@ BOOST_AUTO_TEST_CASE(t_has_operator)
     CHECK_HAS_OPERATOR_TWO(has_logical_and,             1, 1, 0, 0, 0, 0);
     CHECK_HAS_OPERATOR_TWO(has_logical_or,              1, 1, 0, 0, 0, 0);
 
-    /// ±È½Ï
+    /// æ¯”è¾ƒ
     CHECK_HAS_OPERATOR_TWO(can_less,                    1, 1, 0, 0, 0, 1);
     CHECK_HAS_OPERATOR_TWO(can_less_or_equal,           1, 1, 0, 0, 0, 1);
     CHECK_HAS_OPERATOR_TWO(can_equal,                   1, 1, 0, 0, 0, 1);
@@ -299,7 +299,7 @@ BOOST_AUTO_TEST_CASE(t_has_operator)
     CHECK_HAS_OPERATOR_TWO(has_greater_or_equal,        1, 1, 0, 0, 0, 0);
     CHECK_HAS_OPERATOR_TWO(has_not_equal,               1, 1, 0, 0, 0, 0);
 
-    /// ÆäËûÔËËã·û
+    /// å…¶ä»–è¿ç®—ç¬¦
     CHECK_HAS_OPERATOR(can_address_of,                  1, 1, 1, 1, 1, 1);
     CHECK_HAS_OPERATOR(can_invoke,                      0, 0, 0, 1, 0, 0);
     CHECK_HAS_OPERATOR(can_dereference,                 0, 0, 0, 1, 0, 0);
@@ -314,14 +314,14 @@ BOOST_AUTO_TEST_CASE(t_has_operator)
     CHECK_HAS_OPERATOR_RIGHT(has_delete, void*,         0, 1, 0, 0, 0, 0);
 #endif //defined(_MSC_VER)
 
-    /// ¸³Öµ²Ù×÷·û
+    /// èµ‹å€¼æ“ä½œç¬¦
     CHECK_HAS_OPERATOR_TWO(can_assign,                  1, 1, 1, 1, 1, 1);
     CHECK_HAS_OPERATOR_TWO(has_assign,                  1, 1, 1, 1, 1, 0);
 
 
 #endif //!defined(BEX_SUPPORT_CXX11)
 
-    XDump("½áÊø²âÊÔ has_operator");
+    XDump("ç»“æŸæµ‹è¯• has_operator");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

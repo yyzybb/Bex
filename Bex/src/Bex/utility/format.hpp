@@ -5,7 +5,7 @@
 #include <boost/preprocessor.hpp>
 
 //////////////////////////////////////////////////////////////////////////
-/// ×Ö·û´®¸ñÊ½»¯
+/// å­—ç¬¦ä¸²æ ¼å¼åŒ–
 
 #ifndef BEX_FORMAT_MAX_PARAMS
 #define BEX_FORMAT_MAX_PARAMS 16

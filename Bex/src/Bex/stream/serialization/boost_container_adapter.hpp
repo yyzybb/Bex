@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
-/// streamÖ§³ÖboostÌá¹©µÄÈİÆ÷µÄÊÊÅäÆ÷
+/// streamæ”¯æŒboostæä¾›çš„å®¹å™¨çš„é€‚é…å™¨
 
 /// boost::bimap
 template <class Ar, typename K1, typename K2, typename AP1, typename AP2, typename AP3>

@@ -7,11 +7,11 @@ public:
     TestThreadPool()
         : m_long(0)
     {
-        XDump(" ¿ªÊ¼²âÊÔ ThreadPool" );
+        XDump(" å¼€å§‹æµ‹è¯• ThreadPool" );
     }
     ~TestThreadPool()
     {
-        XDump(" ½áÊø²âÊÔ ThreadPool" );
+        XDump(" ç»“æŸæµ‹è¯• ThreadPool" );
     }
 
     void sleep_m1()
@@ -47,7 +47,7 @@ BOOST_FIXTURE_TEST_SUITE(s_threadpool, TestThreadPool)
 BOOST_AUTO_TEST_CASE(t_threadpool)
 {
     BOOST_CHECK( (m_threadpool.thread_count() >= 1) );
-    Dump("Thread Count = " << m_threadpool.thread_count())
+    Dump("Thread Count = " << m_threadpool.thread_count());
     
     BOOST_CHECK_EQUAL( m_threadpool.unfinished(), 0 );
     UFOR( m_threadpool.thread_count() )

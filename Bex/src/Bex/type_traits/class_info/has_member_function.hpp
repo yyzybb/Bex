@@ -4,7 +4,7 @@
 #include <Bex/type_traits/defines.hpp>
 #include <Bex/type_traits/signature_traits.hpp>
 //////////////////////////////////////////////////////////////////////////
-/// ÀàÊÇ·ñÓÐÖ¸¶¨º¯ÊýÇ©ÃûµÄÆÕÍ¨³ÉÔ±º¯Êý
+/// ç±»æ˜¯å¦æœ‰æŒ‡å®šå‡½æ•°ç­¾åçš„æ™®é€šæˆå‘˜å‡½æ•°
 
 namespace Bex
 {

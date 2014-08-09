@@ -7,7 +7,7 @@
 
 namespace Bex { namespace bexio 
 {
-    // ¿Í»§¶ËÄ¬ÈÏÅäÖÃ
+    // å®¢æˆ·ç«¯é»˜è®¤é…ç½®
     ssl_options ssl_options::client()
     {
         static ssl_options opts = {
@@ -23,7 +23,7 @@ namespace Bex { namespace bexio
         return opts;
     }
 
-    // ·şÎñ¶ËÄ¬ÈÏÅäÖÃ
+    // æœåŠ¡ç«¯é»˜è®¤é…ç½®
     ssl_options ssl_options::server()
     {
         static ssl_options opts = {

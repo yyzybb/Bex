@@ -11,10 +11,10 @@ namespace Bex { namespace mpl
 {
     //////////////////////////////////////////////////////////////////////////
     /// mpl while
-    // @Cond Ñ­»·¿ØÖÆÌõ¼şº¯Êı
-    // @Do   Ñ­»·ÌåÖ´ĞĞº¯Êı
-    // @T    Ñ­»·Êı¾İ
-    // @Return T±»Ñ­»·´¦ÀíµÄ½á¹û
+    // @Cond å¾ªç¯æ§åˆ¶æ¡ä»¶å‡½æ•°
+    // @Do   å¾ªç¯ä½“æ‰§è¡Œå‡½æ•°
+    // @T    å¾ªç¯æ•°æ®
+    // @Return Tè¢«å¾ªç¯å¤„ç†çš„ç»“æœ
     template <
         template<typename> class Cond,
         template<typename> class Do,

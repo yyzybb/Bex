@@ -2,7 +2,7 @@
 #define __BEX_IO_PACKET_PARSER_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// pod·â°üÍ·Ê½µÄÊı¾İ½âÎöÆ÷
+/// podå°åŒ…å¤´å¼çš„æ•°æ®è§£æå™¨
 
 /*
 * @Concept:
@@ -13,7 +13,7 @@
 
 namespace Bex { namespace bexio 
 {
-    // °üº¬std::size_t size(); ½Ó¿ÚµÄ·â°üÍ·ËùÓÃµÄSizer
+    // åŒ…å«std::size_t size(); æ¥å£çš„å°åŒ…å¤´æ‰€ç”¨çš„Sizer
     struct sizer_packet_head
     {
         template <typename PacketHead>
@@ -23,7 +23,7 @@ namespace Bex { namespace bexio
         }
     };
 
-    // ³¤¶ÈÔÚÇ°4¸ö×Ö½ÚµÄ·â°üÍ·ËùÓÃµÄSizer
+    // é•¿åº¦åœ¨å‰4ä¸ªå­—èŠ‚çš„å°åŒ…å¤´æ‰€ç”¨çš„Sizer
     struct first4_packet_head
     {
         template <typename PacketHead>
@@ -33,9 +33,9 @@ namespace Bex { namespace bexio
         }
     };
 
-    /// ·â°ü½âÎöÆ÷
-    template <typename PacketHead = boost::uint32_t,    ///< ·â°üÍ·ÀàĞÍ¶¨Òå
-        typename Sizer = first4_packet_head,            ///< ¸ù¾İ·â°üÍ·¼ÆËã°ü³¤µÄ½Ó¿Ú(½á¹û²»°üº¬°üÍ·µÄ³¤¶È)
+    /// å°åŒ…è§£æå™¨
+    template <typename PacketHead = boost::uint32_t,    ///< å°åŒ…å¤´ç±»å‹å®šä¹‰
+        typename Sizer = first4_packet_head,            ///< æ ¹æ®å°åŒ…å¤´è®¡ç®—åŒ…é•¿çš„æ¥å£(ç»“æœä¸åŒ…å«åŒ…å¤´çš„é•¿åº¦)
         typename Allocator = ::Bex::bexio::allocator<int> >
     class packet_parser
     {
@@ -44,7 +44,7 @@ namespace Bex { namespace bexio
         typedef typename Allocator::template rebind<char>::other allocator;
         typedef boost::function<void(error_code const&, PacketHead*, char const*, std::size_t)> Callback;
 
-        // °üÍ·³¤¶È
+        // åŒ…å¤´é•¿åº¦
         const std::size_t head_size { sizeof(PacketHead) };
 
         ~packet_parser()
@@ -53,7 +53,7 @@ namespace Bex { namespace bexio
                 allocator().deallocate(buf_);
         }
 
-        // ³õÊ¼»¯
+        // åˆå§‹åŒ–
         void initialize(std::size_t max_packet_size, Callback callback)
         {
             if (!init_.set())
@@ -65,7 +65,7 @@ namespace Bex { namespace bexio
             callback_ = callback;
         }
 
-        // Ñ¹Èë´ı½âÎöÊı¾İ
+        // å‹å…¥å¾…è§£ææ•°æ®
         void parse(char const* data, std::size_t size)
         {
             char const* buf = data;
@@ -75,33 +75,33 @@ namespace Bex { namespace bexio
             {
                 if (0 == pos_)
                 {
-                    // »º³åÇøÖĞÎŞÊı¾İ, Ö±½ÓÔÚÉÏ²ã»º³åÇøÖĞ³¢ÊÔ×é°ü.
+                    // ç¼“å†²åŒºä¸­æ— æ•°æ®, ç›´æ¥åœ¨ä¸Šå±‚ç¼“å†²åŒºä¸­å°è¯•ç»„åŒ….
                     if (len < head_size)
                     {
-                        // ²»×ãÒ»¸ö·â°üÍ·, Ğ´Èë»º³åÇø¼´¿É
+                        // ä¸è¶³ä¸€ä¸ªå°åŒ…å¤´, å†™å…¥ç¼“å†²åŒºå³å¯
                         write_buffer(buf, len);
                         return ;
                     }
                     else
                     {
-                        // ÓĞÍêÕûµÄ·â°üÍ·, ½øÒ»²½¼ì²âÊÇ·ñÓĞÍêÕûµÄ·â°ü.
+                        // æœ‰å®Œæ•´çš„å°åŒ…å¤´, è¿›ä¸€æ­¥æ£€æµ‹æ˜¯å¦æœ‰å®Œæ•´çš„å°åŒ….
                         std::size_t packet_len = Sizer()(packethead(buf)) + head_size;
                         if (packet_len > size_)
                         {
-                            // ·â°ü³¤´íÎó
+                            // å°åŒ…é•¿é”™è¯¯
                             invoke_callback(generate_error(bee::parse_error), 0, 0, 0);
                             return ;
                         }
 
                         if (len < packet_len)
                         {
-                            // ²»×ãÒ»¸ö·â°ü, ·ÅÈë»º³åÇøÖĞ, µÈ´ıºóĞøÊı¾İ.
+                            // ä¸è¶³ä¸€ä¸ªå°åŒ…, æ”¾å…¥ç¼“å†²åŒºä¸­, ç­‰å¾…åç»­æ•°æ®.
                             write_buffer(buf, len);
                             return ;
                         }
                         else
                         {
-                            // ÓĞÍêÕûµÄ·â°ü, Ö±½Ó´¦Àí.
+                            // æœ‰å®Œæ•´çš„å°åŒ…, ç›´æ¥å¤„ç†.
                             invoke_callback(error_code(), &packethead(buf), buf + head_size, packet_len - head_size);
                             buf += packet_len;
                             len -= packet_len;
@@ -111,7 +111,7 @@ namespace Bex { namespace bexio
                 }
                 else if (pos_ < head_size)
                 {
-                    // »º³åÇøÖĞÓĞÊı¾İ, µ«²»×ãÒ»¸ö·â°üÍ·, ³¢ÊÔÆ´×ãÒ»¸ö·â°üÍ·
+                    // ç¼“å†²åŒºä¸­æœ‰æ•°æ®, ä½†ä¸è¶³ä¸€ä¸ªå°åŒ…å¤´, å°è¯•æ‹¼è¶³ä¸€ä¸ªå°åŒ…å¤´
                     std::size_t delta = head_size - pos_;
                     std::size_t cpy_size = (std::min)(delta, len);
                     write_buffer(buf, cpy_size);
@@ -121,11 +121,11 @@ namespace Bex { namespace bexio
                 }
                 else
                 {
-                    // »º³åÇøÖĞÓĞÍêÕûµÄ·â°üÍ·
+                    // ç¼“å†²åŒºä¸­æœ‰å®Œæ•´çš„å°åŒ…å¤´
                     std::size_t packet_len = Sizer()(packethead(buf_)) + head_size;
                     if (packet_len > size_)
                     {
-                        // ·â°ü³¤´íÎó
+                        // å°åŒ…é•¿é”™è¯¯
                         invoke_callback(generate_error(bee::parse_error), 0, 0, 0);
                         return ;
                     }
@@ -133,13 +133,13 @@ namespace Bex { namespace bexio
                     std::size_t delta = packet_len - pos_;
                     if (delta > len)
                     {
-                        // ÎŞ·¨Æ´³öÒ»¸öÍêÕûµÄ·â°ü
+                        // æ— æ³•æ‹¼å‡ºä¸€ä¸ªå®Œæ•´çš„å°åŒ…
                         write_buffer(buf, len);
                         return ;
                     }
                     else
                     {
-                        // ¿ÉÒÔÆ´³öÒ»¸öÍêÕûµÄ·â°ü
+                        // å¯ä»¥æ‹¼å‡ºä¸€ä¸ªå®Œæ•´çš„å°åŒ…
                         write_buffer(buf, delta);
                         invoke_callback(error_code(), &packethead(buf_), buf_ + head_size, pos_ - head_size);
                         pos_ = 0;
@@ -152,14 +152,14 @@ namespace Bex { namespace bexio
         }
 
     private:
-        // µ÷ÓÃ»Øµ÷
+        // è°ƒç”¨å›è°ƒ
         inline void invoke_callback(error_code const& ec, PacketHead * ph, char const* data, std::size_t size)
         {
             if (callback_)
                 callback_(ec, ph, data, size);
         }
 
-        // Ğ´ÈëÊı¾İÖÁ»º³åÇø
+        // å†™å…¥æ•°æ®è‡³ç¼“å†²åŒº
         bool write_buffer(char const* data, std::size_t size)
         {
             if (size + pos_ > size_) 
@@ -170,22 +170,22 @@ namespace Bex { namespace bexio
             return true;
         }
 
-        // ´ÓÊı¾İ×ª»»Îª°üÍ·
+        // ä»æ•°æ®è½¬æ¢ä¸ºåŒ…å¤´
         inline PacketHead & packethead(char const* data)
         {
             return (*(PacketHead*)data);
         }
 
     private:
-        // ÊÇ·ñ³õÊ¼»¯
+        // æ˜¯å¦åˆå§‹åŒ–
         sentry<inter_lock> init_;
 
-        // »º³åÇø
+        // ç¼“å†²åŒº
         char * buf_;
         std::size_t size_;
         std::size_t pos_;
 
-        // ½âÎö½á¹û»Øµ÷
+        // è§£æç»“æœå›è°ƒ
         Callback callback_;
     };
 

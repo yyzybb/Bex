@@ -12,7 +12,7 @@ namespace Bex { namespace bexio
     template <class Strand = io_service, class Allocator = ::Bex::bexio::allocator<int> >
     class multithread_strand;
 
-    /// µ±«∞≤„actor
+    /// ÂΩìÂâçÂ±Çactor
     template <class T>
     io_service& actor(T & object)
     {

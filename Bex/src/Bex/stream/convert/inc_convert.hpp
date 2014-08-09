@@ -4,11 +4,11 @@
 #include "base_convert.hpp"
 
 //////////////////////////////////////////////////////////////////////////
-/// ×ÔÔö×ª»»Æ÷
+/// è‡ªå¢è½¬æ¢å™¨
 
 /* Remarks:
-*    operator++()ºósave.
-*    loadºóoperator--().
+*    operator++()åsave.
+*    loadåoperator--().
 */
 
 namespace Bex { namespace convert

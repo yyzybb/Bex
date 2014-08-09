@@ -2,11 +2,11 @@
 #define __BEX_STREAM_CONVERT_A2W_CONVERT_HPP__
 
 #include "base_convert.hpp"
-#include <Bex/platform/charset_cvt.h>
+#include <Bex/locale/charset_cvt.h>
 #include <string>
 #include <boost/static_assert.hpp>
 //////////////////////////////////////////////////////////////////////////
-/// ansi -> unicode��洢
+/// ansi -> unicode后存储
 namespace Bex { namespace convert
 {
     // string -> wstring

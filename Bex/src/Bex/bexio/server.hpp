@@ -2,7 +2,7 @@
 #define __BEX_IO_SERVER_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// ÓĞÁ¬½ÓĞ­ÒéµÄ·şÎñ¶Ë
+/// æœ‰è¿æ¥åè®®çš„æœåŠ¡ç«¯
 #include "bexio_fwd.hpp"
 #include "session_list_mgr.hpp"
 #include "handlers.hpp"
@@ -51,7 +51,7 @@ namespace Bex { namespace bexio
             terminate();
         }
 
-        // Æô¶¯
+        // å¯åŠ¨
         bool startup(endpoint const& addr, std::size_t listen_count = 1)
         {
             if (is_running())
@@ -74,70 +74,70 @@ namespace Bex { namespace bexio
                 if (!async_accept())
                     return false;
 
-            // Æô¶¯¹¤×÷Ïß³Ì
+            // å¯åŠ¨å·¥ä½œçº¿ç¨‹
             use_service<mstrand_service_type>(ios_).startup(opts_->workthread_count);
 
             running_.set();
             return true;
         }
 
-        // ÓÅÑÅµØ¹Ø±Õ
+        // ä¼˜é›…åœ°å…³é—­
         void shutdown()
         {
-            // ÉèÖÃshutdown±ê¼Ç
+            // è®¾ç½®shutdownæ ‡è®°
             if (!shutdowning_.set())
                 return ;
 
-            // ÏÈÍ£Ö¹½ÓÊÜÁ¬½Ó
+            // å…ˆåœæ­¢æ¥å—è¿æ¥
             stop_accept();
         }
 
-        // Ç¿ÖÆ¹Ø±Õ
+        // å¼ºåˆ¶å…³é—­
         void terminate()
         {
             stop_accept();
             terminate_sessions();
         }
 
-        // ÊÇ·ñ¹¤×÷ÖĞ
+        // æ˜¯å¦å·¥ä½œä¸­
         bool is_running() const
         {
             return running_.is_set();
         }
 
-        // ¸ù¾İid²éÕÒÁ¬½Ó
+        // æ ¹æ®idæŸ¥æ‰¾è¿æ¥
         session_ptr find(session_id id) const
         {
             return session_mgr_.find(id);
         }
 
-        // µ±Ç°Á¬½ÓÊı
+        // å½“å‰è¿æ¥æ•°
         std::size_t size() const
         {
             return session_mgr_.size();
         }
 
-        // ÌáÈ¡´íÎóĞÅÏ¢
+        // æå–é”™è¯¯ä¿¡æ¯
         error_code get_error_code() const
         {
             return ec_;
         }
 
-        // ÉèÖÃÁ¬½ÓÏûÏ¢»Øµ÷
+        // è®¾ç½®è¿æ¥æ¶ˆæ¯å›è°ƒ
         template <typename session_type::callback_em CallbackType, typename F>
         void set_callback(F const& f)
         {
             session_type::set_callback(*callback_, f);
         }
 
-        // ÉèÖÃÎÕÊÖ³ö´í»Øµ÷
+        // è®¾ç½®æ¡æ‰‹å‡ºé”™å›è°ƒ
         void set_handshake_error_callbcak(OnHandshakeError const& f)
         {
             on_handshake_error_ = f;
         }
 
     private:
-        // ·¢Æğ½ÓÊÜÁ¬½ÓÇëÇó
+        // å‘èµ·æ¥å—è¿æ¥è¯·æ±‚
         bool async_accept(bool reply = false)
         {
             if (!reply)
@@ -159,7 +159,7 @@ namespace Bex { namespace bexio
             return true;
         }
 
-        // ½ÓÊÜÁ¬½ÓÇëÇó»Øµ÷
+        // æ¥å—è¿æ¥è¯·æ±‚å›è°ƒ
         void on_async_accept(error_code const& ec, socket_ptr sp)
         {
             if (ec)
@@ -176,7 +176,7 @@ namespace Bex { namespace bexio
             async_handshake(sp);
         }
 
-        // ÎÕÊÖ
+        // æ¡æ‰‹
         void async_handshake(socket_ptr const& sp)
         {
             auto handler = BEX_IO_BIND(&this_type::on_async_handshake, this, BEX_IO_PH_ERROR, sp);
@@ -191,7 +191,7 @@ namespace Bex { namespace bexio
                 protocol_traits_type::async_handshake(sp, ssl::stream_base::server, handler);
         }
 
-        // ÎÕÊÖ»Øµ÷
+        // æ¡æ‰‹å›è°ƒ
         void on_async_handshake(error_code const& ec, socket_ptr sp)
         {
             if (ec)
@@ -213,7 +213,7 @@ namespace Bex { namespace bexio
             session_mgr_.insert(session);
         }
 
-        // Í£Ö¹½ÓÊÜÁ¬½Ó
+        // åœæ­¢æ¥å—è¿æ¥
         void stop_accept()
         {
             error_code ec;
@@ -221,7 +221,7 @@ namespace Bex { namespace bexio
             acceptor_.close(ec);
         }
 
-        // Á¬½ÓÉ¾³ıÆ÷
+        // è¿æ¥åˆ é™¤å™¨
         void session_deleter(session_type * sp)
         {
             session_mgr_.erase(sp);
@@ -234,13 +234,13 @@ namespace Bex { namespace bexio
             deallocate<allocator>(sp);
         }
 
-        // ÓÅÑÅµØ¹Ø±ÕËùÓĞÁ¬½Ó
+        // ä¼˜é›…åœ°å…³é—­æ‰€æœ‰è¿æ¥
         void shutdown_sessions()
         {
             session_mgr_.for_each(BEX_IO_BIND(&session_type::shutdown, _1));
         }
 
-        // Ç¿ÖÆµØ¹Ø±ÕËùÓĞÁ¬½Ó
+        // å¼ºåˆ¶åœ°å…³é—­æ‰€æœ‰è¿æ¥
         void terminate_sessions()
         {
             session_mgr_.for_each(BEX_IO_BIND(&session_type::terminate, _1));
@@ -252,34 +252,34 @@ namespace Bex { namespace bexio
         // acceptor
         acceptor acceptor_;
 
-        // Á¬½Ó¹ÜÀíÆ÷
+        // è¿æ¥ç®¡ç†å™¨
         session_mgr_type session_mgr_;
 
-        // ÊÇ·ñ¹¤×÷ÖĞ
+        // æ˜¯å¦å·¥ä½œä¸­
         sentry<inter_lock> running_;
 
-        // ´íÎóÂë(Ö»¼ÇÂ¼µÚÒ»¸ö´íÎó)
+        // é”™è¯¯ç (åªè®°å½•ç¬¬ä¸€ä¸ªé”™è¯¯)
         error_code ec_;
 
-        // Ö´ĞĞÖĞµÄacceptÇëÇóÊı
+        // æ‰§è¡Œä¸­çš„acceptè¯·æ±‚æ•°
         std::atomic<long> accept_count_;
 
-        // ÓÅÑÅµØ¹Ø±ÕÖĞ
+        // ä¼˜é›…åœ°å…³é—­ä¸­
         sentry<bool> shutdowning_;
 
-        // Ñ¡Ïî
+        // é€‰é¡¹
         shared_ptr<options> opts_;
 
-        // »Øµ÷
+        // å›è°ƒ
         shared_ptr<callback_type> callback_;
 
-        // ÎÕÊÖ³ö´í»Øµ÷
+        // æ¡æ‰‹å‡ºé”™å›è°ƒ
         OnHandshakeError on_handshake_error_;
 
-        // loopÄ£Ê½µÄ»Øµ÷¶ÓÁĞ
+        // loopæ¨¡å¼çš„å›è°ƒé˜Ÿåˆ—
         io_service callback_list;
 
-        // ±êÊ¶×ÔÉíÊÇ·ñ´æ»îµÄcondition
+        // æ ‡è¯†è‡ªèº«æ˜¯å¦å­˜æ´»çš„condition
         handler_condition_type live_cond_;
     };
     

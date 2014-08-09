@@ -38,7 +38,7 @@
 namespace Bex { namespace serialization
 {
     //////////////////////////////////////////////////////////////////////////
-    /// ¶ş½øÖÆÊı¾İÁ÷°ü×°Àà
+    /// äºŒè¿›åˆ¶æ•°æ®æµåŒ…è£…ç±»
     struct binary_wrapper
     {
         char *      m_data;
@@ -61,7 +61,7 @@ namespace Bex { namespace serialization
     };
 
     //////////////////////////////////////////////////////////////////////////
-    /// ÎÄ±¾Êı¾İÁ÷°ü×°Àà
+    /// æ–‡æœ¬æ•°æ®æµåŒ…è£…ç±»
     template <typename T>
     struct text_wrapper
     {

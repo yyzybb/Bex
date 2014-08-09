@@ -23,7 +23,7 @@ namespace Bex
     public:
         ~singleton()
         {
-            getInstance();  ///< 防止VC链接器将未引用的全局变量消除.
+            getInstance();  ///< 闃叉VC閾炬帴鍣ㄥ皢鏈紩鐢ㄧ殑鍏ㄥ眬鍙橀噺娑堥櫎.
         }
 
         static T& getInstance()

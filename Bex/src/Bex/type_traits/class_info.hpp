@@ -2,7 +2,7 @@
 #define __BEX_TYPE_TRAITS_CLASS_INFO_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// class_info ÓÃÓÚÊ¶±ğÀàµÄĞÅÏ¢
+/// class_info ç”¨äºè¯†åˆ«ç±»çš„ä¿¡æ¯
 #include <Bex/type_traits/class_info/has_const_int.hpp>
 #include <Bex/type_traits/class_info/has_member_data.hpp>
 #include <Bex/type_traits/class_info/has_member_function.hpp>
@@ -16,25 +16,25 @@
 
 //struct X
 //{
-//    int member_data;                                ///< OK! ÍêÃÀ
-//    static int static_member_data;                  ///< OK! ÍêÃÀ
-//    void member_function(int);                      ///< OK! ÍêÃÀ
-//    static int static_member_function(double);      ///< OK! ÍêÃÀ
+//    int member_data;                                ///< OK! å®Œç¾
+//    static int static_member_data;                  ///< OK! å®Œç¾
+//    void member_function(int);                      ///< OK! å®Œç¾
+//    static int static_member_function(double);      ///< OK! å®Œç¾
 //
-//    /// typedef ºÍ ×Ô¶¨ÒåÀàĞÍÔİÊ±ÎŞ·¨Ï¸ÖÂÇø·Ö
+//    /// typedef å’Œ è‡ªå®šä¹‰ç±»å‹æš‚æ—¶æ— æ³•ç»†è‡´åŒºåˆ†
 //    typedef int _typedef;           ///< OK!
 //    struct declare_struct;          ///< OK!
 //
 //    template <typename T>
-//    struct declare_template_struct; ///< ĞèÖ¸¶¨²ÎÊıÁĞ±í, ÊµÏÖ²ÎÊı¿É±äºó¿ÉÒÔ´ïµ½ÍêÃÀ
+//    struct declare_template_struct; ///< éœ€æŒ‡å®šå‚æ•°åˆ—è¡¨, å®ç°å‚æ•°å¯å˜åå¯ä»¥è¾¾åˆ°å®Œç¾
 //
 //    template <typename T>
-//    void member_template_function();    ///< ÓëstaticÏàÍ¬, ÎŞ·¨Ê¶±ğº¯ÊıÇ©Ãû
+//    void member_template_function();    ///< ä¸staticç›¸åŒ, æ— æ³•è¯†åˆ«å‡½æ•°ç­¾å
 //    template <typename T>
-//    static void static_member_template_function(); ///< ÓëstaticÏàÍ¬, ÎŞ·¨Ê¶±ğº¯ÊıÇ©Ãû
+//    static void static_member_template_function(); ///< ä¸staticç›¸åŒ, æ— æ³•è¯†åˆ«å‡½æ•°ç­¾å
 //
-//    static const int init_static_const_int_member_data = 0; ///< OK! ÓëÃ¶¾ÙÏàÍ¬
-//    enum { enum_number, }; ///< OK! Óëstatic const intÏàÍ¬
+//    static const int init_static_const_int_member_data = 0; ///< OK! ä¸æšä¸¾ç›¸åŒ
+//    enum { enum_number, }; ///< OK! ä¸static const intç›¸åŒ
 //};
 
 #endif //__BEX_TYPE_TRAITS_CLASS_INFO_HPP__

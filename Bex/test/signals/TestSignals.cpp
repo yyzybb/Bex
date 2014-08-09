@@ -61,7 +61,7 @@ public:
 int Player::s_index = 0;
 
 BOOST_AUTO_TEST_SUITE(s_signals)
-/// ÕýÈ·ÐÔ²âÊÔ
+/// æ­£ç¡®æ€§æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_signals)
 {
     Player p0, p1, p2;

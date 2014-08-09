@@ -5,10 +5,10 @@
 
 BOOST_AUTO_TEST_SUITE(s_range)
 
-/// ÕıÈ·ĞÔ²âÊÔ
+/// æ­£ç¡®æ€§æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_range)
 {
-    XDump("¿ªÊ¼²âÊÔ range");
+    XDump("å¼€å§‹æµ‹è¯• range");
 
     int v = 0;
     for (auto i : range(5))
@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE(t_range)
         v += i;
     BOOST_CHECK(v == (1 + 2));
 
-    XDump("½áÊø²âÊÔ range");
+    XDump("ç»“æŸæµ‹è¯• range");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

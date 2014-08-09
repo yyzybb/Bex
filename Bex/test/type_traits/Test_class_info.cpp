@@ -16,14 +16,14 @@ struct A<1>
 
 BOOST_AUTO_TEST_SUITE(s_class_info)
 
-/// ÕıÈ·ĞÔ²âÊÔ
+/// æ­£ç¡®æ€§æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_class_info)
 {
-    XDump("¿ªÊ¼²âÊÔ class_info");
+    XDump("å¼€å§‹æµ‹è¯• class_info");
 
     DumpX(has_const_int_sci<A<1> >::value);
 
-    XDump("½áÊø²âÊÔ class_info");
+    XDump("ç»“æŸæµ‹è¯• class_info");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

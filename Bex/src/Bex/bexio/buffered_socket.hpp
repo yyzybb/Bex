@@ -2,7 +2,7 @@
 #define __BEX_IO_BUFFERED_SOCKET_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// socketÖ®ÉÏ·â×°Ò»²ãÊÕ·¢»º³åÇø
+/// socketä¹‹ä¸Šå°è£…ä¸€å±‚æ”¶å‘ç¼“å†²åŒº
 
 #include "bexio_fwd.hpp"
 #include "allocator.hpp"
@@ -22,8 +22,8 @@ namespace Bex { namespace bexio
         typedef boost::function<void(error_code, std::size_t)> callback_t;
 
     public:
-        // @rbsize : ½ÓÊÕ»º³åÇø´óĞ¡
-        // @wbsize : ·¢ËÍ»º³åÇø´óĞ¡
+        // @rbsize : æ¥æ”¶ç¼“å†²åŒºå¤§å°
+        // @wbsize : å‘é€ç¼“å†²åŒºå¤§å°
         template <typename ... Args>
         buffered_socket(std::size_t rbsize, std::size_t wbsize, Args && ... args)
             : socket_(std::forward<Args>(args)...)
@@ -40,13 +40,13 @@ namespace Bex { namespace bexio
             alloc_t().deallocate((void*)write_storage_);
         } 
         
-        // »ñÈ¡ÏÂÒ»²ã
+        // è·å–ä¸‹ä¸€å±‚
         next_layer_type& next_layer()
         {
             return socket_;
         }
 
-        // »ñÈ¡×îµ×²ã
+        // è·å–æœ€åº•å±‚
         lowest_layer_type& lowest_layer()
         {
             return ::Bex::bexio::lowest_layer(socket_);
@@ -58,33 +58,33 @@ namespace Bex { namespace bexio
             return socket_.get_io_service();
         }
 
-        // ¹Ø±Õ
+        // å…³é—­
         void close()
         {
             socket_.close();
         }
 
-        // ¹Ø±Õ
+        // å…³é—­
         error_code close(error_code & ec)
         {
             return socket_.close(ec);
         }
 
-        // Í¬²½Ğ´Èë(·¢ËÍ)Êı¾İ
+        // åŒæ­¥å†™å…¥(å‘é€)æ•°æ®
         template <typename ConstBufferSequence>
         std::size_t write_some(const ConstBufferSequence& buffers)
         {
             return socket_.write_some(buffers);
         }
 
-        // Í¬²½Ğ´Èë(·¢ËÍ)Êı¾İ
+        // åŒæ­¥å†™å…¥(å‘é€)æ•°æ®
         template <typename ConstBufferSequence>
         std::size_t write_some(const ConstBufferSequence& buffers, error_code& ec)
         {
             return socket_.write_some(buffers, ec);
         }
 
-        // Òì²½Ğ´Èë(·¢ËÍ)Êı¾İ
+        // å¼‚æ­¥å†™å…¥(å‘é€)æ•°æ®
         // @WriteHandler : void(boost::system::error_code, std::size_t))
         template <typename WriteHandler>
         bool async_write_some(WriteHandler const& handler)
@@ -99,14 +99,14 @@ namespace Bex { namespace bexio
             return true;
         }
 
-        // Í¬²½¶ÁÈ¡(½ÓÊÕ)Êı¾İ
+        // åŒæ­¥è¯»å–(æ¥æ”¶)æ•°æ®
         template <typename MutableBufferSequence>
         std::size_t read_some(const MutableBufferSequence& buffers)
         {
             return socket_.read_some(buffers);
         }
 
-        // Í¬²½¶ÁÈ¡(½ÓÊÕ)Êı¾İ
+        // åŒæ­¥è¯»å–(æ¥æ”¶)æ•°æ®
         template <typename MutableBufferSequence>
         std::size_t read_some(const MutableBufferSequence& buffers,
             boost::system::error_code& ec)
@@ -114,7 +114,7 @@ namespace Bex { namespace bexio
             return socket_.read_some(buffers, ec);
         }
 
-        // Òì²½¶ÁÈ¡(½ÓÊÕ)Êı¾İ
+        // å¼‚æ­¥è¯»å–(æ¥æ”¶)æ•°æ®
         // @ReadHandler : void(boost::system::error_code, std::size_t)
         template <typename ReadHandler>
         bool async_read_some(ReadHandler const& handler)
@@ -129,57 +129,57 @@ namespace Bex { namespace bexio
             return true;
         }
 
-        // ÌáÈ¡½ÓÊÕ»º³åÇøÖĞµÄÒÑÊÕµ½µÄÊı¾İ
+        // æå–æ¥æ”¶ç¼“å†²åŒºä¸­çš„å·²æ”¶åˆ°çš„æ•°æ®
         template <typename ConstBufferSequence>
         std::size_t get_buffers(ConstBufferSequence & buffers) const
         {
             return read_buffer_.get_buffers(buffers);
         }
 
-        // ¶ÁÈ¡Êı¾İÍê³É
+        // è¯»å–æ•°æ®å®Œæˆ
         void read_done(std::size_t size)
         {
             read_buffer_.gbump(size);
         }
 
-        // ½ÓÊÕ»º³åÇø¿É¶ÁÊı¾İ³¤¶È
+        // æ¥æ”¶ç¼“å†²åŒºå¯è¯»æ•°æ®é•¿åº¦
         std::size_t getable_read() const
         {
             return read_buffer_.gsize();
         }
 
-        // ½ÓÊÕ»º³åÇø¿ÉĞ´Êı¾İ³¤¶È
+        // æ¥æ”¶ç¼“å†²åŒºå¯å†™æ•°æ®é•¿åº¦
         std::size_t putable_read() const
         {
             return read_buffer_.psize();
         }
 
-        // ÌáÈ¡·¢ËÍ»º³åÇøÖĞµÄ¿ÉĞ´Êı¾İ¶Î
+        // æå–å‘é€ç¼“å†²åŒºä¸­çš„å¯å†™æ•°æ®æ®µ
         template <typename MutableBufferSequence>
         std::size_t put_buffers(MutableBufferSequence & buffers) const
         {
             return write_buffer_.put_buffers(buffers);
         }
 
-        // Ğ´ÈëÊı¾İÍê³É
+        // å†™å…¥æ•°æ®å®Œæˆ
         void write_done(std::size_t size)
         {
             write_buffer_.pbump(size);
         }
 
-        // ·¢ËÍ»º³åÇø¿É¶ÁÊı¾İ³¤¶È
+        // å‘é€ç¼“å†²åŒºå¯è¯»æ•°æ®é•¿åº¦
         std::size_t getable_write() const
         {
             return write_buffer_.gsize();
         }
 
-        // ·¢ËÍ»º³åÇø¿ÉĞ´Êı¾İ³¤¶È
+        // å‘é€ç¼“å†²åŒºå¯å†™æ•°æ®é•¿åº¦
         std::size_t putable_write() const
         {
             return write_buffer_.psize();
         }
 
-        // ½«Òª·¢ËÍµÄÊı¾İĞ´Èë·¢ËÍ»º³åÇøÖĞ
+        // å°†è¦å‘é€çš„æ•°æ®å†™å…¥å‘é€ç¼“å†²åŒºä¸­
         std::size_t sputn(char const* data, std::size_t size)
         {
             return write_buffer_.sputn(data, size);
@@ -191,7 +191,7 @@ namespace Bex { namespace bexio
             return write_buffer_.sputn_to_buffers(buffers);
         }
 
-        // ½«½ÓÊÕ»º³åÇøÖĞÒÑ½ÓÊÕµ½Êı¾İcopyµ½MutableBufferSequenceÖĞ
+        // å°†æ¥æ”¶ç¼“å†²åŒºä¸­å·²æ¥æ”¶åˆ°æ•°æ®copyåˆ°MutableBufferSequenceä¸­
         std::size_t sgetn(char const* data, std::size_t size)
         {
             return read_buffer_.sgetn(data, size);

@@ -2,7 +2,7 @@
 #define __BEX_IO_CLIENT_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// ÓĞÁ¬½ÓĞ­ÒéµÄ¿Í»§¶Ë
+/// æœ‰è¿æ¥åè®®çš„å®¢æˆ·ç«¯
 #include "bexio_fwd.hpp"
 #include "handlers.hpp"
 #include "core.hpp"
@@ -48,7 +48,7 @@ namespace Bex { namespace bexio
                 boost::this_thread::sleep( boost::posix_time::milliseconds(1) );
         }
 
-        // ×èÈûÊ½Á¬½Ó
+        // é˜»å¡å¼è¿æ¥
         bool connect(endpoint const& addr)
         {
             if (is_running() || async_connecting_.is_set())
@@ -69,19 +69,19 @@ namespace Bex { namespace bexio
             session_ = make_shared_ptr<session_type, allocator>();
             session_->initialize(sp, opts_, callback_);
 
-            // Æô¶¯¹¤×÷Ïß³Ì
+            // å¯åŠ¨å·¥ä½œçº¿ç¨‹
             mstrand_service_.startup(opts_->workthread_count);
             running_.set();
             return true;
         }
 
-        // ÉèÖÃÒì²½Á¬½Ó»Øµ÷
+        // è®¾ç½®å¼‚æ­¥è¿æ¥å›è°ƒ
         void set_async_connect_callback(OnAsyncConnect const& callback)
         {
             async_connect_callback_ = callback;
         }
 
-        // Òì²½Á¬½Ó
+        // å¼‚æ­¥è¿æ¥
         bool async_connect(endpoint const& addr)
         {
             if (is_running() || !async_connecting_.set())
@@ -95,12 +95,12 @@ namespace Bex { namespace bexio
                 BEX_IO_BIND(&this_type::on_async_connect, this, BEX_IO_PH_ERROR
                     , sp, addr));
 
-            // Æô¶¯¹¤×÷Ïß³Ì
+            // å¯åŠ¨å·¥ä½œçº¿ç¨‹
             mstrand_service_.startup(opts_->workthread_count);
             return true;
         }
 
-        // ´ø³¬Ê±µÄÒì²½Á¬½Ó
+        // å¸¦è¶…æ—¶çš„å¼‚æ­¥è¿æ¥
         bool async_connect_timed(endpoint const& addr, boost::posix_time::time_duration time)
         {
             if (is_running() || !async_connecting_.set())
@@ -110,24 +110,24 @@ namespace Bex { namespace bexio
             if (ec_)
                 return false;
 
-            /// Á¬½Ó³¬Ê±¼ÆÊ±Æ÷, Òì²½µÈ´ı
+            /// è¿æ¥è¶…æ—¶è®¡æ—¶å™¨, å¼‚æ­¥ç­‰å¾…
             auto timed_handler = timer_handler<allocator>(BEX_IO_BIND(&this_type::on_async_connect_timed, this, BEX_IO_PH_ERROR, sp, addr, time), ios_);
             timed_handler.expires_from_now(time);
             timed_handler.async_wait(BEX_IO_BIND(&this_type::on_overtime, this, BEX_IO_PH_ERROR, sp, bee::connect_overtime));
             sp->lowest_layer().async_connect(addr, timed_handler);
 
-            // Æô¶¯¹¤×÷Ïß³Ì
+            // å¯åŠ¨å·¥ä½œçº¿ç¨‹
             mstrand_service_.startup(opts_->workthread_count);
             return true;
         }
 
-        // Á¬½ÓÊÇ·ñOK
+        // è¿æ¥æ˜¯å¦OK
         bool is_running() const
         {
             return (session_ && !session_->is_disconnected());
         }
 
-        // ·¢ËÍÊı¾İ
+        // å‘é€æ•°æ®
         bool send(char const* buffer, std::size_t size)
         {
             if (is_running())
@@ -136,53 +136,53 @@ namespace Bex { namespace bexio
             return false;
         }
 
-        // ÓÅÑÅµØ¹Ø±ÕÁ¬½Ó
+        // ä¼˜é›…åœ°å…³é—­è¿æ¥
         void shutdown()
         {
             if (is_running())
                 session_->shutdown();
         }
 
-        // Ç¿ÖÆµØ¹Ø±ÕÁ¬½Ó
+        // å¼ºåˆ¶åœ°å…³é—­è¿æ¥
         void terminate()
         {
             if (is_running())
                 session_->terminate();
         }
 
-        // ´íÎóÔ­Òò
+        // é”™è¯¯åŸå› 
         error_code get_error_code() const
         {
             return ec_;
         }
 
-        // ÉèÖÃÁ¬½ÓÏûÏ¢»Øµ÷
+        // è®¾ç½®è¿æ¥æ¶ˆæ¯å›è°ƒ
         template <typename session_type::callback_em CallbackType, typename F>
         void set_callback(F const& f)
         {
             session_type::set_callback(*callback_, f);
         }
 
-        // ÉèÖÃÎÕÊÖ³ö´í»Øµ÷
+        // è®¾ç½®æ¡æ‰‹å‡ºé”™å›è°ƒ
         void set_handshake_error_callbcak(OnHandshakeError const& f)
         {
             on_handshake_error_ = f;
         }
 
     private:
-        // Òì²½Á¬½Ó»Øµ÷
+        // å¼‚æ­¥è¿æ¥å›è°ƒ
         void on_async_connect(error_code const& ec, socket_ptr sp, endpoint addr)
         {
             if (ec)
             {
-                // ´íÎó
+                // é”™è¯¯
                 ec_ = ec;
                 async_connecting_.reset();
-                notify_onconnect();    // Í¨ÖªÁ¬½Ó½á¹û
+                notify_onconnect();    // é€šçŸ¥è¿æ¥ç»“æœ
             }
             else if (sp->lowest_layer().remote_endpoint() == sp->lowest_layer().local_endpoint())
             {
-                // »Ø»·¼ÙÁ´½Ó, ÖØÊÔ.
+                // å›ç¯å‡é“¾æ¥, é‡è¯•.
                 async_connecting_.reset();
                 if (!async_connect(addr))
                 {
@@ -192,25 +192,25 @@ namespace Bex { namespace bexio
             }
             else
             {
-                // Á¬½Ó³É¹¦, ÎÕÊÖ
+                // è¿æ¥æˆåŠŸ, æ¡æ‰‹
                 async_handshake(sp, addr);
             }
         }
 
-        // Òì²½Á¬½Ó»Øµ÷(´ø³¬Ê±)
+        // å¼‚æ­¥è¿æ¥å›è°ƒ(å¸¦è¶…æ—¶)
         void on_async_connect_timed(error_code const& ec, socket_ptr sp
             , endpoint addr, boost::posix_time::time_duration timed)
         {
             if (ec)
             {
-                // ´íÎó
+                // é”™è¯¯
                 ec_ = ec;
                 async_connecting_.reset();
                 notify_onconnect();
             }
             else if (sp->lowest_layer().remote_endpoint() == sp->lowest_layer().local_endpoint())
             {
-                // »Ø»·¼ÙÁ´½Ó, ÖØÊÔ.
+                // å›ç¯å‡é“¾æ¥, é‡è¯•.
                 async_connecting_.reset();
                 if (!async_connect_timed(addr, timed))
                 {
@@ -221,12 +221,12 @@ namespace Bex { namespace bexio
             }
             else
             {
-                // Á¬½Ó³É¹¦, ÎÕÊÖ
+                // è¿æ¥æˆåŠŸ, æ¡æ‰‹
                 async_handshake(sp, addr);
             }
         }
 
-        // ÎÕÊÖ
+        // æ¡æ‰‹
         void async_handshake(socket_ptr const& sp, endpoint const& addr)
         {
             async_handshaking_.set();
@@ -242,7 +242,7 @@ namespace Bex { namespace bexio
                 protocol_traits_type::async_handshake(sp, ssl::stream_base::client, handler);
         }
 
-        // ÎÕÊÖ»Øµ÷
+        // æ¡æ‰‹å›è°ƒ
         void on_async_handshake(error_code const& ec, socket_ptr sp, endpoint addr)
         {
             async_handshaking_.reset();
@@ -267,13 +267,13 @@ namespace Bex { namespace bexio
         }
 
 
-        // ³¬Ê±»Øµ÷
+        // è¶…æ—¶å›è°ƒ
         void on_overtime(error_code const& ec, socket_ptr sp, bee error_enum)
         {
             if (ec)
                 return ;
 
-            // ³¬Ê±ÁË
+            // è¶…æ—¶äº†
             error_code lec;
             sp->lowest_layer().cancel(lec);
             sp->lowest_layer().shutdown(socket_base::shutdown_both, lec);
@@ -283,7 +283,7 @@ namespace Bex { namespace bexio
             notify_onconnect();
         }
 
-        // Í¨ÖªÁ¬½Ó½á¹û
+        // é€šçŸ¥è¿æ¥ç»“æœ
         void notify_onconnect()
         {
             if (async_connect_callback_)
@@ -293,37 +293,37 @@ namespace Bex { namespace bexio
     private:
         io_service & ios_;
 
-        // Á¬½Ó
+        // è¿æ¥
         session_ptr session_;
 
-        // Òì²½Á¬½ÓÖĞ
+        // å¼‚æ­¥è¿æ¥ä¸­
         sentry<inter_lock> async_connecting_;
 
-        // ÎÕÊÖÖĞ
+        // æ¡æ‰‹ä¸­
         sentry<inter_lock> async_handshaking_;
 
-        // Òì²½Á¬½Ó»Øµ÷
+        // å¼‚æ­¥è¿æ¥å›è°ƒ
         OnAsyncConnect async_connect_callback_;
 
-        // Òì²½Á¬½Ó»Øµ÷Í¨Öª
+        // å¼‚æ­¥è¿æ¥å›è°ƒé€šçŸ¥
         sentry<bool> notify_async_connect_;
 
-        // Á¬½Ó³É¹¦
+        // è¿æ¥æˆåŠŸ
         sentry<inter_lock> running_;
 
-        // Á¬½Ó´íÎóÂë
+        // è¿æ¥é”™è¯¯ç 
         error_code ec_;
 
-        // ¹¤×÷Ïß³Ì·şÎñ
+        // å·¥ä½œçº¿ç¨‹æœåŠ¡
         mstrand_service_type & mstrand_service_;
 
-        // Ñ¡Ïî
+        // é€‰é¡¹
         shared_ptr<options> opts_;
 
-        // »Øµ÷
+        // å›è°ƒ
         shared_ptr<callback_type> callback_;
 
-        // ÎÕÊÖ³ö´í»Øµ÷
+        // æ¡æ‰‹å‡ºé”™å›è°ƒ
         OnHandshakeError on_handshake_error_;
     };
 

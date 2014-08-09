@@ -2,7 +2,7 @@
 #define __BEX_UTILITY_LOCK_PTR_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// 锁定式的指针
+/// 閿佸畾寮忕殑鎸囬拡
 
 #include <boost/bind.hpp>
 #include <boost/function.hpp>

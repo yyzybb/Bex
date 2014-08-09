@@ -2,7 +2,7 @@
 #define __BEX_TYPE_TRAITS_DEFINES_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// type_traitsËùÐèµÄ»ù±¾¶¨Òå
+/// type_traitsæ‰€éœ€çš„åŸºæœ¬å®šä¹‰
 #include <Bex/config.hpp>
 
 namespace Bex

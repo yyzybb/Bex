@@ -1,19 +1,20 @@
 #ifndef __BEX_STREAM_CONVERT_BASE_CONVERT_HPP__
 #define __BEX_STREAM_CONVERT_BASE_CONVERT_HPP__
 
+#include <Bex/config.hpp>
 #include <Bex/type_traits/class_info.hpp>
 #include <Bex/stream/serialization/utility.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 
 //////////////////////////////////////////////////////////////////////////
-/// Êı¾İ×ª»»Æ÷(¿ÉÓëserialization¿âÅäºÏÊ¹ÓÃ)
+/// æ•°æ®è½¬æ¢å™¨(å¯ä¸serializationåº“é…åˆä½¿ç”¨)
 namespace Bex { namespace convert
 {
-    /// convert¿Õ»ùÀà
+    /// convertç©ºåŸºç±»
     class empty_base_convert {};
 
-    /// convert»ùÀà
+    /// convertåŸºç±»
     template <class Archive, class Convert>
     class basic_serialize_convert
         : public empty_base_convert
@@ -42,14 +43,14 @@ namespace Bex { namespace convert
     struct convert_traits_helper
         : public archive_traits<typename T::archive_type>
     {
-        static const bool is_convert = true;
+        static BEX_CONSTEXPR bool is_convert = true;
     };
 
     template <typename T>
     struct convert_traits_helper<T, false>
         : public archive_traits<void>
     {
-        static const bool is_convert = false;
+        static BEX_CONSTEXPR bool is_convert = false;
     };
 
     template <typename T>

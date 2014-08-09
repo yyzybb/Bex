@@ -4,10 +4,12 @@
 #include <iosfwd>
 #include <streambuf>
 #include <boost/noncopyable.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/assert.hpp>
 #include <Bex/config.hpp>
 
 //////////////////////////////////////////////////////////////////////////
-/// 固定长度的streambuf
+/// 鍥哄畾闀垮害鐨剆treambuf
 
 namespace Bex { namespace stream
 {

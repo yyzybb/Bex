@@ -2,7 +2,7 @@
 #define __BEX_IO_SOCKET_OPTIONS_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// socketÑ¡ÏîÀ©Õ¹
+/// socketé€‰é¡¹æ‰©å±•
 #include "bexio_fwd.hpp"
 #include <boost/asio/detail/socket_types.hpp>
 
@@ -50,7 +50,7 @@ namespace Bex { namespace bexio { namespace pltf
             return ;
         }
 
-        int default_count = 5;  // Ä¬ÈÏ×î¶à¿ÉÔÊĞí¶ªÊ§µÄĞÄÌø°üÊıÁ¿
+        int default_count = 5;  // é»˜è®¤æœ€å¤šå¯å…è®¸ä¸¢å¤±çš„å¿ƒè·³åŒ…æ•°é‡
         if(::setsockopt(s, SOL_TCP, TCP_KEEPCNT
             , (void*)&default_count, sizeof(default_count)) == -1)
         {
@@ -66,9 +66,9 @@ namespace Bex { namespace bexio { namespace pltf
 } //namespace pltf
 
     //////////////////////////////////////////////////////////////////////////
-    /// ÉèÖÃĞÄÌø¼ì²â
-    // @idle: Ê×´ÎÌ½²â¿ªÊ¼Ç°µÄtcpÎŞÊı¾İÊÕ·¢¿ÕÏĞÊ±¼ä(µ¥Î»: Ãë)
-    // @interval: Ã¿´ÎÌ½²âµÄ¼ä¸ôÊ±¼ä(µ¥Î»: Ãë)
+    /// è®¾ç½®å¿ƒè·³æ£€æµ‹
+    // @idle: é¦–æ¬¡æ¢æµ‹å¼€å§‹å‰çš„tcpæ— æ•°æ®æ”¶å‘ç©ºé—²æ—¶é—´(å•ä½: ç§’)
+    // @interval: æ¯æ¬¡æ¢æµ‹çš„é—´éš”æ—¶é—´(å•ä½: ç§’)
     template <typename Protocol, typename SocketService>
     inline void set_keepalive(basic_socket<Protocol, SocketService> & s
         , int idle, int interval, boost::system::error_code & ec)

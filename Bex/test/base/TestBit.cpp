@@ -3,10 +3,10 @@ using namespace Bex;
 
 BOOST_AUTO_TEST_SUITE(s_test_base)
 
-/// ÕýÈ·ÐÔ²âÊÔ
+/// æ­£ç¡®æ€§æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_test_bit)
 {
-    XDump(" ¿ªÊ¼²âÊÔ bit.hpp ");
+    XDump(" å¼€å§‹æµ‹è¯• bit.hpp ");
 
     /// ------ BEX_LEAST_BIT
     BOOST_CHECK_EQUAL(BEX_LEAST_BIT(0), 1);
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(t_test_bit)
     BOOST_CHECK(BEX_TEST_BIT_VALUE(0x3f, 0x07));
     BOOST_CHECK(BEX_TEST_BIT_VALUE(0x3f, 0x30));
 
-    XDump(" ½áÊø²âÊÔ bit.hpp ");
+    XDump(" ç»“æŸæµ‹è¯• bit.hpp ");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

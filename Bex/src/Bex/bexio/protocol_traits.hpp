@@ -2,7 +2,7 @@
 #define __BEX_IO_PROTOCOL_TRAITS_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// Ğ­ÒéÏà¹Ø½Ó¿Ú´¦Àí
+/// åè®®ç›¸å…³æ¥å£å¤„ç†
 #include "bexio_fwd.hpp"
 #include <boost/asio/ssl/stream_base.hpp>
 
@@ -51,7 +51,7 @@ namespace Bex { namespace bexio
     //    : has_initialize_2<Protocol, F, Id>
     //{};
 
-    /// Öğ²ã¼ì²â
+    /// é€å±‚æ£€æµ‹
     //template <typename Protocol, typename F, typename Id>
     //struct has_initialize
     //    : has_initialize_1<Protocol, F, Id
@@ -284,14 +284,14 @@ namespace Bex { namespace bexio
     {
         typedef typename Protocol::socket_ptr socket_ptr;
 
-        // ³õÊ¼»¯
+        // åˆå§‹åŒ–
         template <typename F, typename Id>
         static void initialize(Protocol & proto, shared_ptr<options> const& opts, F const& f, Id const& id)
         {
             initialize_c<Protocol, F, Id>()(proto, opts, f, id);
         }
 
-        // Òì²½ÎÕÊÖ
+        // å¼‚æ­¥æ¡æ‰‹
         template <typename Handler>
         static void async_handshake(socket_ptr sp,
             ssl::stream_base::handshake_type hstype, BEX_MOVE_ARG(Handler) handler)
@@ -299,13 +299,13 @@ namespace Bex { namespace bexio
             async_handshake_c<Protocol, Handler>()(sp, hstype, BEX_MOVE_CAST(Handler)(handler));
         }
 
-        // Í¬²½ÎÕÊÖ
+        // åŒæ­¥æ¡æ‰‹
         static void handshake(socket_ptr sp, ssl::stream_base::handshake_type hstype, error_code & ec)
         {
             handshake_c<Protocol>()(sp, hstype, ec);
         }
 
-        // Òì²½ÓÅÑÅµØ¹Ø±Õ
+        // å¼‚æ­¥ä¼˜é›…åœ°å…³é—­
         template <typename Handler>
         static void async_shutdown(socket_ptr sp, BEX_MOVE_ARG(Handler) handler)
         {

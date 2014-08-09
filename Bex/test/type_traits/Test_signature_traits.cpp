@@ -9,10 +9,10 @@ class A
 
 BOOST_AUTO_TEST_SUITE(s_signature_traits)
 
-/// ÕıÈ·ĞÔ²âÊÔ
+/// æ­£ç¡®æ€§æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_signature_traits)
 {
-    XDump("¿ªÊ¼²âÊÔ signature_traits");
+    XDump("å¼€å§‹æµ‹è¯• signature_traits");
 
     {
         typedef signature_traits<void()> st;
@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(t_signature_traits)
         DumpX(typeid(st::member_function<A>::type).name());
     }
 
-    XDump("½áÊø²âÊÔ signature_traits");
+    XDump("ç»“æŸæµ‹è¯• signature_traits");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

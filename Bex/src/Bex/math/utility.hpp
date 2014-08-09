@@ -3,7 +3,7 @@
 
 namespace Bex
 {
-    /// ³Ë·½¼ÆËã
+    /// ä¹˜æ–¹è®¡ç®—
     template <int X, int N = 2>
     struct static_pow
     {

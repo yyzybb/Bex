@@ -2,7 +2,7 @@
 #define __BEX_MATH_COMPRESS_NUMERIC__
 
 //////////////////////////////////////////////////////////////////////////
-/// Ñ¹Ëõ´æ´¢µÄÕûÊýÀàÐÍ
+/// åŽ‹ç¼©å­˜å‚¨çš„æ•´æ•°ç±»åž‹
 
 #include <Bex/base.hpp>
 #include <boost/static_assert.hpp>

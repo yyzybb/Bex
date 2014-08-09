@@ -9,13 +9,13 @@ class A
 
 BOOST_AUTO_TEST_SUITE(s_remove_all)
 
-/// ÕıÈ·ĞÔ²âÊÔ
+/// æ­£ç¡®æ€§æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_remove_all)
 {
-    XDump("¿ªÊ¼²âÊÔ remove_all");
+    XDump("å¼€å§‹æµ‹è¯• remove_all");
 
     //////////////////////////////////////////////////////////////////////////
-    /// µ¥¸öĞŞÊÎ
+    /// å•ä¸ªä¿®é¥°
     typedef int T;
     typedef int T1;
     typedef int* T2;
@@ -32,14 +32,14 @@ BOOST_AUTO_TEST_CASE(t_remove_all)
     BOOST_STATIC_ASSERT(( boost::is_same<remove_all<T6>::type, T>::value ));
 
     //////////////////////////////////////////////////////////////////////////
-    /// ¶à¸öĞŞÊÎ
+    /// å¤šä¸ªä¿®é¥°
     typedef int * volatile const& T11;
     typedef volatile const int *& T12;
     BOOST_STATIC_ASSERT(( boost::is_same<remove_all<T11>::type, T>::value ));
     BOOST_STATIC_ASSERT(( boost::is_same<remove_all<T12>::type, T>::value ));
 
     //////////////////////////////////////////////////////////////////////////
-    /// ¶à²ãÇ¶Ì×ĞŞÊÎ
+    /// å¤šå±‚åµŒå¥—ä¿®é¥°
     typedef int ** T21;
     typedef int **& T22;
     typedef int const * const T23;
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(t_remove_all)
     BOOST_STATIC_ASSERT(( boost::is_same<remove_all<T25>::type, T>::value ));
     BOOST_STATIC_ASSERT(( boost::is_same<remove_all<T26>::type, T>::value ));
 
-    XDump("½áÊø²âÊÔ remove_all");
+    XDump("ç»“æŸæµ‹è¯• remove_all");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -5,7 +5,7 @@
 #include "text_oarchive.hpp"
 
 //////////////////////////////////////////////////////////////////////////
-/// ĞòÁĞ»¯ in/out
+/// åºåˆ—åŒ– in/out
 
 namespace Bex { namespace serialization
 {

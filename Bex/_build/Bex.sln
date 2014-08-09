@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test.vcxproj", "{45
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_bexio", "test_bexio.vcxproj", "{195EF7B6-B990-4AED-9C60-CE5AD3472D1E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_linux", "test_linux\test_linux.vcxproj", "{90657F7E-07C0-4339-A115-C31EE01AA73D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +29,10 @@ Global
 		{195EF7B6-B990-4AED-9C60-CE5AD3472D1E}.Debug|Win32.Build.0 = Debug|Win32
 		{195EF7B6-B990-4AED-9C60-CE5AD3472D1E}.Release|Win32.ActiveCfg = Release|Win32
 		{195EF7B6-B990-4AED-9C60-CE5AD3472D1E}.Release|Win32.Build.0 = Release|Win32
+		{90657F7E-07C0-4339-A115-C31EE01AA73D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{90657F7E-07C0-4339-A115-C31EE01AA73D}.Debug|Win32.Build.0 = Debug|Win32
+		{90657F7E-07C0-4339-A115-C31EE01AA73D}.Release|Win32.ActiveCfg = Release|Win32
+		{90657F7E-07C0-4339-A115-C31EE01AA73D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

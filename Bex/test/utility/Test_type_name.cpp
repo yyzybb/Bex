@@ -6,10 +6,10 @@ struct X;
 
 BOOST_AUTO_TEST_SUITE(s_type_name)
 
-/// ÕıÈ·ĞÔ²âÊÔ
+/// æ­£ç¡®æ€§æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_type_name)
 {
-    XDump("¿ªÊ¼²âÊÔ type_name");
+    XDump("å¼€å§‹æµ‹è¯• type_name");
 
     std::string icr = real_typename<int const&>();
     std::string ia = real_typename<int[4]>();
@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE(t_type_name)
     BOOST_CHECK(vfcp == "void (__thiscall X::*)(void)");
 #endif
 
-    XDump("½áÊø²âÊÔ type_name");
+    XDump("ç»“æŸæµ‹è¯• type_name");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

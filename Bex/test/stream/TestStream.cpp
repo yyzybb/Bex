@@ -1,5 +1,6 @@
 #include "TestPCH.h"
 #include <Bex/stream.hpp>
+#include <Bex/locale/charset_cvt.h>
 
 struct TestStreamStruct
 {
@@ -167,11 +168,11 @@ struct TestStreamStruct
         ret &= check_hashmap_container(map, rhs.map, pr_v2);
         ret &= check_hashmap_container(mmap, rhs.mmap, pr_v2);
 #if defined(_MSC_VER)
-        ret &= check_hashmap_container(hmap, rhs.hmap, std::equal_to<>() );
+        ret &= check_hashmap_container(hmap, rhs.hmap, Bex::equal_to<>() );
 #endif //defined(_MSC_VER)
 #if defined(BOOST_HAS_TR1_UNORDERED_MAP)
-        ret &= check_hashmap_container(umap, rhs.umap, std::equal_to<>() );
-        ret &= check_hashmultimap_container(ummap, rhs.ummap, std::equal_to<>() );
+        ret &= check_hashmap_container(umap, rhs.umap, Bex::equal_to<>() );
+        ret &= check_hashmultimap_container(ummap, rhs.ummap, Bex::equal_to<>() );
 #endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
 #if defined(BOOST_HAS_TR1_UNORDERED_SET)
         ret &= check_hashset_container(uset, rhs.uset);
@@ -181,7 +182,7 @@ struct TestStreamStruct
         ret &= check_container(sarray, rhs.sarray);
 #endif //defined(BEX_SUPPORT_CXX11)
         ret &= check_container(barray, rhs.barray);
-        ret &= check_hashmap_container(bbimap.left, rhs.bbimap.left, std::equal_to<>() );
+        ret &= check_hashmap_container(bbimap.left, rhs.bbimap.left, Bex::equal_to<>() );
         return ret;
     }
 
@@ -363,18 +364,22 @@ inline void assert_convert(T const&
     , bool is_convert, bool is_load, bool is_save, bool is_unkown)
 {
     typedef convert_traits<T> traits;
-    BOOST_CHECK_EQUAL(traits::is_convert, is_convert);
-    BOOST_CHECK_EQUAL(traits::is_load, is_load);
-    BOOST_CHECK_EQUAL(traits::is_save, is_save);
-    BOOST_CHECK_EQUAL(traits::is_unkown, is_unkown);
+    bool _is_convert = traits::is_convert;
+    bool _is_load = traits::is_load;
+    bool _is_save = traits::is_save;
+    bool _is_unkown = traits::is_unkown;
+    BOOST_CHECK_EQUAL(_is_convert, is_convert);
+    BOOST_CHECK_EQUAL(_is_load, is_load);
+    BOOST_CHECK_EQUAL(_is_save, is_save);
+    BOOST_CHECK_EQUAL(_is_unkown, is_unkown);
 }
 
 BOOST_AUTO_TEST_SUITE(s_stream_suite)
 
-/// ²âÊÔconvert
+/// æµ‹è¯•convert
 BOOST_AUTO_TEST_CASE(t_stream_convert_case)
 {
-    XDump("¿ªÊ¼²âÊÔ stream.convert");
+    XDump("å¼€å§‹æµ‹è¯• stream.convert");
 
     std::string str;
     assert_convert(a2w_cvt<binary_iarchive>(str), true, true, false, false);
@@ -387,8 +392,8 @@ BOOST_AUTO_TEST_CASE(t_stream_convert_case)
         TestIncConvert obj, check;
         obj.i = 2;
         obj.s = 3;
-        obj.str = "ÎÒÃÇ";
-        strcpy(obj.arr_char, "Ó×ÖÉ");
+        obj.str = conv::u82a("æˆ‘ä»¬");
+        strcpy(obj.arr_char, conv::u82a("å¹¼ç¨š").c_str());
         BOOST_CHECK(binary_save(obj, buf, sizeof(buf)) > 0);
 
         BOOST_CHECK(*(int*)buf == 3);
@@ -401,10 +406,10 @@ BOOST_AUTO_TEST_CASE(t_stream_convert_case)
         BOOST_CHECK(strcmp(obj.arr_char, check.arr_char) == 0);
     }
 
-    XDump("½áÊø²âÊÔ stream.convert");
+    XDump("ç»“æŸæµ‹è¯• stream.convert");
 }
 
-/// ²âÊÔremove_all
+/// æµ‹è¯•remove_all
 BOOST_AUTO_TEST_CASE(t_stream_utility_case)
 {
     int i; check_function(i); check_class<int> cc_int;
@@ -434,10 +439,10 @@ BOOST_AUTO_TEST_CASE(t_stream_utility_case)
     int *& ref_pi = pi; check_function(ref_pi); check_class<int *&> cc_int_pr;
 }
 
-/// ²âÊÔstatic_streambuf
+/// æµ‹è¯•static_streambuf
 BOOST_AUTO_TEST_CASE(t_static_streambuf)
 {
-    XDump("¿ªÊ¼²âÊÔ static_streambuf");
+    XDump("å¼€å§‹æµ‹è¯• static_streambuf");
 
     const int buf_size = 12;
     char buf[buf_size] = {}, data[buf_size];
@@ -485,13 +490,13 @@ BOOST_AUTO_TEST_CASE(t_static_streambuf)
     BOOST_CHECK( ssb.pubseekoff(7, std::ios_base::beg, std::ios_base::out | std::ios_base::in) == (std::streamoff)7 );
     BOOST_CHECK( ssb.size() == 0 );
 
-    XDump("½áÊø²âÊÔ static_streambuf");
+    XDump("ç»“æŸæµ‹è¯• static_streambuf");
 }
 
-/// ÕıÈ·ĞÔ²âÊÔ
+/// æ­£ç¡®æ€§æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_stream_case)
 {
-    XDump("¿ªÊ¼²âÊÔ stream");
+    XDump("å¼€å§‹æµ‹è¯• stream");
     
     /// binary_oarchive -> std::cout
     {
@@ -968,7 +973,7 @@ BOOST_AUTO_TEST_CASE(t_stream_case)
         
         BOOST_CHECK(ok);
 
-        const int tc = 100;
+        const int tc = 1;
 
         // test property
         {
@@ -1002,13 +1007,13 @@ BOOST_AUTO_TEST_CASE(t_stream_case)
         BOOST_CHECK(memcmp(obj, check, sizeof(obj)) == 0);
     }
 
-    XDump("½áÊø²âÊÔ stream");
+    XDump("ç»“æŸæµ‹è¯• stream");
 }
 
-/// ĞÔÄÜ²âÊÔ
+/// æ€§èƒ½æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_stream_property_case)
 {
-    XDump("¿ªÊ¼²âÊÔ stream.serializationĞÔÄÜ");
+    XDump("å¼€å§‹æµ‹è¯• stream.serializationæ€§èƒ½");
 
 #ifdef _DEBUG
     const int tc = 10000;
@@ -1086,7 +1091,7 @@ BOOST_AUTO_TEST_CASE(t_stream_property_case)
         BOOST_CHECK_EQUAL(ssb.size(), 0);
     }
 
-    XDump("½áÊø²âÊÔ stream.serializationĞÔÄÜ");
+    XDump("ç»“æŸæµ‹è¯• stream.serializationæ€§èƒ½");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -5,9 +5,9 @@
 #include <Bex/utility/operators.h>
 #include <Bex/config.hpp>
 //////////////////////////////////////////////////////////////////////////
-/// ÀàÊÇ·ñÖØÔØÁËÖ¸¶¨²Ù×÷·ûµÄ³ÉÔ±º¯Êı
+/// ç±»æ˜¯å¦é‡è½½äº†æŒ‡å®šæ“ä½œç¬¦çš„æˆå‘˜å‡½æ•°
 
-/* µ±ÇÒ½öµ±²Ù×÷·ûÊÇ¸³Öµ²Ù×÷·ûÊ±, Ê¶±ğµÄÊÇ·ÇÄ£°åĞÎÊ½, ÆäÓà²Ù×÷·û¾ùÊ¶±ğµ½Ä£°åĞÎÊ½.
+/* å½“ä¸”ä»…å½“æ“ä½œç¬¦æ˜¯èµ‹å€¼æ“ä½œç¬¦æ—¶, è¯†åˆ«çš„æ˜¯éæ¨¡æ¿å½¢å¼, å…¶ä½™æ“ä½œç¬¦å‡è¯†åˆ«åˆ°æ¨¡æ¿å½¢å¼.
     struct X
     {
         template <typename T>
@@ -46,7 +46,7 @@ namespace Bex
         static const bool value = (sizeof(test<T>(0)) == sizeof(yes_type)); \
     }
 
-    /// ÊıÑ§¼ÆËã
+    /// æ•°å­¦è®¡ç®—
     _BEX_TT_HAS_OPERATOR(has_template_operator_add, BEX_OPERATOR_ADD);
     _BEX_TT_HAS_OPERATOR(has_template_operator_inc, BEX_OPERATOR_INC);
     _BEX_TT_HAS_OPERATOR(has_template_operator_add_assign, BEX_OPERATOR_ADD_ASSIGN);
@@ -60,7 +60,7 @@ namespace Bex
     _BEX_TT_HAS_OPERATOR(has_template_operator_module, BEX_OPERATOR_MODULE);
     _BEX_TT_HAS_OPERATOR(has_template_operator_module_assign, BEX_OPERATOR_MODULE_ASSIGN);
 
-    /// ¶ş½øÖÆÔËËã
+    /// äºŒè¿›åˆ¶è¿ç®—
     _BEX_TT_HAS_OPERATOR(has_template_operator_bit_and, BEX_OPERATOR_BIT_AND);
     _BEX_TT_HAS_OPERATOR(has_template_operator_bit_and_assign, BEX_OPERATOR_BIT_AND_ASSIGN);
     _BEX_TT_HAS_OPERATOR(has_template_operator_bit_or, BEX_OPERATOR_BIT_OR);
@@ -73,12 +73,12 @@ namespace Bex
     _BEX_TT_HAS_OPERATOR(has_template_operator_right_shift, BEX_OPERATOR_RIGHT_SHIFT);
     _BEX_TT_HAS_OPERATOR(has_template_operator_right_shift_assign, BEX_OPERATOR_RIGHT_SHIFT_ASSIGN);
 
-    /// Âß¼­ÔËËã
+    /// é€»è¾‘è¿ç®—
     _BEX_TT_HAS_OPERATOR(has_template_operator_logical_not, BEX_OPERATOR_LOGICAL_NOT);
     _BEX_TT_HAS_OPERATOR(has_template_operator_logical_and, BEX_OPERATOR_LOGICAL_AND);
     _BEX_TT_HAS_OPERATOR(has_template_operator_logical_or, BEX_OPERATOR_LOGICAL_OR);
 
-    /// ±È½Ï
+    /// æ¯”è¾ƒ
     _BEX_TT_HAS_OPERATOR(has_template_operator_less, BEX_OPERATOR_LESS);
     _BEX_TT_HAS_OPERATOR(has_template_operator_less_or_equal, BEX_OPERATOR_LESS_OR_EQUAL);
     _BEX_TT_HAS_OPERATOR(has_template_operator_equal, BEX_OPERATOR_EQUAL);
@@ -86,7 +86,7 @@ namespace Bex
     _BEX_TT_HAS_OPERATOR(has_template_operator_greater_or_equal, BEX_OPERATOR_GREATER_OR_EQUAL);
     _BEX_TT_HAS_OPERATOR(has_template_operator_not_equal, BEX_OPERATOR_NOT_EQUAL);
 
-    /// ÆäËûÔËËã·û
+    /// å…¶ä»–è¿ç®—ç¬¦
     _BEX_TT_HAS_OPERATOR(has_template_operator_address_of, BEX_OPERATOR_ADDRESS_OF);
     _BEX_TT_HAS_OPERATOR(has_template_operator_invoke, BEX_OPERATOR_INVOKE);
     _BEX_TT_HAS_OPERATOR(has_template_operator_dereference, BEX_OPERATOR_DEREFERENCE);
@@ -95,10 +95,10 @@ namespace Bex
     _BEX_TT_HAS_OPERATOR(has_template_operator_new, BEX_OPERATOR_NEW);
     _BEX_TT_HAS_OPERATOR(has_template_operator_delete, BEX_OPERATOR_DELETE);
     
-    /// ¸³Öµ²Ù×÷·û
+    /// èµ‹å€¼æ“ä½œç¬¦
     _BEX_TT_HAS_OPERATOR(has_operator_assign, BEX_OPERATOR_ASSIGN);
 
-    /// ¶ººÅ²Ù×÷·û
+    /// é€—å·æ“ä½œç¬¦
     template <typename T>
     struct has_template_operator_comma
     {
@@ -170,7 +170,7 @@ namespace Bex
         static const bool value = (sizeof(test<T>(nullptr)) == sizeof(yes_type));                       \
     };
 
-    /// Ò»ÔªÔËËã·û
+    /// ä¸€å…ƒè¿ç®—ç¬¦
     BEX_TT_HAS_UNARY_PREFIX_OPERATOR(can_unary_plus, BEX_OPERATOR_UNARY_PLUS)
     BEX_TT_HAS_UNARY_PREFIX_OPERATOR(can_unary_minus, BEX_OPERATOR_UNARY_NEGATION)
     BEX_TT_HAS_UNARY_PREFIX_OPERATOR(can_prefix_increment, BEX_OPERATOR_INC)
@@ -195,7 +195,7 @@ namespace Bex
     template <typename T, typename ... Args>
     using has_postfix_decrement = has_decrement<T, int>;
 
-    /// ÊıÑ§¼ÆËã
+    /// æ•°å­¦è®¡ç®—
     BEX_TT_HAS_BINARY_OPERATOR(can_plus, BEX_OPERATOR_ADD)
     BEX_TT_HAS_BINARY_OPERATOR(can_plus_assign, BEX_OPERATOR_ADD_ASSIGN)
     BEX_TT_HAS_BINARY_OPERATOR(can_minus, BEX_OPERATOR_SUB)
@@ -218,7 +218,7 @@ namespace Bex
     BEX_TT_HAS_INVOKE_OPERATOR(has_modulo, BEX_OPERATOR_MODULE)
     BEX_TT_HAS_INVOKE_OPERATOR(has_modulo_assign, BEX_OPERATOR_MODULE_ASSIGN)
         
-    /// ¶ş½øÖÆÔËËã
+    /// äºŒè¿›åˆ¶è¿ç®—
     BEX_TT_HAS_BINARY_OPERATOR(can_bitwise_and, BEX_OPERATOR_BIT_AND)
     BEX_TT_HAS_BINARY_OPERATOR(can_bitwise_and_assign, BEX_OPERATOR_BIT_AND_ASSIGN)
     BEX_TT_HAS_BINARY_OPERATOR(can_bitwise_or, BEX_OPERATOR_BIT_OR)
@@ -243,7 +243,7 @@ namespace Bex
     BEX_TT_HAS_INVOKE_OPERATOR(has_bitwise_right_shift, BEX_OPERATOR_RIGHT_SHIFT)
     BEX_TT_HAS_INVOKE_OPERATOR(has_bitwise_right_shift_assign, BEX_OPERATOR_RIGHT_SHIFT_ASSIGN)
 
-    /// Âß¼­ÔËËã
+    /// é€»è¾‘è¿ç®—
     BEX_TT_HAS_UNARY_PREFIX_OPERATOR(can_logical_not, BEX_OPERATOR_LOGICAL_NOT)
     BEX_TT_HAS_BINARY_OPERATOR(can_logical_and, BEX_OPERATOR_LOGICAL_AND)
     BEX_TT_HAS_BINARY_OPERATOR(can_logical_or, BEX_OPERATOR_LOGICAL_OR)
@@ -252,7 +252,7 @@ namespace Bex
     BEX_TT_HAS_INVOKE_OPERATOR(has_logical_and, BEX_OPERATOR_LOGICAL_AND)
     BEX_TT_HAS_INVOKE_OPERATOR(has_logical_or, BEX_OPERATOR_LOGICAL_OR)
 
-    /// ±È½Ï
+    /// æ¯”è¾ƒ
     BEX_TT_HAS_BINARY_OPERATOR(can_less, BEX_OPERATOR_LESS)
     BEX_TT_HAS_BINARY_OPERATOR(can_less_or_equal, BEX_OPERATOR_LESS_OR_EQUAL)
     BEX_TT_HAS_BINARY_OPERATOR(can_equal, BEX_OPERATOR_EQUAL)
@@ -267,7 +267,7 @@ namespace Bex
     BEX_TT_HAS_INVOKE_OPERATOR(has_greater_or_equal, BEX_OPERATOR_GREATER_OR_EQUAL)
     BEX_TT_HAS_INVOKE_OPERATOR(has_not_equal, BEX_OPERATOR_NOT_EQUAL)
 
-    /// ÆäËûÔËËã·û
+    /// å…¶ä»–è¿ç®—ç¬¦
     BEX_TT_HAS_UNARY_PREFIX_OPERATOR(can_address_of, BEX_OPERATOR_ADDRESS_OF)
     BEX_TT_HAS_UNARY_POSTFIX_OPERATOR(can_invoke, BEX_OPERATOR_INVOKE)
     BEX_TT_HAS_UNARY_PREFIX_OPERATOR(can_dereference, BEX_OPERATOR_DEREFERENCE)
@@ -280,11 +280,11 @@ namespace Bex
     BEX_TT_HAS_INVOKE_OPERATOR(has_new, BEX_OPERATOR_NEW)
     BEX_TT_HAS_INVOKE_OPERATOR(has_delete, BEX_OPERATOR_DELETE)
 
-    /// ¸³Öµ²Ù×÷·û
+    /// èµ‹å€¼æ“ä½œç¬¦
     BEX_TT_HAS_BINARY_OPERATOR(can_assign, BEX_OPERATOR_ASSIGN)
     BEX_TT_HAS_INVOKE_OPERATOR(has_assign, BEX_OPERATOR_ASSIGN)
 
-    /// ¶ººÅ²Ù×÷·û
+    /// é€—å·æ“ä½œç¬¦
     template <typename T, typename ... Args>
     struct has_comma
     {

@@ -97,10 +97,10 @@ void put_cb_thread(nonblocking_circularbuffer & stream, char const* data, std::s
 
 BOOST_AUTO_TEST_SUITE(s_bexio)
 
-/// ÕıÈ·ĞÔ²âÊÔ
+/// æ­£ç¡®æ€§æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_bexio_noblocking_circle)
 {
-    XDump("¿ªÊ¼²âÊÔ noblocking_circle");
+    XDump("å¼€å§‹æµ‹è¯• noblocking_circle");
 
     {
         static const int size = 1024 * 1024;
@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE(t_bexio_noblocking_circle)
         BOOST_CHECK((memcmp(src, dst, size) == 0));
     }
 
-    XDump("½áÊø²âÊÔ noblocking_circle");
+    XDump("ç»“æŸæµ‹è¯• noblocking_circle");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

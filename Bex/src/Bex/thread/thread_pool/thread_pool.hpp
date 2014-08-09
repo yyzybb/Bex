@@ -14,7 +14,7 @@
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-/// Ïß³Ì³Ø
+/// çº¿ç¨‹æ± 
 
 namespace Bex
 {
@@ -61,8 +61,8 @@ namespace Bex
                 }
 
             private:
-                std::list<Task>         m_taskList;     ///< ÈÎÎñ¶ÓÁĞ
-                boost::mutex            m_mutex;        ///< ÈÎÎñ¶ÓÁĞËø
+                std::list<Task>         m_taskList;     ///< ä»»åŠ¡é˜Ÿåˆ—
+                boost::mutex            m_mutex;        ///< ä»»åŠ¡é˜Ÿåˆ—é”
             };
 
         public:
@@ -82,7 +82,7 @@ namespace Bex
                 m_tg.join_all();
             }
 
-            /// Ìí¼ÓÈÎÎñµ½Ïß³Ì³ØÖĞ
+            /// æ·»åŠ ä»»åŠ¡åˆ°çº¿ç¨‹æ± ä¸­
             inline void push_task(Task const& task)
             {
 #if !defined(BEX_SUPPORT_CXX11)
@@ -93,7 +93,7 @@ namespace Bex
                 m_taskQueue.push(task);
             }
 
-            /// µÈ´ıËùÓĞÈÎÎñ´¦ÀíÍê³É
+            /// ç­‰å¾…æ‰€æœ‰ä»»åŠ¡å¤„ç†å®Œæˆ
             inline bool join_all(uint64_t milliseconds)
             {
                 boost::timer bt;
@@ -109,26 +109,26 @@ namespace Bex
                 return true;
             }
 
-            /// µ±Ç°Ïß³Ì³ØÊÇ·ñ¿ÕÏĞ
+            /// å½“å‰çº¿ç¨‹æ± æ˜¯å¦ç©ºé—²
             inline bool is_free() const
             {
                 return (0 == m_unfinished);
             }
 
-            /// µ±Ç°Î´Íê³ÉµÄÈÎÎñÊıÁ¿
+            /// å½“å‰æœªå®Œæˆçš„ä»»åŠ¡æ•°é‡
             inline uint32_t  unfinished() const
             {
                 return m_unfinished;
             }
 
-            /// Ïß³ÌÊıÁ¿
+            /// çº¿ç¨‹æ•°é‡
             uint32_t  thread_count() const
             {
                 return (uint32_t)m_tg.size();
             }
 
         private:
-            /// ÈÎÎñ´¦Àíº¯Êı(Ïß³ÌÖ´ĞĞº¯Êı)
+            /// ä»»åŠ¡å¤„ç†å‡½æ•°(çº¿ç¨‹æ‰§è¡Œå‡½æ•°)
             void run()
             {
                 while ( true )
@@ -154,10 +154,10 @@ namespace Bex
             }
 
         private:
-            boost::thread_group     m_tg;           ///< Ïß³Ì×é
-            TSQueue                 m_taskQueue;    ///< Ïß³Ì°²È«µÄÈÎÎñ¶ÓÁĞ
+            boost::thread_group     m_tg;           ///< çº¿ç¨‹ç»„
+            TSQueue                 m_taskQueue;    ///< çº¿ç¨‹å®‰å…¨çš„ä»»åŠ¡é˜Ÿåˆ—
 #if !defined(BEX_SUPPORT_CXX11)
-            volatile long           m_unfinished;   ///< Î´Íê³ÉÈÎÎñÊıÁ¿
+            volatile long           m_unfinished;   ///< æœªå®Œæˆä»»åŠ¡æ•°é‡
 #else
             std::atomic<long>       m_unfinished;
 #endif
@@ -173,31 +173,31 @@ namespace Bex
             if ( m_Impl ) delete m_Impl, m_Impl = NULL;
         }
 
-        /// Ìí¼ÓÈÎÎñµ½Ïß³Ì³ØÖĞ
+        /// æ·»åŠ ä»»åŠ¡åˆ°çº¿ç¨‹æ± ä¸­
         inline void push_task(Task const& task)
         {
             m_Impl->push_task(task);
         }
 
-        /// µÈ´ıËùÓĞÈÎÎñ´¦ÀíÍê³É
+        /// ç­‰å¾…æ‰€æœ‰ä»»åŠ¡å¤„ç†å®Œæˆ
         inline bool join_all(uint64_t milliseconds = (std::numeric_limits<uint64_t>::max)())
         {
             return m_Impl->join_all(milliseconds);
         }
 
-        /// µ±Ç°Ïß³Ì³ØÊÇ·ñ¿ÕÏĞ
+        /// å½“å‰çº¿ç¨‹æ± æ˜¯å¦ç©ºé—²
         inline bool is_free() const
         {
             return m_Impl->is_free();
         }
 
-        /// µ±Ç°Î´Íê³ÉµÄÈÎÎñÊıÁ¿
+        /// å½“å‰æœªå®Œæˆçš„ä»»åŠ¡æ•°é‡
         inline uint32_t  unfinished() const
         {
             return m_Impl->unfinished();
         }
 
-        /// Ïß³ÌÊıÁ¿
+        /// çº¿ç¨‹æ•°é‡
         inline uint32_t  thread_count() const
         {
             return m_Impl->thread_count();

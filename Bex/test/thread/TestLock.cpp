@@ -3,10 +3,10 @@
 
 BOOST_AUTO_TEST_SUITE(s_threadlock_suite)
 
-/// ÕıÈ·ĞÔ²âÊÔ
+/// æ­£ç¡®æ€§æµ‹è¯•
 BOOST_AUTO_TEST_CASE(t_threadlock_case)
 {
-    XDump("¿ªÊ¼²âÊÔ threadlock");
+    XDump("å¼€å§‹æµ‹è¯• threadlock");
 
     /// inter_lock
     {
@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(t_threadlock_case)
         }
     }
 
-    XDump("½áÊø²âÊÔ threadlock");
+    XDump("ç»“æŸæµ‹è¯• threadlock");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
