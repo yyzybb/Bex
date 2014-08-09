@@ -52,12 +52,12 @@
     <ClInclude Include="..\src\Bex\filesystem\filestream.hpp" />
     <ClInclude Include="..\src\Bex\functor.hpp" />
     <ClInclude Include="..\src\Bex\functor\functor.hpp" />
+    <ClInclude Include="..\src\Bex\locale\charset_cvt.h" />
     <ClInclude Include="..\src\Bex\math.hpp" />
     <ClInclude Include="..\src\Bex\math\compress_numeric.hpp" />
     <ClInclude Include="..\src\Bex\math\uint_3.hpp" />
     <ClInclude Include="..\src\Bex\math\utility.hpp" />
     <ClInclude Include="..\src\Bex\mpl\while.hpp" />
-    <ClInclude Include="..\src\Bex\platform\charset_cvt.h" />
     <ClInclude Include="..\src\Bex\platform\utility.h" />
     <ClInclude Include="..\src\Bex\platform\win32\win32_service.hpp" />
     <ClInclude Include="..\src\Bex\signals\combine_accumulate_value.hpp" />

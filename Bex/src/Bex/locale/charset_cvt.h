@@ -1,6 +1,8 @@
 #ifndef __BEX_PLATFORM_CHARSET_CVT_H__
 #define __BEX_PLATFORM_CHARSET_CVT_H__
 
+#include <Bex/config.hpp>
+#include <Bex/config/windows.h>
 #include <boost/locale.hpp>
 #include <Bex/utility/singleton.hpp>
 
@@ -19,16 +21,16 @@ namespace Bex { namespace conv
 
     const windows_encoding all_windows_encodings[] = {
         { "big5", 950, 0 },
-        { "cp1250", 1250, 0 },
-        { "cp1251", 1251, 0 },
-        { "cp1252", 1252, 0 },
-        { "cp1253", 1253, 0 },
-        { "cp1254", 1254, 0 },
-        { "cp1255", 1255, 0 },
-        { "cp1256", 1256, 0 },
-        { "cp1257", 1257, 0 },
-        { "cp874", 874, 0 },
-        { "cp932", 932, 0 },
+        //{ "cp1250", 1250, 0 },
+        //{ "cp1251", 1251, 0 },
+        //{ "cp1252", 1252, 0 },
+        //{ "cp1253", 1253, 0 },
+        //{ "cp1254", 1254, 0 },
+        //{ "cp1255", 1255, 0 },
+        //{ "cp1256", 1256, 0 },
+        //{ "cp1257", 1257, 0 },
+        //{ "cp874", 874, 0 },
+        //{ "cp932", 932, 0 },
         //{ "cp936", 936, 0 },
         { "eucjp", 20932, 0 },
         { "euckr", 51949, 0 },
@@ -129,6 +131,11 @@ namespace Bex { namespace conv
     }
 
     // unicode -> ansi
+    inline std::string w2a(std::wstring const& wstr)
+    {
+        using namespace boost::locale::conv;
+        return from_utf(wstr, locale::getInstance(), default_method);
+    }
     template <typename CharType>
     inline std::string w2a(std::basic_string<CharType> const& wstr)
     {
