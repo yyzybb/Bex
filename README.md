@@ -32,14 +32,27 @@ Bex库是完全header only的库, 无需编译!
 
 Bex/src/Bex (按字母顺序排列, 带^标记的是还不成熟的或以后可能会放弃维护的组件):
 
+
     > base          - 提供内置类型定义
+    
     > bind          - 完美转发的bind库, 功能类似于标准库中的bind, 基于C++11, 优势在于可以正确处理带右值引用形参的函数调用.
+    
     > bexio         - 基于asio封装的网络库, 目标是支持所有常用协议.(目前支持tcp & ssl). 基于C++11
+    
     > config        - Bex配置工具, 用于区分当前系统\编译器等环境信息.
+        |---- config.hpp -- Bex库自定义一些跨平台宏
+        |---- windows.h  -- 对WindowsSDK的include封装
+        |---- stl.hpp    -- 用于消除各版本STL的一部分差异
+        
     > filesystem    - 标准库fstream的扩展
+    
     > math          - 提供了一个可以压缩存储的自定义整数类型
+    
     > mpl           - 模板元编程库
         |---- while     -- 控制语句: while_
+    
+    > locale        - 本地化
+        |---- charset_cvt   -- 字符集转换工具
     
     > platform      - 封装不得不用平台SDK实现的功能
         |---- win32     -- 在Win32下的实现
