@@ -21,6 +21,9 @@
     <ClInclude Include="..\src\Bex\bexio\client.hpp" />
     <ClInclude Include="..\src\Bex\bexio\core.hpp" />
     <ClInclude Include="..\src\Bex\bexio\error.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\http\escape_string.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\http\http_options.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\http\url.hpp" />
     <ClInclude Include="..\src\Bex\bexio\intrusive_list.hpp" />
     <ClInclude Include="..\src\Bex\bexio\handlers.hpp" />
     <ClInclude Include="..\src\Bex\bexio\options.hpp" />

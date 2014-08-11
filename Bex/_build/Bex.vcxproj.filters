@@ -76,6 +76,9 @@
     <Filter Include="src\locale">
       <UniqueIdentifier>{1afeeffc-bef6-482c-a193-67cf7807eb3f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\bexio\http">
+      <UniqueIdentifier>{c4209100-d3bc-4c60-b6e2-fbc2d955f489}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Bex\base\bit.hpp">
@@ -401,6 +404,15 @@
     </ClInclude>
     <ClInclude Include="..\src\Bex\locale\charset_cvt.h">
       <Filter>src\locale</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\http\escape_string.hpp">
+      <Filter>src\bexio\http</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\http\http_options.hpp">
+      <Filter>src\bexio\http</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\http\url.hpp">
+      <Filter>src\bexio\http</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

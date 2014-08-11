@@ -45,10 +45,9 @@ namespace Bex { namespace bexio { namespace http
     	 * @c query(), @c fragment() all return an empty string, and @c port() returns
     	 * 0.
     	 */
-    	url()
-    		: ipv6_host_(false)
-    	{
-    	}
+    	url() 
+            : ipv6_host_(false) 
+        {}
 
     	/// Constructs an object of class @c url.
     	/**

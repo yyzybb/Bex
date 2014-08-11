@@ -3,9 +3,11 @@
 
 #include <Bex/bexio/bexio_fwd.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/xpressive/xpressive_dynamic.hpp>
 
-namespace Bex { namespace bexio { namespace http
-{ 
+namespace Bex { 
+namespace bexio { 
+namespace http { 
     
 // 如果没有定义最大重定向次数, 则默认为5次最大重定向.
 #ifndef BEXIO_HTTP_MAX_REDIRECTS
@@ -40,9 +42,8 @@ namespace option
 	static const std::string transfer_encoding("Transfer-Encoding");
 	static const std::string content_encoding("Content-Encoding");
 
-    // 分隔符
+    // 换行分隔符
     static const std::string line_end("\r\n");
-    static const std::string opt_end("\r\n\r\n");
 
     // 检测是否是内置选项
     inline bool is_builtin_option(std::string const& key)
@@ -95,12 +96,11 @@ public:
         std::string s;
         opt_value_type v_method = get(request_method);
         opt_value_type v_version = get(http_version);
-        opt_value_type v_path = get(path);
-        opt_value_type v_status_code = get(status_code);
-        opt_value_type v_status_str = get(status_str);
         if (v_method.empty())
         {
             // response
+            opt_value_type v_status_code = get(status_code);
+            opt_value_type v_status_str = get(status_str);
             s += v_version, s += " ";
             s += v_status_code, s += " ";
             s += v_status_str, s += line_end;
@@ -108,10 +108,103 @@ public:
         else
         {
             // request
+            opt_value_type v_path = get(path);
             s += v_method, s += " ";
             s += v_path, s += " ";
             s += v_version, s += line_end;
         }
+
+        for (const_iterator cit = opts_.begin(); cit != opts_.end(); ++cit)
+        {
+            opt_key_type const& key = cit->first;
+            opt_value_type const& value = cit->second;
+            if (is_builtin_option(key))
+                continue;
+
+            s += key, s += ":", s += value, s += line_end;
+        }
+
+        s += line_end;
+        return s;
+    }
+
+    /// The http header looks like:
+    //GET /123456 HTTP/1.1
+    //Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*
+    //Accept-Language: zh-cn
+    //Accept-Encoding: gzip, deflate
+    //User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; Maxthon; .NET CLR 1.1.4322)
+    //Host: 10.1.1.238:8000
+    //Connection: Keep-Alive
+    //
+    bool from_string(const char* s)
+    {
+        using namespace boost::xpressive;
+        using namespace option;
+
+        static const char * dynamic_regex = R"(^([^\s]+)\s+([^\s]+)\s+([^\s]+)\r\n
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
+            \r\n$)";
+
+        static cregex re = cregex::compile(dynamic_regex, regex_constants::single_line | regex_constants::ignore_white_space);
+        cmatch mrs;
+        if (!regex_match(s, mrs, re, regex_constants::format_all))
+            return false;
+
+        if (mrs.size() < 4)
+            return false;
+
+        bool is_response = boost::all(mrs[2].str(), boost::is_digit());
+        if (is_response)
+        {
+            // response
+            set(http_version, mrs[1].str());
+            set(status_code, mrs[2].str());
+            set(status_str, mrs[3].str());
+        }
+        else
+        {
+            // request
+            set(request_method, mrs[1].str());
+            set(path, mrs[2].str());
+            set(http_version, mrs[3].str());
+        }
+
+        for ( std::size_t ui = 4; ui + 1 < mrs.size(); ui += 2 )
+        {
+            set(mrs[ui].str(), mrs[ui + 1].str());
+        }
+
+        return true;
     }
 
 protected:
