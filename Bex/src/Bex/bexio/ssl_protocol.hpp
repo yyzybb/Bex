@@ -115,7 +115,7 @@ namespace Bex { namespace bexio
         {
             if (!opts.ssl_opts)
             {
-                ec = generate_error(bee::miss_ssl_options);
+                ec = make_error_code(bee::miss_ssl_options);
                 return socket_ptr();
             }
 

@@ -22,6 +22,7 @@
 #include <numeric>
 #include <list>
 #include <atomic>
+#include <type_traits>
 #include "options.hpp"
 #include "error.hpp"
 #include "sentry.hpp"

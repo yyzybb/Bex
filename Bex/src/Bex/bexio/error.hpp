@@ -100,7 +100,7 @@ namespace Bex { namespace bexio
     }
 
     /// 生成bexio_error类型的error_code
-    inline boost::system::error_code generate_error(bexio_error_em ev)
+    inline boost::system::error_code make_error_code(bexio_error_em ev)
     {
         return boost::system::error_code((int)ev, get_bexio_category());
     }

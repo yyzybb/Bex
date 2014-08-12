@@ -414,6 +414,12 @@
     <ClInclude Include="..\src\Bex\bexio\http\url.hpp">
       <Filter>src\bexio\http</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\http_protocol.hpp">
+      <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\bexio\http\http_stream.hpp">
+      <Filter>src\bexio\http</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Bex\platform\win32\win32_service.ipp">

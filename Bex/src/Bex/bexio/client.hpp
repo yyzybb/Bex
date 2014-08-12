@@ -186,7 +186,7 @@ namespace Bex { namespace bexio
                 async_connecting_.reset();
                 if (!async_connect(addr))
                 {
-                    if (!ec_) ec_ = generate_error(bee::reconnect_error);
+                    if (!ec_) ec_ = make_error_code(bee::reconnect_error);
                     notify_onconnect();
                 }
             }
@@ -214,7 +214,7 @@ namespace Bex { namespace bexio
                 async_connecting_.reset();
                 if (!async_connect_timed(addr, timed))
                 {
-                    if (!ec_) ec_ = generate_error(bee::reconnect_error);
+                    if (!ec_) ec_ = make_error_code(bee::reconnect_error);
                     notify_onconnect();
                 }
                 return ;
@@ -235,7 +235,7 @@ namespace Bex { namespace bexio
             {
                 auto timed_handler = timer_handler<allocator>(handler, ios_);
                 timed_handler.expires_from_now(boost::posix_time::milliseconds(opts_->ssl_opts->handshake_overtime));
-                timed_handler.async_wait(BEX_IO_BIND(&this_type::on_async_handshake, this, generate_error(bee::handshake_overtime), sp, addr));
+                timed_handler.async_wait(BEX_IO_BIND(&this_type::on_async_handshake, this, make_error_code(bee::handshake_overtime), sp, addr));
                 protocol_traits_type::async_handshake(sp, ssl::stream_base::client, timed_handler);
             }
             else
@@ -279,7 +279,7 @@ namespace Bex { namespace bexio
             sp->lowest_layer().shutdown(socket_base::shutdown_both, lec);
             sp->lowest_layer().close(lec);
             async_connecting_.reset();
-            ec_ = generate_error(error_enum);
+            ec_ = make_error_code(error_enum);
             notify_onconnect();
         }
 

@@ -14,6 +14,22 @@ namespace http {
 #define BEXIO_HTTP_MAX_REDIRECTS 5
 #endif
 
+enum BEX_ENUM_CLASS http_proxy_type
+{
+	// 没有设置代理.
+	none,
+	// socks4代理, 需要username.
+	socks4,
+	// 不需要用户密码的socks5代理.
+	socks5,
+	// 需要用户密码认证的socks5代理.
+	socks5_pw,
+	// http代理, 不需要认证.
+	http,
+	// http代理, 需要认证.
+	http_pw,
+};
+
 // 常用http选项.
 namespace option
 {
@@ -45,6 +61,11 @@ namespace option
     // 换行分隔符
     static const std::string line_end("\r\n");
 
+    // 协议默认端口号
+    static const int http_port = 80;
+    static const int https_port = 443;
+    static const int ftp_port = 21;
+
     // 检测是否是内置选项
     inline bool is_builtin_option(std::string const& key)
     {
@@ -54,7 +75,7 @@ namespace option
 
 
 // http的选项存储.
-class options
+class http_header
 {
 public:
     typedef std::string opt_key_type;
@@ -64,7 +85,7 @@ public:
     typedef opts::iterator iterator;
     typedef opts::const_iterator const_iterator;
 
-    options() : fake_continue_(false) {}
+    http_header() {}
 
     // 获取指定选项的值
     opt_value_type get(opt_key_type const& _key) const
@@ -207,13 +228,20 @@ public:
         return true;
     }
 
+    /// http包体内容长度
+    std::size_t body_size() const
+    {
+        opt_value_type clength = get(option::content_length);
+        return (std::size_t)std::atoi(clength.c_str());
+    }
+
 protected:
 	// 选项列表.
 	opts opts_;
 
-	// 是否启用假100 continue消息, 如果启用, 则在发送完成http request head
-	// 之后, 返回一个fake continue消息.
-	bool fake_continue_;
+	//// 是否启用假100 continue消息, 如果启用, 则在发送完成http request head
+	//// 之后, 返回一个fake continue消息.
+	//bool fake_continue_;
 };
 
 // 请求时的http选项.
@@ -223,7 +251,7 @@ protected:
 // Host, 取值为http服务器, 默认为http服务器.
 // Accept, 取值任意, 默认为"*/*".
 // 这些比较常用的选项被定义在http_options中.
-typedef option request_opts;
+typedef http_header request_header;
 
 // http服务器返回的http选项.
 // 一般会包括以下几个选项:
@@ -232,16 +260,15 @@ typedef option request_opts;
 // Server, 服务器名称.
 // Content-Length, 数据内容长度.
 // Connection, 连接状态标识.
-typedef option response_opts;
+typedef http_header response_header;
 
 
 
 // Http请求的代理设置.
-
-struct proxy_settings
+struct proxy_options
 {
-	proxy_settings()
-		: type (none)
+	proxy_options()
+        : type(http_proxy_type::none), port(option::http_port)
 	{}
 
 	std::string hostname;
@@ -250,92 +277,76 @@ struct proxy_settings
 	std::string username;
 	std::string password;
 
-	enum proxy_type
-	{
-		// 没有设置代理.
-		none,
-		// socks4代理, 需要username.
-		socks4,
-		// 不需要用户密码的socks5代理.
-		socks5,
-		// 需要用户密码认证的socks5代理.
-		socks5_pw,
-		// http代理, 不需要认证.
-		http,
-		// http代理, 需要认证.
-		http_pw,
-	};
-
-	proxy_type type;
+	http_proxy_type type;
 };
 
 
-// 一些默认的值.
-static const int default_request_piece_num = 10;
-static const int default_time_out = 11;
-static const int default_connections_limit = 5;
-static const int default_buffer_size = 1024;
-
-// multi_download下载设置.
-
-struct settings
-{
-	settings ()
-		: download_rate_limit(-1)
-		, connections_limit(default_connections_limit)
-		, piece_size(-1)
-		, time_out(default_time_out)
-		, request_piece_num(default_request_piece_num)
-		, allow_use_meta_url(true)
-		, disable_multi_download(false)
-		, check_certificate(true)
-		, storage(NULL)
-	{}
-
-	// 下载速率限制, -1为无限制, 单位为: byte/s.
-	int download_rate_limit;
-
-	// 连接数限制, -1为默认.
-	int connections_limit;
-
-	// 分块大小, 默认根据文件大小自动计算.
-	int piece_size;
-
-	// 超时断开, 默认为11秒.
-	int time_out;
-
-	// 每次请求的分片数, 默认为10.
-	int request_piece_num;
-
-	// meta_file路径, 默认为当前路径下同文件名的.meta文件.
-	fs::path meta_file;
-
-	// 允许使用meta中保存的url, 默认为允许. 针对一些变动的url, 我们应该禁用.
-	bool allow_use_meta_url;
-
-	// 禁止使用并发下载.
-	// NOTE: 比如用于动态页面下载, 因为动态页面不能使用并发下载, 如果还想继续使用
-	// multi_download进行下载, 则需要设置这个参数, 否则并发下载动态数据的行为, 是
-	// 未定义的, 其结果可能因为数据长度不一至导致断言, 也可能数据错误.
-	// NOTE: 不推荐使用multi_download进行下载, 而应该使用http_stream进行下载,
-	// multi_download主要应用在大文件, 静态页面下载!
-	bool disable_multi_download;
-
-	// 下载文件路径, 默认为当前目录.
-	fs::path save_path;
-
-	// 设置是否检查证书, 默认检查证书.
-	bool check_certificate;
-
-	// 存储接口创建函数指针, 默认为multi_download提供的file.hpp实现.
-	storage_constructor_type storage;
-
-	// 请求选项.
-	request_opts opts;
-
-	// 代理设置.
-	proxy_settings proxy;
-};
+//// 一些默认的值.
+//static const int default_request_piece_num = 10;
+//static const int default_time_out = 11;
+//static const int default_connections_limit = 5;
+//static const int default_buffer_size = 1024;
+//
+//// multi_download下载设置.
+//
+//struct settings
+//{
+//	settings ()
+//		: download_rate_limit(-1)
+//		, connections_limit(default_connections_limit)
+//		, piece_size(-1)
+//		, time_out(default_time_out)
+//		, request_piece_num(default_request_piece_num)
+//		, allow_use_meta_url(true)
+//		, disable_multi_download(false)
+//		, check_certificate(true)
+//		, storage(NULL)
+//	{}
+//
+//	// 下载速率限制, -1为无限制, 单位为: byte/s.
+//	int download_rate_limit;
+//
+//	// 连接数限制, -1为默认.
+//	int connections_limit;
+//
+//	// 分块大小, 默认根据文件大小自动计算.
+//	int piece_size;
+//
+//	// 超时断开, 默认为11秒.
+//	int time_out;
+//
+//	// 每次请求的分片数, 默认为10.
+//	int request_piece_num;
+//
+//	// meta_file路径, 默认为当前路径下同文件名的.meta文件.
+//	fs::path meta_file;
+//
+//	// 允许使用meta中保存的url, 默认为允许. 针对一些变动的url, 我们应该禁用.
+//	bool allow_use_meta_url;
+//
+//	// 禁止使用并发下载.
+//	// NOTE: 比如用于动态页面下载, 因为动态页面不能使用并发下载, 如果还想继续使用
+//	// multi_download进行下载, 则需要设置这个参数, 否则并发下载动态数据的行为, 是
+//	// 未定义的, 其结果可能因为数据长度不一至导致断言, 也可能数据错误.
+//	// NOTE: 不推荐使用multi_download进行下载, 而应该使用http_stream进行下载,
+//	// multi_download主要应用在大文件, 静态页面下载!
+//	bool disable_multi_download;
+//
+//	// 下载文件路径, 默认为当前目录.
+//	fs::path save_path;
+//
+//	// 设置是否检查证书, 默认检查证书.
+//	bool check_certificate;
+//
+//	// 存储接口创建函数指针, 默认为multi_download提供的file.hpp实现.
+//	storage_constructor_type storage;
+//
+//	// 请求选项.
+//	request_opts opts;
+//
+//	// 代理设置.
+//	proxy_settings proxy;
+//};
 
 } //namespace http
 } //namespace bexio
