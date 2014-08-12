@@ -27,6 +27,8 @@
 #include "error.hpp"
 #include "sentry.hpp"
 #include "allocator.hpp"
+#include "stream_concept.hpp"
+#include "regexs.h"
 
 #if defined(BEX_USE_FORWARDBIND)
 #include <Bex/bind.hpp>

@@ -55,16 +55,26 @@ namespace option
 	static const std::string connection("Connection");
 	static const std::string proxy_connection("Proxy-Connection");
 	static const std::string accept_encoding("Accept-Encoding");
+	static const std::string accept_language("Accept-Language");
 	static const std::string transfer_encoding("Transfer-Encoding");
 	static const std::string content_encoding("Content-Encoding");
 
-    // 换行分隔符
-    static const std::string line_end("\r\n");
+    // 分隔符
+    static const std::string line_end("\r\n"); // 换行
+    static const std::string header_end("\r\n\r\n"); // header结束符
 
     // 协议默认端口号
     static const int http_port = 80;
     static const int https_port = 443;
     static const int ftp_port = 21;
+
+    // request method
+    static const std::string rm_get("GET");
+    static const std::string rm_post("POST");
+
+    // http versions
+    static const std::string http_1_0("HTTP/1.0");
+    static const std::string http_1_1("HTTP/1.1");
 
     // 检测是否是内置选项
     inline bool is_builtin_option(std::string const& key)
@@ -98,7 +108,8 @@ public:
     }
 
     // 设置指定选项的值
-    void set(opt_key_type const& _key, opt_value_type const& value)
+    auto set(opt_key_type const& _key, opt_value_type const& value)
+        -> decltype([this](opt_key_type const& k, opt_value_type const& v){return this->set(k, v);})
     {
         opt_key_type key = boost::to_lower_copy(_key);
         iterator it = std::find_if(opts_.begin(), opts_.end(), [](opt_type const& opt, opt_key_type const& key) {
@@ -108,6 +119,8 @@ public:
             opts_.push_back(opt_type(key, value));
         else
             it->second = value;
+
+        return [this](opt_key_type const& k, opt_value_type const& v){return this->set(k, v);};
     }
 
     std::string to_string() const
@@ -163,40 +176,7 @@ public:
         using namespace boost::xpressive;
         using namespace option;
 
-        static const char * dynamic_regex = R"(^([^\s]+)\s+([^\s]+)\s+([^\s]+)\r\n
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-            \r\n$)";
-
-        static cregex re = cregex::compile(dynamic_regex, regex_constants::single_line | regex_constants::ignore_white_space);
+        static cregex re = cregex::compile(re_httpheader, regex_constants::single_line | regex_constants::ignore_white_space);
         cmatch mrs;
         if (!regex_match(s, mrs, re, regex_constants::format_all))
             return false;

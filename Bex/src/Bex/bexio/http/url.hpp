@@ -3,6 +3,7 @@
 
 #include <Bex/bexio/bexio_fwd.hpp>
 #include "escape_string.hpp"
+#include "http_options.hpp"
 
 namespace Bex { namespace bexio { namespace http
 { 
@@ -404,6 +405,22 @@ namespace Bex { namespace bexio { namespace http
     	{
     		return from_string(s.c_str(), ec);
     	}
+
+        request_header to_request() const
+        {
+            using namespace option;
+
+            std::string _path = this->path();
+            if (!query().empty())
+                _path += "?", _path += query();
+
+            request_header r;
+            r.set(request_method, rm_get)
+                (option::path, _path)
+                (http_version, http_1_1)
+                (option::host, this->host());
+            return r;
+        }
 
     	/// Compares two @c url objects for equality.
     	friend bool operator==(const url& a, const url& b)

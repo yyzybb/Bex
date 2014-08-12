@@ -9,17 +9,25 @@
 
 namespace Bex { namespace bexio { namespace http
 { 
-    template <class Stream>
+    template <class Stream, 
+        class Allocator = ::Bex::bexio::allocator<int> >
     class http_stream
+        : ::boost::enable_shared_from_this<http_stream<Stream> >
     {
     public:
-        enum class proxy_handshake_type {
+        enum handshake_type {
             proxy_client,
             proxy_server,
         };
 
         typedef typename boost::remove_reference<Stream>::type next_layer_type;
         typedef typename lowest_layer_t<next_layer_type>::type lowest_layer_type;
+        typedef typename lowest_layer_type::protocol_type protocol_type;
+        typedef typename protocol_type::resolver resolver;
+        typedef typename lowest_layer_type::endpoint_type endpoint_type;
+
+        typedef http_stream<Stream> this_type;
+        typedef shared_ptr<this_type> life_token_type;
 
         template <typename ... Args>
         explicit http_stream(Args && ... args)
@@ -31,6 +39,9 @@ namespace Bex { namespace bexio { namespace http
 
         /// Access an url, it's noexcept function.
         void open(url _url, error_code & ec);
+
+        /// Get response when the stream opened.
+        response_header response();
 
         boost::asio::io_service& get_io_service()
         {
@@ -58,7 +69,7 @@ namespace Bex { namespace bexio { namespace http
          * If the proxy has been set, it will perform Http proxy procotol handshake.
          * Otherwise, the function do nothing.
          */
-        void handshake(proxy_handshake_type type);
+        void handshake(handshake_type type);
 
         /// Perform Http proxy procotol handshaking, it's noexcept function.
         /**
@@ -66,7 +77,7 @@ namespace Bex { namespace bexio { namespace http
          * If the proxy has been set, it will perform Http proxy procotol handshake.
          * Otherwise, the function do nothing.
          */
-        void handshake(proxy_handshake_type type, error_code & ec);
+        void handshake(handshake_type type, error_code & ec);
 
         /// Start an asynchronous handshake.
         /**
@@ -85,7 +96,7 @@ namespace Bex { namespace bexio { namespace http
          */
         template <typename HandshakeHandler>
             BOOST_ASIO_INITFN_RESULT_TYPE(HandshakeHandler, void (boost::system::error_code))
-        async_handshake(proxy_handshake_type type, HandshakeHandler && handler);
+        async_handshake(handshake_type type, HandshakeHandler && handler);
 
         /// Shutdown the http stream, it maybe throw exception.
         /**
@@ -129,46 +140,69 @@ namespace Bex { namespace bexio { namespace http
         async_write_some(const ConstBufferSequence& buffers, WriteHandler && handler);
 
         /// Read some data to the stream, it maybe throw exception.
-        template <typename ConstBufferSequence>
-        std::size_t read_some(const ConstBufferSequence& buffers);
+        template <typename MutableBufferSequence>
+        std::size_t read_some(const MutableBufferSequence& buffers);
 
         /// Read some data to the stream, it's noexcept function.
-        template <typename ConstBufferSequence>
-        std::size_t read_some(const ConstBufferSequence& buffers, error_code & ec);
+        template <typename MutableBufferSequence>
+        std::size_t read_some(const MutableBufferSequence& buffers, error_code & ec);
 
         /// Start an asynchronous read.
-        template <typename ConstBufferSequence, typename WriteHandler>
-            BOOST_ASIO_INITFN_RESULT_TYPE(WriteHandler, void (boost::system::error_code, std::size_t))
-        async_read_some(const ConstBufferSequence& buffers, WriteHandler && handler);
+        template <typename MutableBufferSequence, typename ReadHandler>
+            BOOST_ASIO_INITFN_RESULT_TYPE(ReadHandler, void (boost::system::error_code, std::size_t))
+        async_read_some(const MutableBufferSequence& buffers, ReadHandler && handler);
 
     private:
         /// Perform nextlayer handshake
-        template <typename HandshakeHandler>
-        decltype(std::declval(next_layer_type).handshake(0, std::declval(error_code)))
-        do_nextlayer_handshake(proxy_handshake_type type, error_code & ec);
+        template <typename = int>
+            typename boost::enable_if<has_handshake_stream<next_layer_type>, void>::type
+        do_nextlayer_handshake(handshake_type type, error_code & ec);
+
+        template <typename = int>
+            typename boost::disable_if<has_handshake_stream<next_layer_type>, void>::type
+        do_nextlayer_handshake(handshake_type type, error_code & ec);
+
+        void do_proxy_handshake(handshake_type type, error_code & ec);
 
         /// Start an asynchronous nextlayer handshake
         template <typename HandshakeHandler>
-        void do_async_nextlayer_handshake(proxy_handshake_type type, HandshakeHandler && handler);
+            typename boost::enable_if<has_async_handshake_stream<next_layer_type>, void>::type
+        do_async_nextlayer_handshake(handshake_type type, HandshakeHandler && handler);
+
+        template <typename HandshakeHandler>
+            typename boost::disable_if<has_async_handshake_stream<next_layer_type>, void>::type
+        do_async_nextlayer_handshake(handshake_type type, HandshakeHandler && handler);
 
         /// Start an asynchronous proxy handshake
         template <typename HandshakeHandler>
-        void do_async_proxy_handshake(proxy_handshake_type type, HandshakeHandler && handler);
+        void do_async_proxy_handshake(handshake_type type, HandshakeHandler && handler, life_token_type);
 
         /// next_layer asynchronous handshake handler
         template <typename HandshakeHandler>
-        void on_nextlayer_handshake(error_code const& ec, HandshakeHandler & handler);
+        void on_nextlayer_handshake(error_code const& ec, handshake_type type, HandshakeHandler & handler, life_token_type);
 
         /// http proxy protocol asynchronous handshake handler
         template <typename HandshakeHandler>
-        void on_proxy_handshake(error_code const& ec, HandshakeHandler & handler);
+        void on_proxy_handshake(error_code const& ec, HandshakeHandler & handler, life_token_type);
+
+        /// Get the life_token.
+        life_token_type get_token();
 
     private:
+        // next layer stream object or reference.
         Stream next_layer_;
+
+        // proxy options
+        shared_ptr<proxy_options> proxy_;
+
+        // The buffer used to "open" interface only!
+        boost::asio::basic_streambuf<Allocator> synchronous_buffer_;
     };
 
 } //namespace http
 } //namespace bexio
 } //namespace Bex
+
+#include <Bex/bexio/detail/http_stream.ipp>
 
 #endif //__BEX_IO_HTTP_HTTP_STREAM_HPP__
