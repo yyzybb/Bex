@@ -49,7 +49,7 @@ static const char * re_httpheader = R"(^([^\s]+)\s+([^\s]+)\s+([^\s]+)\r\n
     (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
     (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
     (?:([^\s:]+):\s*((?:[^\r]|\r\n\s+)+)\r\n)?
-    \r\n$)";
+    \r\n)";
 
 struct regex
 {

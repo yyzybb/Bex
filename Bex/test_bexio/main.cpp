@@ -8,6 +8,7 @@
 
 #include <Bex/bexio/bexio.hpp>
 #include <Bex/bexio/ssl_protocol.hpp>
+#include <Bex/bexio/http/http_stream.hpp>
 #include <Bex/utility/format.hpp>
 #include <Bex/locale/charset_cvt.h>
 using namespace Bex::bexio;
@@ -20,7 +21,7 @@ enum {
     t_multiconn = 2,    // 大量并发连接
     t_packet = 3,       // 解包测试
     t_tcp_shutdown = 4, // 测试优雅地关闭连接(发送后立即shutdown, 要保证对端可以接收完整, 不丢数据.)
-    t_ssl_shutdown = 5, // 测试优雅地关闭连接(发送后立即shutdown, 要保证对端可以接收完整, 不丢数据.)
+    t_http_stream = 5,  // http_stream测试
 };
 
 std::string remote_ip = "127.0.0.1"; //"192.168.1.105";
@@ -301,6 +302,35 @@ void start_multi_client()
     core<typename client::allocator>::getInstance().run();
 }
 
+void start_http_stream()
+{
+    std::string _url;
+    Dump(u82a("请输入url:"));
+    std::cin >> _url;
+
+    http::http_stream<ip::tcp::socket> s(core<>::getInstance().backfront());
+    s.open(_url);
+    http::response_header r = s.response();
+    Dump("-- Response Header:");
+    Dump(r.to_string());
+
+    std::size_t length = atoi(r.get(http::option::content_length).c_str());
+    char buf[128] = {};
+    if (length)
+        Dump("-- Body:");
+    else
+        Dump("-- NoBody, Done!");
+
+    while (length)
+    {
+        std::size_t once = s.read_some(buffer(buf, (std::min<int>)(sizeof(buf), length)));
+        std::cout << std::string(buf, once);
+        length -= once;
+    }
+
+    std::cout << std::endl;
+}
+
 void handle_ctrl_c(error_code, int, signal_set * ss)
 {
     ss->async_wait(boost::bind(&handle_ctrl_c, ::_1, ::_2, ss));
@@ -313,7 +343,7 @@ void handle_ctrl_c(error_code, int, signal_set * ss)
     }
 }
 
-int main()
+void test()
 {
     // 配置
     //signal_set signal_proc(core<>::getInstance().backfront(), SIGINT);
@@ -323,8 +353,8 @@ int main()
     do 
     {
         std::cout << u82a("请输入端类型"
-            "\n\t(0:tcp, 1:ssl_tcp)"
-            "\n\t(0:simple, 1:pingpong, 2:multiconn, 3:packet, 4:tcp_shutdown)"
+            "\n\t(0:tcp, 1:ssl_tcp, 2:http)"
+            "\n\t(0:simple, 1:pingpong, 2:multiconn, 3:packet, 4:tcp_shutdown, 5:http_stream)"
             "\n\t(0:server, 1:client):") << std::endl;
         std::cin >> input;
 
@@ -340,7 +370,7 @@ int main()
                 long oc = s_obj_count;
 #if defined(_WIN32) || defined(_WIN64)
                 ::SetConsoleTitleA(Bex::format("%s (%d)(%d)", ((point == 0) ? "server" : "client"), oc, c).c_str());
-#else
+#else //defined(_WIN32) || defined(_WIN64)
                 static long s_c = c;
                 static long s_oc = oc;
                 if (s_c != c || s_oc != oc)
@@ -348,7 +378,7 @@ int main()
                     Dump(Bex::format("%s (%d)(%d)", ((point == 0) ? "server" : "client"), oc, c));
                     s_c = c, s_oc = oc;
                 }
-#endif
+#endif //defined(_WIN32) || defined(_WIN64)
                 boost::this_thread::sleep(boost::posix_time::millisec(100));
             }
         });
@@ -436,11 +466,30 @@ int main()
                     start_client<shutdown_session<ssl_proto> >();
             break;
 
+        case t_http_stream:
+            if (point == 1)
+                start_http_stream();
+            break;
+
         default:
             break;
         }
     } while (true);
+}
 
-    std::cin.get();
+int main()
+{
+    try
+    {
+        test();
+    }
+    catch (std::exception& e)
+    {
+        Dump("exception -> " << e.what());
+    }
+
+#if defined(BOOST_WINDOWS_API)
+    system("pause");
+#endif //defined(BOOST_WINDOWS_API)
     return 0;
 }

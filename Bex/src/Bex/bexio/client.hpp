@@ -113,7 +113,7 @@ namespace Bex { namespace bexio
             /// 连接超时计时器, 异步等待
             auto timed_handler = timer_handler<allocator>(BEX_IO_BIND(&this_type::on_async_connect_timed, this, BEX_IO_PH_ERROR, sp, addr, time), ios_);
             timed_handler.expires_from_now(time);
-            timed_handler.async_wait(BEX_IO_BIND(&this_type::on_overtime, this, BEX_IO_PH_ERROR, sp, bee::connect_overtime));
+            timed_handler.async_wait(BEX_IO_BIND(&this_type::on_overtime, this, BEX_IO_PH_ERROR, sp, errc::connect_overtime));
             sp->lowest_layer().async_connect(addr, timed_handler);
 
             // 启动工作线程
@@ -186,7 +186,7 @@ namespace Bex { namespace bexio
                 async_connecting_.reset();
                 if (!async_connect(addr))
                 {
-                    if (!ec_) ec_ = make_error_code(bee::reconnect_error);
+                    if (!ec_) ec_ = make_error_code(errc::reconnect_error);
                     notify_onconnect();
                 }
             }
@@ -214,7 +214,7 @@ namespace Bex { namespace bexio
                 async_connecting_.reset();
                 if (!async_connect_timed(addr, timed))
                 {
-                    if (!ec_) ec_ = make_error_code(bee::reconnect_error);
+                    if (!ec_) ec_ = make_error_code(errc::reconnect_error);
                     notify_onconnect();
                 }
                 return ;
@@ -235,7 +235,7 @@ namespace Bex { namespace bexio
             {
                 auto timed_handler = timer_handler<allocator>(handler, ios_);
                 timed_handler.expires_from_now(boost::posix_time::milliseconds(opts_->ssl_opts->handshake_overtime));
-                timed_handler.async_wait(BEX_IO_BIND(&this_type::on_async_handshake, this, make_error_code(bee::handshake_overtime), sp, addr));
+                timed_handler.async_wait(BEX_IO_BIND(&this_type::on_async_handshake, this, make_error_code(errc::handshake_overtime), sp, addr));
                 protocol_traits_type::async_handshake(sp, ssl::stream_base::client, timed_handler);
             }
             else
@@ -268,7 +268,7 @@ namespace Bex { namespace bexio
 
 
         // 超时回调
-        void on_overtime(error_code const& ec, socket_ptr sp, bee error_enum)
+        void on_overtime(error_code const& ec, socket_ptr sp, errc error_enum)
         {
             if (ec)
                 return ;

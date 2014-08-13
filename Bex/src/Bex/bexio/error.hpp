@@ -30,8 +30,13 @@ namespace Bex { namespace bexio
         url_miss_port_after_risk,       ///< ':'后面缺少端口号
         url_port_mustbe_digit,          ///< 端口号必须为数字
         url_path_contains_invaild_char, ///< path中含有非法字符
+
+        /// ------ http errors
+        http_response_header_parse_error,   ///< response头解析失败
     };
-    typedef bexio_error_em bee;
+    typedef bexio_error_em errc;
+
+#define BEX_IO_CASE_ERRORCODE(c) case (int)errc::c: return #c
 
     class bexio_error
         : public boost::system::error_category
@@ -52,38 +57,29 @@ namespace Bex { namespace bexio
         {
             switch(ev)
             {
-            case (int)bee::initiative_terminate:
-                return "initiative terminate";
+            // session errors
+            BEX_IO_CASE_ERRORCODE(initiative_terminate);
+            BEX_IO_CASE_ERRORCODE(initiative_shutdown);
+            BEX_IO_CASE_ERRORCODE(passive_shutdown);
+            BEX_IO_CASE_ERRORCODE(sendbuffer_overflow);
+            BEX_IO_CASE_ERRORCODE(receivebuffer_overflow);
+            BEX_IO_CASE_ERRORCODE(connect_overtime);
+            BEX_IO_CASE_ERRORCODE(parse_error);
+            BEX_IO_CASE_ERRORCODE(reconnect_error);
+            BEX_IO_CASE_ERRORCODE(miss_ssl_options);
+            BEX_IO_CASE_ERRORCODE(handshake_overtime);
+            BEX_IO_CASE_ERRORCODE(shutdown_overtime);
 
-            case (int)bee::initiative_shutdown:
-                return "initiative shutdown";
+            // url parse errors
+            BEX_IO_CASE_ERRORCODE(url_miss_protocol_split);
+            BEX_IO_CASE_ERRORCODE(url_miss_match_brackets);
+            BEX_IO_CASE_ERRORCODE(url_ipv6_host_toomore);
+            BEX_IO_CASE_ERRORCODE(url_miss_port_after_risk);
+            BEX_IO_CASE_ERRORCODE(url_port_mustbe_digit);
+            BEX_IO_CASE_ERRORCODE(url_path_contains_invaild_char);
 
-            case (int)bee::passive_shutdown:
-                return "passive shutdown";
-
-            case (int)bee::sendbuffer_overflow:
-                return "sendbuffer overflow";
-
-            case (int)bee::receivebuffer_overflow:
-                return "receivebuffer overflow";
-
-            case (int)bee::connect_overtime:
-                return "connect overtime";
-
-            case (int)bee::parse_error:
-                return "data parse error";
-
-            case (int)bee::reconnect_error:
-                return "reconnect error";
-
-            case (int)bee::miss_ssl_options:
-                return "miss ssl options";
-
-            case (int)bee::handshake_overtime:
-                return "handshake overtime";
-
-            case (int)bee::shutdown_overtime:
-                return "shutdown overtime";
+            // http errors
+            BEX_IO_CASE_ERRORCODE(http_response_header_parse_error);
 
             default:
                 return "undefined bexio error";

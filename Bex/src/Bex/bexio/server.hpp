@@ -184,7 +184,7 @@ namespace Bex { namespace bexio
             {
                 auto timed_handler = timer_handler<allocator>(handler, ios_);
                 timed_handler.expires_from_now(boost::posix_time::milliseconds(opts_->ssl_opts->handshake_overtime));
-                timed_handler.async_wait(BEX_IO_BIND(&this_type::on_async_handshake, this, make_error_code(bee::handshake_overtime), sp));
+                timed_handler.async_wait(BEX_IO_BIND(&this_type::on_async_handshake, this, make_error_code(errc::handshake_overtime), sp));
                 protocol_traits_type::async_handshake(sp, ssl::stream_base::server, timed_handler);
             }
             else

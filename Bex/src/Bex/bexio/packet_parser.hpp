@@ -89,7 +89,7 @@ namespace Bex { namespace bexio
                         if (packet_len > size_)
                         {
                             // 封包长错误
-                            invoke_callback(make_error_code(bee::parse_error), 0, 0, 0);
+                            invoke_callback(make_error_code(errc::parse_error), 0, 0, 0);
                             return ;
                         }
 
@@ -126,7 +126,7 @@ namespace Bex { namespace bexio
                     if (packet_len > size_)
                     {
                         // 封包长错误
-                        invoke_callback(make_error_code(bee::parse_error), 0, 0, 0);
+                        invoke_callback(make_error_code(errc::parse_error), 0, 0, 0);
                         return ;
                     }
 

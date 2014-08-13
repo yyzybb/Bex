@@ -8,10 +8,10 @@
 #include <boost/asio.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/bind.hpp>
+#include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/thread.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/function.hpp>
 #include <boost/array.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits.hpp>

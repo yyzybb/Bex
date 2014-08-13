@@ -276,13 +276,14 @@ namespace Bex { namespace bexio { namespace http
 
     		// Protocol.
     		std::size_t length = std::strcspn(s, ":");
-    		new_url.protocol_.assign(s, s += length);
+    		new_url.protocol_.assign(s, s + length);
+            s += length;
             std::transform(new_url.protocol_.begin(), new_url.protocol_.end(), new_url.protocol_.begin(), &std::tolower);
 
     		// "://".
     		if (*s++ != ':' || *s++ != '/' || *s++ != '/')
     		{
-                ec = make_error_code(bee::url_miss_protocol_split);
+                ec = make_error_code(errc::url_miss_protocol_split);
     			return url();
     		}
 
@@ -309,7 +310,7 @@ namespace Bex { namespace bexio { namespace http
     			length = std::strcspn(++s, "]");
     			if (s[length] != ']')
     			{
-                    ec = make_error_code(bee::url_miss_match_brackets);
+                    ec = make_error_code(errc::url_miss_match_brackets);
     				return url();
     			}
     			new_url.host_.assign(s, s + length);
@@ -317,7 +318,7 @@ namespace Bex { namespace bexio { namespace http
     			s += length + 1;
     			if (std::strcspn(s, ":/?#") != 0)
     			{
-                    ec = make_error_code(bee::url_ipv6_host_toomore);
+                    ec = make_error_code(errc::url_ipv6_host_toomore);
     				return url();
     			}
     		}
@@ -334,7 +335,7 @@ namespace Bex { namespace bexio { namespace http
     			length = std::strcspn(++s, "/?#");
     			if (length == 0)
     			{
-                    ec = make_error_code(bee::url_miss_port_after_risk);
+                    ec = make_error_code(errc::url_miss_port_after_risk);
     				return url();
     			}
     			new_url.port_.assign(s, s + length);
@@ -342,7 +343,7 @@ namespace Bex { namespace bexio { namespace http
     			{
     				if (!std::isdigit(new_url.port_[i]))
     				{
-                        ec = make_error_code(bee::url_port_mustbe_digit);
+                        ec = make_error_code(errc::url_port_mustbe_digit);
     					return url();
     				}
     			}
@@ -356,7 +357,7 @@ namespace Bex { namespace bexio { namespace http
     			new_url.path_.assign(s, s + length);
     			if (escape::unescape_path_copy(new_url.path_).empty())
     			{
-                    ec = make_error_code(bee::url_path_contains_invaild_char);
+                    ec = make_error_code(errc::url_path_contains_invaild_char);
     				return url();
     			}
     			s += length;

@@ -95,24 +95,36 @@ public:
     typedef opts::iterator iterator;
     typedef opts::const_iterator const_iterator;
 
+    struct setter
+    {
+        http_header& ref_;
+        explicit setter(http_header& ref) : ref_(ref) {}
+        inline setter operator()(opt_key_type const& _key, opt_value_type const& value)
+        {
+            return ref_.set(_key, value);
+        }
+    };
+
+    // @Todo: getter.
+    // @Todo: http头中, 头域名允许重复, 不要强制转变大小写!
+
     http_header() {}
 
     // 获取指定选项的值
     opt_value_type get(opt_key_type const& _key) const
     {
         opt_key_type key = boost::to_lower_copy(_key);
-        const_iterator cit = std::find_if(opts_.begin(), opts_.end(), [](opt_type const& opt, opt_key_type const& key) {
+        const_iterator cit = std::find_if(opts_.begin(), opts_.end(), [&key](opt_type const& opt) {
             return opt.first == key;
         });
         return (opts_.end() == cit) ? opt_value_type() : (cit->second);
     }
 
     // 设置指定选项的值
-    auto set(opt_key_type const& _key, opt_value_type const& value)
-        -> decltype([this](opt_key_type const& k, opt_value_type const& v){return this->set(k, v);})
+    setter set(opt_key_type const& _key, opt_value_type const& value)
     {
         opt_key_type key = boost::to_lower_copy(_key);
-        iterator it = std::find_if(opts_.begin(), opts_.end(), [](opt_type const& opt, opt_key_type const& key) {
+        iterator it = std::find_if(opts_.begin(), opts_.end(), [&key](opt_type const& opt) {
             return opt.first == key;
         });
         if (opts_.end() == it)
@@ -120,7 +132,7 @@ public:
         else
             it->second = value;
 
-        return [this](opt_key_type const& k, opt_value_type const& v){return this->set(k, v);};
+        return setter(*this);
     }
 
     std::string to_string() const
@@ -171,18 +183,25 @@ public:
     //Host: 10.1.1.238:8000
     //Connection: Keep-Alive
     //
-    bool from_string(const char* s)
+    std::size_t from_string(const char* s)
     {
         using namespace boost::xpressive;
         using namespace option;
 
         static cregex re = cregex::compile(re_httpheader, regex_constants::single_line | regex_constants::ignore_white_space);
+
+        const char* end = strstr(s, header_end.c_str());
+        if (!end || !*end)
+            return 0;
+
+        std::string match_s(s, end + header_end.size());
+
         cmatch mrs;
-        if (!regex_match(s, mrs, re, regex_constants::format_all))
-            return false;
+        if (!regex_search(match_s.c_str(), mrs, re, regex_constants::format_all))
+            return 0;
 
         if (mrs.size() < 4)
-            return false;
+            return 0;
 
         bool is_response = boost::all(mrs[2].str(), boost::is_digit());
         if (is_response)
@@ -202,10 +221,13 @@ public:
 
         for ( std::size_t ui = 4; ui + 1 < mrs.size(); ui += 2 )
         {
+            if (mrs[ui].str().empty())
+                continue;
+
             set(mrs[ui].str(), mrs[ui + 1].str());
         }
 
-        return true;
+        return mrs[0].str().length();
     }
 
     /// http包体内容长度

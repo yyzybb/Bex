@@ -43,6 +43,9 @@ namespace Bex { namespace bexio { namespace http
         /// Get response when the stream opened.
         response_header response();
 
+        /// Get response when the stream opened.
+        response_header response(error_code & ec);
+
         boost::asio::io_service& get_io_service()
         {
             return ::Bex::bexio::lowest_layer(next_layer_).get_io_service();
@@ -95,8 +98,7 @@ namespace Bex { namespace bexio { namespace http
          * ); @endcode
          */
         template <typename HandshakeHandler>
-            BOOST_ASIO_INITFN_RESULT_TYPE(HandshakeHandler, void (boost::system::error_code))
-        async_handshake(handshake_type type, HandshakeHandler && handler);
+        void async_handshake(handshake_type type, HandshakeHandler && handler);
 
         /// Shutdown the http stream, it maybe throw exception.
         /**
@@ -123,8 +125,7 @@ namespace Bex { namespace bexio { namespace http
          * ); @endcode
          */
         template <typename ShutdownHandler>
-            BOOST_ASIO_INITFN_RESULT_TYPE(ShutdownHandler, void (boost::system::error_code))
-        async_shutdown(ShutdownHandler && handler);
+        void async_shutdown(ShutdownHandler && handler);
 
         /// Write some data to the stream, it maybe throw exception.
         template <typename ConstBufferSequence>
@@ -135,9 +136,14 @@ namespace Bex { namespace bexio { namespace http
         std::size_t write_some(const ConstBufferSequence& buffers, error_code & ec);
 
         /// Start an asynchronous write.
+        /**
+         * The Handler likes:
+         * @code 
+         * void handler(const boost::system::error_code&, std::size_t);
+         * @endcode
+         */
         template <typename ConstBufferSequence, typename WriteHandler>
-            BOOST_ASIO_INITFN_RESULT_TYPE(WriteHandler, void (boost::system::error_code, std::size_t))
-        async_write_some(const ConstBufferSequence& buffers, WriteHandler && handler);
+        void async_write_some(const ConstBufferSequence& buffers, WriteHandler && handler);
 
         /// Read some data to the stream, it maybe throw exception.
         template <typename MutableBufferSequence>
@@ -148,29 +154,34 @@ namespace Bex { namespace bexio { namespace http
         std::size_t read_some(const MutableBufferSequence& buffers, error_code & ec);
 
         /// Start an asynchronous read.
+        /**
+         * The Handler likes:
+         * @code 
+         * void handler(const boost::system::error_code&, std::size_t);
+         * @endcode
+         */
         template <typename MutableBufferSequence, typename ReadHandler>
-            BOOST_ASIO_INITFN_RESULT_TYPE(ReadHandler, void (boost::system::error_code, std::size_t))
-        async_read_some(const MutableBufferSequence& buffers, ReadHandler && handler);
+        void async_read_some(const MutableBufferSequence& buffers, ReadHandler && handler);
 
     private:
         /// Perform nextlayer handshake
-        template <typename = int>
-            typename boost::enable_if<has_handshake_stream<next_layer_type>, void>::type
+        template <typename NextLayerType>
+            typename boost::enable_if<has_handshake_stream<NextLayerType>>::type
         do_nextlayer_handshake(handshake_type type, error_code & ec);
 
-        template <typename = int>
-            typename boost::disable_if<has_handshake_stream<next_layer_type>, void>::type
+        template <typename NextLayerType>
+            typename boost::disable_if<has_handshake_stream<NextLayerType>>::type
         do_nextlayer_handshake(handshake_type type, error_code & ec);
 
         void do_proxy_handshake(handshake_type type, error_code & ec);
 
         /// Start an asynchronous nextlayer handshake
-        template <typename HandshakeHandler>
-            typename boost::enable_if<has_async_handshake_stream<next_layer_type>, void>::type
+        template <typename NextLayerType, typename HandshakeHandler>
+            typename boost::enable_if<has_async_handshake_stream<NextLayerType>>::type
         do_async_nextlayer_handshake(handshake_type type, HandshakeHandler && handler);
 
-        template <typename HandshakeHandler>
-            typename boost::disable_if<has_async_handshake_stream<next_layer_type>, void>::type
+        template <typename NextLayerType, typename HandshakeHandler>
+            typename boost::disable_if<has_async_handshake_stream<NextLayerType>>::type
         do_async_nextlayer_handshake(handshake_type type, HandshakeHandler && handler);
 
         /// Start an asynchronous proxy handshake
@@ -195,8 +206,8 @@ namespace Bex { namespace bexio { namespace http
         // proxy options
         shared_ptr<proxy_options> proxy_;
 
-        // The buffer used to "open" interface only!
-        boost::asio::basic_streambuf<Allocator> synchronous_buffer_;
+        // The buffer is used to read data.
+        boost::asio::basic_streambuf<Allocator> read_buffer_;
     };
 
 } //namespace http
