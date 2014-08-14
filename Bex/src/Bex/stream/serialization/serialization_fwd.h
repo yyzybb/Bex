@@ -3,6 +3,9 @@
 
 //////////////////////////////////////////////////////////////////////////
 /// stream.serialization库前置声明文件
+//
+// @Todo: 提供强制所有非内置类型都有写序列化接口的方法.
+// @Todo: 提供新的序列化接口, 所有要使用此接口做序列化和反序列化的非内置类型都要有序列化接口和版本号定义.
 
 #ifndef BEX_STREAM_SERIALIZATION_VERSION_NAME
 #define BEX_STREAM_SERIALIZATION_VERSION_NAME bex_serialization_version
