@@ -2,7 +2,7 @@
 #define __BEX_IO_TCP_PACKET_PROTOCOL_HPP__
 
 //////////////////////////////////////////////////////////////////////////
-/// tcp packeted socket policy
+/// tcp packeted protocol
 #include "bexio_fwd.hpp"
 #include "buffered_socket.hpp"
 #include "nonblocking_circularbuffer.hpp"

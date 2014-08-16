@@ -74,7 +74,6 @@ struct MoveA
     MoveA(MoveA&&) { ++g_MoveAmove; /*Dump("MoveA::move");*/ }
     ~MoveA() = default;
 
-    /// TODO: 支持vs2013 ctp
     MoveA(MoveA const&)
     {
         ++g_MoveAcopy;

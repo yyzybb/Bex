@@ -178,14 +178,14 @@ namespace Bex { namespace bexio
         {
             shutdown_handshaking_.set();
             shutdowning_.set();
-            on_error(generate_error(bee::initiative_shutdown));
+            on_error(make_error_code(errc::initiative_shutdown));
 
             auto handler = BEX_IO_BIND(&this_type::on_async_shutdown, this, BEX_IO_PH_ERROR, shared_this());
             if (opts_->ssl_opts)
             {
                 auto timeout_handler = timer_handler<allocator>(handler, socket_->get_io_service());
                 timeout_handler.expires_from_now(boost::posix_time::milliseconds(opts_->ssl_opts->handshake_overtime));
-                timeout_handler.async_wait(BEX_IO_BIND(&this_type::on_async_shutdown, this, generate_error(bee::handshake_overtime), shared_this()));
+                timeout_handler.async_wait(BEX_IO_BIND(&this_type::on_async_shutdown, this, make_error_code(errc::handshake_overtime), shared_this()));
                 protocol_traits_type::async_shutdown(socket_, timeout_handler);
             }
             else
@@ -200,7 +200,7 @@ namespace Bex { namespace bexio
             if (!terminating_.set())
                 return ;
 
-            on_error(generate_error(bee::initiative_terminate));
+            on_error(make_error_code(errc::initiative_terminate));
             error_code ec;
             socket_->lowest_layer().set_option(socket_base::linger(true, 0), ec);
             do_shutdown_lowest();
@@ -336,7 +336,7 @@ namespace Bex { namespace bexio
                 if (ec.value() == 2)
                 {
                     shutdowning_.set();
-                    on_error(generate_error(bee::passive_shutdown));
+                    on_error(make_error_code(errc::passive_shutdown));
                 }
                 else
                     on_error(ec);
@@ -391,7 +391,7 @@ namespace Bex { namespace bexio
                 return ;
 
             shutdown_dt_.reset();
-            ec_ = generate_error(bee::shutdown_overtime);   // 强制修改断开错误原因
+            ec_ = make_error_code(errc::shutdown_overtime);   // 强制修改断开错误原因
             terminate();
         }
 
@@ -506,7 +506,7 @@ namespace Bex { namespace bexio
         {
             if (opts_->sboe_ == sboe::sbo_interrupt)
             {
-                on_error(generate_error(bee::sendbuffer_overflow));
+                on_error(make_error_code(errc::sendbuffer_overflow));
                 return false;
             }
             else if (opts_->sboe_ == sboe::sbo_wait)
@@ -526,7 +526,7 @@ namespace Bex { namespace bexio
         {
             if (opts_->rboe_ == rboe::rbo_interrupt)
             {
-                on_error(generate_error(bee::receivebuffer_overflow));
+                on_error(make_error_code(errc::receivebuffer_overflow));
                 return false;
             }
             else if (opts_->rboe_ == rboe::rbo_wait)

@@ -21,6 +21,11 @@
     <ClInclude Include="..\src\Bex\bexio\client.hpp" />
     <ClInclude Include="..\src\Bex\bexio\core.hpp" />
     <ClInclude Include="..\src\Bex\bexio\error.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\http\escape_string.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\http\http_options.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\http\http_stream.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\http\url.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\http_protocol.hpp" />
     <ClInclude Include="..\src\Bex\bexio\intrusive_list.hpp" />
     <ClInclude Include="..\src\Bex\bexio\handlers.hpp" />
     <ClInclude Include="..\src\Bex\bexio\options.hpp" />
@@ -31,12 +36,14 @@
     <ClInclude Include="..\src\Bex\bexio\options_ssl.hpp" />
     <ClInclude Include="..\src\Bex\bexio\packet_parser.hpp" />
     <ClInclude Include="..\src\Bex\bexio\protocol_traits.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\regexs.h" />
     <ClInclude Include="..\src\Bex\bexio\sentry.hpp" />
     <ClInclude Include="..\src\Bex\bexio\server.hpp" />
     <ClInclude Include="..\src\Bex\bexio\session.hpp" />
     <ClInclude Include="..\src\Bex\bexio\session_list_mgr.hpp" />
     <ClInclude Include="..\src\Bex\bexio\socket_options.hpp" />
     <ClInclude Include="..\src\Bex\bexio\ssl_protocol.hpp" />
+    <ClInclude Include="..\src\Bex\bexio\stream_concept.hpp" />
     <ClInclude Include="..\src\Bex\bexio\tcp_packet_protocol.hpp" />
     <ClInclude Include="..\src\Bex\bexio\tcp_protocol.hpp" />
     <ClInclude Include="..\src\Bex\bind.hpp" />
@@ -124,6 +131,7 @@
     <ClCompile Include="..\src\Bex\platform\win32\win32_service.ipp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\src\Bex\bexio\detail\http_stream.ipp" />
     <None Include="..\src\Bex\bexio\detail\multithread_strand.ipp" />
     <None Include="..\src\Bex\bexio\detail\options_ssl.ipp" />
   </ItemGroup>

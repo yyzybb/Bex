@@ -8,10 +8,10 @@
 #include <boost/asio.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/bind.hpp>
+#include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/thread.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/function.hpp>
 #include <boost/array.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits.hpp>
@@ -22,10 +22,13 @@
 #include <numeric>
 #include <list>
 #include <atomic>
+#include <type_traits>
 #include "options.hpp"
 #include "error.hpp"
 #include "sentry.hpp"
 #include "allocator.hpp"
+#include "stream_concept.hpp"
+#include "regexs.h"
 
 #if defined(BEX_USE_FORWARDBIND)
 #include <Bex/bind.hpp>

@@ -3,6 +3,12 @@
 
 //////////////////////////////////////////////////////////////////////////
 /// stream.serialization库前置声明文件
+//
+// @Todo: 提供强制所有非内置类型都有写序列化接口的方法.
+// @Todo: 提供新的序列化接口, 所有要使用此接口做序列化和反序列化的非内置类型都要有序列化接口和版本号定义.
+// @Todo: 增加在自定义类外部定义版本号的方式, 以防被继承.
+// @Todo: 重新规范化text_archive的格式.
+// @Todo: 增加nvp, 支持xml json bson等格式, 无nvp的情况下, 默认使用类型名做KEY.
 
 #ifndef BEX_STREAM_SERIALIZATION_VERSION_NAME
 #define BEX_STREAM_SERIALIZATION_VERSION_NAME bex_serialization_version
