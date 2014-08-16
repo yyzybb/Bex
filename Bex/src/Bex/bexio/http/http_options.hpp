@@ -94,43 +94,67 @@ public:
     typedef opts::iterator iterator;
     typedef opts::const_iterator const_iterator;
 
-    struct setter
+    class getter
+    {
+        http_header const& ref_;
+        opt_key_type const key_;
+        mutable std::size_t index_;
+
+    public:
+        explicit getter(http_header const& ref, opt_key_type const& key)
+            : ref_(ref), key_(key), index_(0)
+        {}
+        
+        operator opt_value_type() const
+        {
+            if (!expired())
+                return opt_value_type();
+
+            const_iterator cit = std::find_if(ref_.opts_.begin() + index_, ref_.opts_.end(), [this](opt_type const& opt) {
+                    return boost::iequals(opt.first, this->key_);
+                });
+            if (ref_.opts_.end() == cit)
+            {
+                index_ = ref_.opts_.size();
+                return opt_value_type();
+            }
+
+            index_ = std::distance(ref_.opts_.begin(), cit) + 1;
+            return (cit->second);
+        }
+
+        bool expired() const
+        {
+            return (index_ < ref_.opts_.size());
+        }
+    };
+
+    class setter
     {
         http_header& ref_;
+
+    public:
         explicit setter(http_header& ref) : ref_(ref) {}
+
         inline setter operator()(opt_key_type const& _key, opt_value_type const& value)
         {
             return ref_.set(_key, value);
         }
     };
 
-    // @Todo: getter.
-    // @Todo: http头中, 头域名允许重复, 不要强制转变大小写!
 
     http_header() {}
 
     // 获取指定选项的值
-    opt_value_type get(opt_key_type const& _key) const
+    getter get(opt_key_type const& key) const
     {
-        opt_key_type key = boost::to_lower_copy(_key);
-        const_iterator cit = std::find_if(opts_.begin(), opts_.end(), [&key](opt_type const& opt) {
-            return opt.first == key;
-        });
-        return (opts_.end() == cit) ? opt_value_type() : (cit->second);
+        return getter(*this, key);
     }
 
     // 设置指定选项的值
-    setter set(opt_key_type const& _key, opt_value_type const& value)
+    setter set(opt_key_type const& key, opt_value_type const& value)
     {
-        opt_key_type key = boost::to_lower_copy(_key);
-        iterator it = std::find_if(opts_.begin(), opts_.end(), [&key](opt_type const& opt) {
-            return opt.first == key;
-        });
-        if (opts_.end() == it)
-            opts_.push_back(opt_type(key, value));
-        else
-            it->second = value;
-
+        opts_.push_back(opt_type(key, value));
         return setter(*this);
     }
 
@@ -188,6 +212,8 @@ public:
 
         static boost::regex re(regex::ignore_white(re_httpheader));
 
+        clear();
+
         const char* end = strstr(s, header_end.c_str());
         if (!end || !*end)
             return 0;
@@ -234,6 +260,12 @@ public:
     {
         opt_value_type clength = get(option::content_length);
         return (std::size_t)std::atoi(clength.c_str());
+    }
+
+    /// 清空所有选项
+    void clear()
+    {
+        opts().swap(opts_);
     }
 
 protected:

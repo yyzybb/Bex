@@ -4,8 +4,6 @@
 #include <string>
 #define Dump(x) do { std::cout << x << std::endl; } while(0)
 
-// @todo: Test keepalive.
-
 #include <Bex/bexio/bexio.hpp>
 #include <Bex/bexio/ssl_protocol.hpp>
 #include <Bex/bexio/http/http_stream.hpp>
