@@ -3,7 +3,6 @@
 
 #include <Bex/bexio/bexio_fwd.hpp>
 #include <boost/algorithm/string.hpp>
-#include <boost/xpressive/xpressive_dynamic.hpp>
 
 namespace Bex { 
 namespace bexio { 
@@ -185,10 +184,9 @@ public:
     //
     std::size_t from_string(const char* s)
     {
-        using namespace boost::xpressive;
         using namespace option;
 
-        static cregex re = cregex::compile(re_httpheader, regex_constants::single_line | regex_constants::ignore_white_space);
+        static boost::regex re(regex::ignore_white(re_httpheader));
 
         const char* end = strstr(s, header_end.c_str());
         if (!end || !*end)
@@ -196,8 +194,9 @@ public:
 
         std::string match_s(s, end + header_end.size());
 
-        cmatch mrs;
-        if (!regex_search(match_s.c_str(), mrs, re, regex_constants::format_all))
+        boost::cmatch mrs;
+        if (!boost::regex_search(match_s.c_str(), mrs, re
+              , boost::regex_constants::match_single_line | boost::regex_constants::format_all))
             return 0;
 
         if (mrs.size() < 4)

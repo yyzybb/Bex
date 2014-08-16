@@ -1,8 +1,8 @@
 #ifndef __BEX_IO_REGEXS_H__
 #define __BEX_IO_REGEXS_H__
 
-#include <boost/xpressive/xpressive_dynamic.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/regex.hpp>
 
 namespace Bex {
 namespace bexio {
@@ -53,19 +53,23 @@ static const char * re_httpheader = R"(^([^\s]+)\s+([^\s]+)\s+([^\s]+)\r\n
 
 struct regex
 {
+    static std::string ignore_white(const char * re_str)
+    {
+        return boost::regex_replace(std::string(re_str), boost::regex("\\s+") , "");
+    }
+
     static bool is_ipv4(const char * str)
     {
-        static auto re = ::boost::xpressive::cregex::compile(re_ipv4);
-        return ::boost::xpressive::regex_match(str, re);
+        static boost::regex re(ignore_white(re_ipv4));
+        return ::boost::regex_match(str, re);
     }
 
     static bool is_ipv6(const char * str)
     {
-        static auto re = ::boost::xpressive::cregex::compile(re_ipv6
-            , ::boost::xpressive::regex_constants::ignore_white_space);
+        static boost::regex re(ignore_white(re_ipv6));
 
-        return ::boost::xpressive::regex_match(str, re
-            , ::boost::xpressive::regex_constants::format_all);
+        return ::boost::regex_match(str, re
+            , ::boost::regex_constants::format_all);
     }
 
     static bool is_ip(const char * str)

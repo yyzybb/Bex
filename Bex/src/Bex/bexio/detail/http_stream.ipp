@@ -139,14 +139,14 @@ namespace Bex { namespace bexio { namespace http
     template <typename ConstBufferSequence>
     std::size_t http_stream<Stream, Allocator>::write_some(const ConstBufferSequence& buffers)
     {
-        next_layer_.write_some(buffers);
+        return next_layer_.write_some(buffers);
     }
 
     template <class Stream, class Allocator>
     template <typename ConstBufferSequence>
     std::size_t http_stream<Stream, Allocator>::write_some(const ConstBufferSequence& buffers, error_code & ec)
     {
-        next_layer_.write_some(buffers, ec);
+        return next_layer_.write_some(buffers, ec);
     }
 
     template <class Stream, class Allocator>
@@ -181,7 +181,7 @@ namespace Bex { namespace bexio { namespace http
             return c;
         }
 
-        next_layer_.read_some(buffers, ec);
+        return next_layer_.read_some(buffers, ec);
     }
 
     template <class Stream, class Allocator>

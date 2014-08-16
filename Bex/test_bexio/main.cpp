@@ -11,9 +11,23 @@
 #include <Bex/bexio/http/http_stream.hpp>
 #include <Bex/utility/format.hpp>
 #include <Bex/locale/charset_cvt.h>
+#include <Bex/timer/timer.hpp>
 using namespace Bex::bexio;
 using namespace Bex::conv;
 
+// debug tcmalloc
+struct A
+{
+    A()
+    {
+        addr = (void*)&malloc;
+        void * ptr = malloc(1);
+        free(ptr);
+    }
+
+    void * addr;
+};
+A g_debug_malloc_A;
 
 enum {
     t_simple = 0,       // 简单测试
@@ -314,20 +328,17 @@ void start_http_stream()
     Dump("-- Response Header:");
     Dump(r.to_string());
 
-    std::size_t length = atoi(r.get(http::option::content_length).c_str());
-    char buf[128] = {};
-    if (length)
-        Dump("-- Body:");
-    else
-        Dump("-- NoBody, Done!");
-
-    while (length)
     {
-        std::size_t once = s.read_some(buffer(buf, (std::min<int>)(sizeof(buf), length)));
-        std::cout << std::string(buf, once);
-        length -= once;
+        Bex::timer bt;
+        boost::asio::basic_streambuf<> buf;
+        error_code ec;
+        s.lowest_layer().non_blocking(true);
+        std::size_t length = boost::asio::read(s, buf, [&](error_code const& ec, std::size_t){
+            return (std::size_t)((!!ec || bt.elapsed() > 5) ? 0 : boost::asio::detail::default_max_transfer_size);
+        }, ec);
+        Dump("-- Body: times(" << bt.elapsed() << "s), " << "error(" << ec.message() << ")");
+        Dump(std::string((char const*)boost::asio::detail::buffer_cast_helper(buf.data()), length));
     }
-
     std::cout << std::endl;
 }
 
