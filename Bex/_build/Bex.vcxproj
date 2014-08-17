@@ -122,6 +122,7 @@
     <ClInclude Include="..\src\Bex\type_traits\static_debug.hpp" />
     <ClInclude Include="..\src\Bex\type_traits\type_traits.hpp" />
     <ClInclude Include="..\src\Bex\utility\exception.h" />
+    <ClInclude Include="..\src\Bex\utility\fast_allocator.hpp" />
     <ClInclude Include="..\src\Bex\utility\format.hpp" />
     <ClInclude Include="..\src\Bex\utility\lexical_cast.hpp" />
     <ClInclude Include="..\src\Bex\utility\lock_ptr.hpp" />

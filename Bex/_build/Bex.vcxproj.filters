@@ -435,6 +435,9 @@
     <ClInclude Include="..\src\Bex\stream\serialization\config.h">
       <Filter>src\stream\serialization</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Bex\utility\fast_allocator.hpp">
+      <Filter>src\utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Bex\platform\win32\win32_service.ipp">
