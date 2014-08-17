@@ -108,6 +108,9 @@
     <ClCompile Include="..\test\bexio\TestLayerMetaFunctions.cpp">
       <Filter>bexio</Filter>
     </ClCompile>
+    <ClCompile Include="..\test\stream\TestSerializationProperty.cpp">
+      <Filter>stream</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\test\main\TestPCH.h">

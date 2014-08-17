@@ -11,8 +11,9 @@
 //                    3.增加config.h文件, 以便于用户配置序列化库的行为.
 //
 // * 2014-08-17 @yyz: 提供用于数据持久化的序列化接口(后缀_persisitence), 所有要使用此接口做序列化和反序列化的非内置类型都要有序列化接口和版本号定义.
-// @Todo: 重新规范化text_archive的格式.
+//
 // @Todo: 增加nvp, 支持xml json bson等格式, 无nvp的情况下, 默认使用类型名做KEY.
+// @Todo: 重新规范化text_archive的格式.
 
 #include <Bex/config.hpp>
 #include <Bex/type_traits/type_traits.hpp>
@@ -58,6 +59,17 @@
 
 namespace Bex { namespace serialization
 {
+    //////////////////////////////////////////////////////////////////////////
+    /// archive states
+    enum class archive_state 
+        : unsigned char
+    {
+        idle,
+        running,
+        error,
+    };
+    //////////////////////////////////////////////////////////////////////////
+
     //////////////////////////////////////////////////////////////////////////
     /// archive mark
     enum archive_mark_bit

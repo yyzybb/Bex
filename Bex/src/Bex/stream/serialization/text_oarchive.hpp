@@ -14,20 +14,20 @@ namespace Bex { namespace serialization
         , public text_base
         , public output_archive_base
     {
-        friend class rollback_sentry;
+        friend class sentry;
 
-        std::streambuf& m_sb;
-        archive_mark m_state;
-        std::streamsize m_acc;
+        std::streambuf& buf_;
+        archive_mark mark_;
+        std::streamsize acc_;
 
     public:
         explicit text_oarchive(std::streambuf& sb, archive_mark state = default_mark)
-            : m_sb(sb), m_state(state), m_acc(0)
+            : buf_(sb), mark_(state), acc_(0)
         {
         }
 
         explicit text_oarchive(std::ostream& os, archive_mark state = default_mark)
-            : m_sb(*os.rdbuf()), m_state(state), m_acc(0)
+            : buf_(*os.rdbuf()), mark_(state), acc_(0)
         {
         }
 
@@ -35,18 +35,18 @@ namespace Bex { namespace serialization
 
         inline bool save(char const* buffer, std::size_t size)
         {
-            rollback_sentry sentry(this);
-            std::streamsize ls = m_sb.sputn(buffer, size);
-            m_acc += ls;
+            sentry sentry(this);
+            std::streamsize ls = buf_.sputn(buffer, size);
+            acc_ += ls;
             return sentry.wrap(ls == size);
         }
 
         inline bool save(text_wrapper<char> & wrapper)
         {
-            rollback_sentry sentry(this);
+            sentry sentry(this);
             char & ch = wrapper.data();
-            std::streamsize ls = m_sb.sputn(&ch, 1);
-            m_acc += ls;
+            std::streamsize ls = buf_.sputn(&ch, 1);
+            acc_ += ls;
             return sentry.wrap(ls == 1);
         }
 
@@ -55,18 +55,11 @@ namespace Bex { namespace serialization
         {
             BOOST_STATIC_ASSERT( (boost::is_arithmetic<T>::value) );
 
-            try
-            {
-                rollback_sentry sentry(this);
-                std::string buffer = boost::lexical_cast<std::string>(wrapper.data()) + " ";
-                std::streamsize ls = m_sb.sputn(buffer.c_str(), buffer.length());
-                m_acc += ls;
-                return sentry.wrap(ls == buffer.length());
-            }
-            catch(std::exception &)
-            {
-                return false;
-            }
+            sentry sentry(this);
+            std::string buffer = boost::lexical_cast<std::string>(wrapper.data()) + " ";
+            std::streamsize ls = buf_.sputn(buffer.c_str(), buffer.length());
+            acc_ += ls;
+            return sentry.wrap(ls == buffer.length());
         }
 
         template <typename T>
@@ -78,7 +71,7 @@ namespace Bex { namespace serialization
         template <typename T>
         inline text_oarchive & operator<<(T const& t)
         {
-            rollback_sentry sentry(this);
+            sentry sentry(this);
             if (!sentry.wrap(save(const_cast<T&>(t))))
                 throw exception("output error!");
 

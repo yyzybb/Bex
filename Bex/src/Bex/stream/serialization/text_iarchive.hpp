@@ -14,20 +14,20 @@ namespace Bex { namespace serialization
         , public text_base
         , public input_archive_base
     {
-        friend class rollback_sentry;
+        friend class sentry;
 
-        std::streambuf& m_sb;
-        archive_mark m_state;
-        std::streamsize m_acc;
+        std::streambuf& buf_;
+        archive_mark mark_;
+        std::streamsize acc_;
 
     public:
         explicit text_iarchive(std::streambuf& sb, archive_mark state = default_mark)
-            : m_sb(sb), m_state(state), m_acc(0)
+            : buf_(sb), mark_(state), acc_(0)
         {
         }
 
         explicit text_iarchive(std::istream& is, archive_mark state = default_mark)
-            : m_sb(*is.rdbuf()), m_state(state), m_acc(0)
+            : buf_(*is.rdbuf()), mark_(state), acc_(0)
         {
         }
 
@@ -35,18 +35,18 @@ namespace Bex { namespace serialization
 
         inline bool load(char * buffer, std::size_t size)
         {
-            rollback_sentry sentry(this);
-            std::streamsize ls = m_sb.sgetn(buffer, size);
-            m_acc += ls;
+            sentry sentry(this);
+            std::streamsize ls = buf_.sgetn(buffer, size);
+            acc_ += ls;
             return sentry.wrap(ls == size);
         }
 
         inline bool load(text_wrapper<char> & wrapper)
         {
-            rollback_sentry sentry(this);
+            sentry sentry(this);
             char & ch = wrapper.data();
-            std::streamsize ls = m_sb.sgetn(&ch, 1);
-            m_acc += ls;
+            std::streamsize ls = buf_.sgetn(&ch, 1);
+            acc_ += ls;
             return sentry.wrap(ls == 1);
         }
 
@@ -58,8 +58,8 @@ namespace Bex { namespace serialization
             T & t = wrapper.data();
             try
             {
-                rollback_sentry sentry(this);
-                std::istreambuf_iterator<char> input_first(&m_sb);
+                sentry sentry(this);
+                std::istreambuf_iterator<char> input_first(&buf_);
                 std::istreambuf_iterator<char> input_last;
                 std::string buffer;
                 std::streamsize ls = 0;
@@ -76,7 +76,7 @@ namespace Bex { namespace serialization
 
                     buffer += ch;
                 }
-                m_acc += ls;
+                acc_ += ls;
                 t = boost::lexical_cast<T>(buffer);
                 return sentry.wrap(bOk);
             }
@@ -95,7 +95,7 @@ namespace Bex { namespace serialization
         template <typename T>
         inline text_iarchive & operator>>(T && t)
         {
-            rollback_sentry sentry(this);
+            sentry sentry(this);
             if (!sentry.wrap(load(std::forward<T>(t))))
                 throw exception("input error!");
 

@@ -13,36 +13,46 @@ namespace Bex { namespace serialization
         , public binary_base
         , public input_archive_base
     {
-        friend class rollback_sentry;
+        friend class sentry;
 
-        std::streambuf& m_sb;
-        archive_mark m_state;
-        std::streamsize m_acc;
+        std::streambuf& buf_;
+        archive_mark mark_;
+        std::streamsize acc_;
 
     public:
         explicit binary_iarchive(std::streambuf& sb, archive_mark state = default_mark)
-            : m_sb(sb), m_state(state), m_acc(0)
+            : buf_(sb), mark_(state), acc_(0)
         {
         }
 
         explicit binary_iarchive(std::istream& is, archive_mark state = default_mark)
-            : m_sb(*is.rdbuf()), m_state(state), m_acc(0)
+            : buf_(*is.rdbuf()), mark_(state), acc_(0)
         {
         }
 
-        using base_serializer<binary_iarchive>::load;
-
         inline bool load(char * buffer, std::size_t size)
         {
-            rollback_sentry sentry(this);
-            std::streamsize ls = m_sb.sgetn(buffer, size);
-            m_acc += ls;
+            sentry sentry(this);
+            std::streamsize ls = buf_.sgetn(buffer, size);
+            acc_ += ls;
             return sentry.wrap(ls == size);
         }
 
         inline bool load(binary_wrapper wrapper)
         {
             return load(wrapper.data(), wrapper.size());
+        }
+
+        template <typename T>
+        inline typename boost::disable_if<is_optimize<typename boost::remove_reference<T>::type, binary_iarchive>, bool>::type load(T && t)
+        {
+            return base_serializer<binary_iarchive>::load(t);
+        }
+
+        template <typename T>
+        inline typename boost::enable_if<is_optimize<typename boost::remove_reference<T>::type, binary_iarchive>, bool>::type load(T && t)
+        {
+            return load((char *)&t, sizeof(T));
         }
 
         template <typename T>
@@ -54,10 +64,8 @@ namespace Bex { namespace serialization
         template <typename T>
         inline binary_iarchive & operator>>(T && t)
         {
-            rollback_sentry sentry(this);
-            if (!sentry.wrap(load(std::forward<T>(t))))
-                throw exception("input error!");
-
+            sentry sentry(this);
+            sentry.wrap(load(std::forward<T>(t)));
             return (*this);
         }
 
@@ -68,49 +76,28 @@ namespace Bex { namespace serialization
     template <typename T>
     bool binary_load(T && t , std::istream& is, archive_mark state = default_mark)
     {
-        try
-        {
-            boost::io::ios_flags_saver saver(is);
-            is.unsetf(std::ios_base::skipws);
-            binary_iarchive bi(is, state);
-            bi & std::forward<T>(t);
-            return true;
-        }
-        catch (std::exception&)
-        {
-            return false;
-        }
+        boost::io::ios_flags_saver saver(is);
+        is.unsetf(std::ios_base::skipws);
+        binary_iarchive bi(is, state);
+        bi & std::forward<T>(t);
+        return bi.good();
     }
 
     template <typename T>
     bool binary_load(T && t , std::streambuf& isb, archive_mark state = default_mark)
     {
-        try
-        {
-            binary_iarchive bi(isb, state);
-            bi & std::forward<T>(t);
-            return true;
-        }
-        catch (std::exception&)
-        {
-            return false;
-        }
+        binary_iarchive bi(isb, state);
+        bi & std::forward<T>(t);
+        return bi.good();
     }
 
     template <typename T>
     std::size_t binary_load(T && t , char const * buffer, std::size_t size, archive_mark state = default_mark)
     {
-        try
-        {
-            static_streambuf isb(const_cast<char*>(buffer), size, false);
-            binary_iarchive bi(isb, state);
-            bi & std::forward<T>(t);
-            return (isb.capacity() - isb.size());
-        }
-        catch (std::exception&)
-        {
-            return (std::size_t)0;
-        }
+        static_streambuf isb(const_cast<char*>(buffer), size, false);
+        binary_iarchive bi(isb, state);
+        bi & std::forward<T>(t);
+        return bi.good() ? (isb.capacity() - isb.size()) : 0;
     }
 
     /// 数据持久化专用接口

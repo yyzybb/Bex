@@ -27,6 +27,7 @@
     <ClCompile Include="..\test\mpl\test_while.cpp" />
     <ClCompile Include="..\test\platform\TestCharsetConvert.cpp" />
     <ClCompile Include="..\test\signals\TestSignals.cpp" />
+    <ClCompile Include="..\test\stream\TestSerializationProperty.cpp" />
     <ClCompile Include="..\test\stream\TestStream.cpp" />
     <ClCompile Include="..\test\stream\TestTextArchive.cpp" />
     <ClCompile Include="..\test\thread\TestLock.cpp" />

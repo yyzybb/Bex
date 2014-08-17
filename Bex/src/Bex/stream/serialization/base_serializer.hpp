@@ -24,28 +24,14 @@ namespace Bex { namespace serialization
         {
             inline static bool save(T & t, Ar & ar)
             {
-                try
-                {
-                    serialize_adl(ar, t);
-                    return true;
-                }
-                catch(std::exception&)
-                {
-                    return false;
-                }
+                serialize_adl(ar, t);
+                return ar.good();
             }
 
             inline static bool load(T & t, Ar & ar)
             {
-                try
-                {
-                    serialize_adl(ar, t);
-                    return true;
-                }
-                catch(std::exception&)
-                {
-                    return false;
-                }
+                serialize_adl(ar, t);
+                return ar.good();
             }
         };
 
@@ -70,12 +56,14 @@ namespace Bex { namespace serialization
 #include "boost_container_adapter.hpp"
 
     public:
+        base_serializer() : state_(archive_state::idle) {}
+
         //////////////////////////////////////////////////////////////////////////
         /// save
         template <typename T>
         inline bool save(T const& t)
         {
-            rollback_sentry sentry(get());
+            sentry sentry(get());
             return sentry.wrap(adapter<Archive, T>::save(const_cast<T&>(t), get()));
         }
 
@@ -84,44 +72,67 @@ namespace Bex { namespace serialization
         template <typename T>
         inline bool load(T && t)
         {
-            rollback_sentry sentry(get());
+            sentry sentry(get());
             return sentry.wrap(adapter<Archive, typename boost::remove_reference<T>::type 
                 >::load(t, get()));
         }
 
+        inline bool good() const
+        {
+            return state_ != archive_state::error;
+        }
+
+        inline void clear()
+        {
+            if (!good()) state_ = archive_state::idle;
+        }
+
     protected:
-        class rollback_sentry
+        archive_state state_;
+
+        class sentry
         {
             typedef archive_traits<Archive> traits;
 
-            Archive & m_ar;
-            bool m_rollback;
+            Archive & ar_;
+            bool rollback_;
+            bool start_;
 
         public:
-            explicit rollback_sentry(Archive & ar)
-                : m_ar(ar), m_rollback(ar.m_acc == 0)
+            explicit sentry(Archive & ar)
+                : ar_(ar), rollback_(ar.acc_ == 0), start_(ar.state_ == archive_state::idle)
             {
+                if (start_) ar_.state_ = archive_state::running;
             }
 
-            explicit rollback_sentry(Archive * pAr)
-                : m_ar(*pAr), m_rollback(pAr->m_acc == 0)
+            explicit sentry(Archive * pAr)
+                : ar_(*pAr), rollback_(pAr->acc_ == 0), start_(pAr->state_ == archive_state::idle)
             {
+                if (start_) ar_.state_ = archive_state::running;
             }
 
             inline bool wrap(bool bOk)
             {
-                m_rollback = m_rollback && !bOk;
+                rollback_ = rollback_ && !bOk;
+                if (!bOk) ar_.state_ = archive_state::error;
                 return bOk;
             }
 
-            ~rollback_sentry()
+            ~sentry()
             {
-                if (m_rollback && m_ar.m_acc > 0)
+                if (rollback_ && ar_.acc_ > 0)
                 {
-                    if (m_ar.m_state & amb_rollback)
-                        m_ar.m_sb.pubseekoff( -m_ar.m_acc, std::ios_base::cur
-                            , mode(typename traits::oper_tag()));
-                    m_ar.m_acc = 0;
+                    if (ar_.mark_ & amb_rollback)
+                        ar_.buf_.pubseekoff(-ar_.acc_, std::ios_base::cur
+                        , mode(typename traits::oper_tag()));
+                    ar_.acc_ = 0;
+                    ar_.state_ = archive_state::error;
+                }
+
+                if (start_ && ar_.state_ != archive_state::error)
+                {
+                    ar_.state_ = archive_state::idle;
+                    ar_.acc_ = 0;
                 }
             }
 

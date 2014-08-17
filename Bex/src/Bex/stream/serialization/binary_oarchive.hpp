@@ -13,36 +13,46 @@ namespace Bex { namespace serialization
         , public binary_base
         , public output_archive_base
     {
-        friend class rollback_sentry;
+        friend class sentry;
 
-        std::streambuf& m_sb;
-        archive_mark m_state;
-        std::streamsize m_acc;
+        std::streambuf& buf_;
+        archive_mark mark_;
+        std::streamsize acc_;
 
     public:
         explicit binary_oarchive(std::streambuf& sb, archive_mark state = default_mark)
-            : m_sb(sb), m_state(state), m_acc(0)
+            : buf_(sb), mark_(state), acc_(0)
         {
         }
 
         explicit binary_oarchive(std::ostream& os, archive_mark state = default_mark)
-            : m_sb(*os.rdbuf()), m_state(state), m_acc(0)
+            : buf_(*os.rdbuf()), mark_(state), acc_(0)
         {
         }
 
-        using base_serializer<binary_oarchive>::save;
-
         inline bool save(char const* buffer, std::size_t size)
         {
-            rollback_sentry sentry(this);
-            std::streamsize ls = m_sb.sputn(buffer, size);
-            m_acc += ls;
+            sentry sentry(this);
+            std::streamsize ls = buf_.sputn(buffer, size);
+            acc_ += ls;
             return sentry.wrap(ls == size);
         }
 
         inline bool save(binary_wrapper & wrapper)
         {
             return save(wrapper.data(), wrapper.size());
+        }
+
+        template <typename T>
+        inline typename boost::disable_if<is_optimize<T, binary_oarchive>, bool>::type save(T const& t)
+        {
+            return base_serializer<binary_oarchive>::save(t);
+        }
+
+        template <typename T>
+        inline typename boost::enable_if<is_optimize<T, binary_oarchive>, bool>::type save(T const& t)
+        {
+            return save((char const*)&t, sizeof(T));
         }
 
         template <typename T>
@@ -54,10 +64,8 @@ namespace Bex { namespace serialization
         template <typename T>
         inline binary_oarchive & operator<<(T const& t)
         {
-            rollback_sentry sentry(this);
-            if (!sentry.wrap(save(const_cast<T&>(t))))
-                throw exception("output error!");
-
+            sentry sentry(this);
+            sentry.wrap(save(const_cast<T&>(t)));
             return (*this);
         }
     };
@@ -67,49 +75,28 @@ namespace Bex { namespace serialization
     template <typename T>
     bool binary_save(T const& t, std::ostream& os, archive_mark state = default_mark)
     {
-        try
-        {
-            boost::io::ios_flags_saver saver(os);
-            os.unsetf(std::ios_base::skipws);
-            binary_oarchive bo(os, state);
-            bo & t;
-            return true;
-        }
-        catch (std::exception&)
-        {
-            return false;
-        }
+        boost::io::ios_flags_saver saver(os);
+        os.unsetf(std::ios_base::skipws);
+        binary_oarchive bo(os, state);
+        bo & t;
+        return bo.good();
     }
 
     template <typename T>
     bool binary_save(T const& t, std::streambuf& osb, archive_mark state = default_mark)
     {
-        try
-        {
-            binary_oarchive bo(osb, state);
-            bo & t;
-            return true;
-        }
-        catch (std::exception&)
-        {
-            return false;
-        }
+        binary_oarchive bo(osb, state);
+        bo & t;
+        return bo.good();
     }
 
     template <typename T>
     std::size_t binary_save(T const& t, char * buffer, std::size_t size, archive_mark state = default_mark)
     {
-        try
-        {
-            static_streambuf osb(buffer, size);
-            binary_oarchive bo(osb, state);
-            bo & t;
-            return osb.size();
-        }
-        catch (std::exception&)
-        {
-            return (std::size_t)0;
-        }
+        static_streambuf osb(buffer, size);
+        binary_oarchive bo(osb, state);
+        bo & t;
+        return bo.good() ? osb.size() : 0;
     }
 
     /// 数据持久化专用接口
