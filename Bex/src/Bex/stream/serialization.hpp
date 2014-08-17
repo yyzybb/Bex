@@ -1,7 +1,8 @@
 #ifndef __BEX_STREAM_SERIALIZATION_HPP__
 #define __BEX_STREAM_SERIALIZATION_HPP__
 
-#include "serialization/utility.hpp"
+#include "serialization/config.h"
+#include "serialization/serialization_fwd.h"
 #include "serialization/binary_iarchive.hpp"
 #include "serialization/binary_oarchive.hpp"
 #include "serialization/binary_archive.hpp"

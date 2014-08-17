@@ -1,28 +1,13 @@
 #ifndef __BEX_STREAM_SERIALIZATION_BASE_SERIALIZER__
 #define __BEX_STREAM_SERIALIZATION_BASE_SERIALIZER__
 
-#include <Bex/config.hpp>
-#include <vector>
-#include <list>
-#include <string>
-#include <map>
-#include <boost/assert.hpp>
-#include <boost/static_assert.hpp>
-#include <boost/typeof/typeof.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/io/ios_state.hpp>
-#include <Bex/utility/exception.h>
-#include "utility.hpp"
+#include "serialization_fwd.h"
+#include "concept.hpp"
+#include "archive_traits.hpp"
 #include "serialize_adl.hpp"
 
 //////////////////////////////////////////////////////////////////////////
 /// 序列化接口基类
-
-#if defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-# define BEX_SERIALIZATION_INTERFACE_REFERENCE(type) type &
-#else
-# define BEX_SERIALIZATION_INTERFACE_REFERENCE(type) type &&
-#endif //defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
 
 namespace Bex { namespace serialization
 {
@@ -41,7 +26,7 @@ namespace Bex { namespace serialization
             {
                 try
                 {
-                    serialize_adl(ar, t, get_version<T>::value);
+                    serialize_adl(ar, t);
                     return true;
                 }
                 catch(std::exception&)
@@ -54,7 +39,7 @@ namespace Bex { namespace serialization
             {
                 try
                 {
-                    serialize_adl(ar, t, get_version<T>::value);
+                    serialize_adl(ar, t);
                     return true;
                 }
                 catch(std::exception&)
@@ -97,7 +82,7 @@ namespace Bex { namespace serialization
         //////////////////////////////////////////////////////////////////////////
         /// load
         template <typename T>
-        inline bool load(BEX_SERIALIZATION_INTERFACE_REFERENCE(T) t)
+        inline bool load(T && t)
         {
             rollback_sentry sentry(get());
             return sentry.wrap(adapter<Archive, typename boost::remove_reference<T>::type 

@@ -74,8 +74,6 @@ struct fake_pod_struct
     {
         ar & i & db & xy;
     }
-
-    fake_pod_struct() {}
 };
 
 struct TestIncConvert
@@ -307,7 +305,7 @@ BOOST_AUTO_TEST_CASE(t_stream_text_archive_case)
 
     {
         fake_pod_struct obj[10], check[10];
-        BOOST_CHECK( !BEX_STREAM_SERIALIZATION_IS_POD(fake_pod_struct) );
+        BOOST_CHECK( !Bex::serialization::is_binary_trivial<fake_pod_struct>::value );
 
         std::size_t save_len = text_save(obj, buf, sizeof(buf));
         BOOST_CHECK( save_len > 0 );

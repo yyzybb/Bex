@@ -1,7 +1,6 @@
 #ifndef __BEX_STREAM_SERIALIZATION_BINARY_OARCHIVE__
 #define __BEX_STREAM_SERIALIZATION_BINARY_OARCHIVE__
 
-#include <iosfwd>
 #include "base_serializer.hpp"
 
 //////////////////////////////////////////////////////////////////////////

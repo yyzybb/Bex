@@ -1,7 +1,6 @@
 #ifndef __BEX_STREAM_SERIALIZATION_TEXT_OARCHIVE__
 #define __BEX_STREAM_SERIALIZATION_TEXT_OARCHIVE__
 
-#include <iosfwd>
 #include "base_serializer.hpp"
 #include <boost/lexical_cast.hpp>
 

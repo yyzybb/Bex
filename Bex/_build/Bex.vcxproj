@@ -89,13 +89,16 @@
     <ClInclude Include="..\src\Bex\stream\serialization\binary_oarchive.hpp" />
     <ClInclude Include="..\src\Bex\stream\serialization\boost_container_adapter.hpp" />
     <ClInclude Include="..\src\Bex\stream\serialization\concept.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\config.h" />
     <ClInclude Include="..\src\Bex\stream\serialization\serialization_fwd.h" />
     <ClInclude Include="..\src\Bex\stream\serialization\serialize_adl.hpp" />
     <ClInclude Include="..\src\Bex\stream\serialization\stl_adapter.hpp" />
     <ClInclude Include="..\src\Bex\stream\serialization\text_archive.hpp" />
     <ClInclude Include="..\src\Bex\stream\serialization\text_iarchive.hpp" />
     <ClInclude Include="..\src\Bex\stream\serialization\text_oarchive.hpp" />
-    <ClInclude Include="..\src\Bex\stream\serialization\utility.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\archive_traits.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\version_adl.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\wrappers.hpp" />
     <ClInclude Include="..\src\Bex\stream\static_streambuf.hpp" />
     <ClInclude Include="..\src\Bex\thread.hpp" />
     <ClInclude Include="..\src\Bex\thread\lock\assert_lock.hpp" />

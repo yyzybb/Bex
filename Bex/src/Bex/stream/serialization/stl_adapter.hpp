@@ -10,7 +10,7 @@ struct sized_adapter
         cn32 size(container.size());
         try
         {
-            serialize_adl(ar, size, 0);
+            serialize_adl(ar, size);
             return true;
         }
         catch(std::exception &)
@@ -25,7 +25,7 @@ struct sized_adapter
         cn32 size;
         try
         {
-            serialize_adl(ar, size, 0);
+            serialize_adl(ar, size);
             out_size = size.get();
             return true;
         }

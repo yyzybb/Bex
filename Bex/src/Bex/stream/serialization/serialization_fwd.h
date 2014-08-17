@@ -4,21 +4,58 @@
 //////////////////////////////////////////////////////////////////////////
 /// stream.serialization库前置声明文件
 //
+// * 2014-08-17 @yyz: 1.自定义版本号改为member+adl的方式, 
+//                      使用在自定义类外部定义版本号或friend的方式可以防止版本号被继承.
+//                      使用member函数方式定义版本号, 可以实现单根公有继承体系共享版本号.
+//                    2.不再支持C++98, 以获得更精确的静态检测功能.
+//                    3.增加config.h文件, 以便于用户配置序列化库的行为.
+//
 // @Todo: 提供强制所有非内置类型都有写序列化接口的方法.
 // @Todo: 提供新的序列化接口, 所有要使用此接口做序列化和反序列化的非内置类型都要有序列化接口和版本号定义.
-// @Todo: 增加在自定义类外部定义版本号的方式, 以防被继承.
 // @Todo: 重新规范化text_archive的格式.
 // @Todo: 增加nvp, 支持xml json bson等格式, 无nvp的情况下, 默认使用类型名做KEY.
 
-#ifndef BEX_STREAM_SERIALIZATION_VERSION_NAME
-#define BEX_STREAM_SERIALIZATION_VERSION_NAME bex_serialization_version
-#endif //BEX_STREAM_SERIALIZATION_VERSION_NAME
+#include <Bex/config.hpp>
+#include <Bex/type_traits/type_traits.hpp>
+#include <Bex/utility/exception.h>
+#include <Bex/math/compress_numeric.hpp>
+#include <iosfwd>
 
-/// 用于定义结构体序列化版本号的类内枚举名
-#define BEX_SS_VERSION BEX_STREAM_SERIALIZATION_VERSION_NAME
+// stl containers adapter
+#include <vector> // vector<T> and vector<bool>
+#include <set>
+#include <list>
+#include <string>
+#include <map>
+#include <deque>
 
-/// 消除从基类继承过来的版本号
-#define BEX_SS_UNDEF_BASE_VERSION(Base) private: using Base::BEX_SS_VERSION;
+#if defined(_MSC_VER)
+# include <hash_map>
+#endif //defined(_MSC_VER)
+
+#if defined(BOOST_HAS_TR1_UNORDERED_MAP)
+# include <unordered_map>
+#endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
+
+#if defined(BOOST_HAS_TR1_UNORDERED_SET)
+# include <unordered_set>
+#endif //defined(BOOST_HAS_TR1_UNORDERED_SET)
+
+#if defined(BEX_SUPPORT_CXX11)
+# include <array>
+#endif //defined(BEX_SUPPORT_CXX11)
+
+// boost containers adapter
+#include <boost/bimap.hpp>
+#include <boost/array.hpp>
+#include <boost/assert.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/typeof/typeof.hpp>
+#include <boost/type_traits.hpp>
+#include <boost/io/ios_state.hpp>
+
+#include "config.h"
+#include "wrappers.hpp"
 
 namespace Bex { namespace serialization
 {

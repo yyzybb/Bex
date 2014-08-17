@@ -1,7 +1,6 @@
 #ifndef __BEX_STREAM_SERIALIZATION_BINARY_IARCHIVE__
 #define __BEX_STREAM_SERIALIZATION_BINARY_IARCHIVE__
 
-#include <iosfwd>
 #include "base_serializer.hpp"
 
 //////////////////////////////////////////////////////////////////////////
@@ -41,22 +40,22 @@ namespace Bex { namespace serialization
             return sentry.wrap(ls == size);
         }
 
-        inline bool load(binary_wrapper & wrapper)
+        inline bool load(binary_wrapper wrapper)
         {
             return load(wrapper.data(), wrapper.size());
         }
 
         template <typename T>
-        inline binary_iarchive & operator&(BEX_SERIALIZATION_INTERFACE_REFERENCE(T) t)
+        inline binary_iarchive & operator&(T && t)
         {
-            return (*this >> t);
+            return (*this >> std::forward<T>(t));
         }
 
         template <typename T>
-        inline binary_iarchive & operator>>(BEX_SERIALIZATION_INTERFACE_REFERENCE(T) t)
+        inline binary_iarchive & operator>>(T && t)
         {
             rollback_sentry sentry(this);
-            if (!sentry.wrap(load(t)))
+            if (!sentry.wrap(load(std::forward<T>(t))))
                 throw exception("input error!");
 
             return (*this);
@@ -67,15 +66,14 @@ namespace Bex { namespace serialization
     //////////////////////////////////////////////////////////////////////////
     /// binary_load
     template <typename T>
-    bool binary_load(BEX_SERIALIZATION_INTERFACE_REFERENCE(T) t
-        , std::istream& is, archive_mark state = default_mark)
+    bool binary_load(T && t , std::istream& is, archive_mark state = default_mark)
     {
         try
         {
             boost::io::ios_flags_saver saver(is);
             is.unsetf(std::ios_base::skipws);
             binary_iarchive bi(is, state);
-            bi & t;
+            bi & std::forward<T>(t);
             return true;
         }
         catch (std::exception&)
@@ -85,13 +83,12 @@ namespace Bex { namespace serialization
     }
 
     template <typename T>
-    bool binary_load(BEX_SERIALIZATION_INTERFACE_REFERENCE(T) t
-        , std::streambuf& isb, archive_mark state = default_mark)
+    bool binary_load(T && t , std::streambuf& isb, archive_mark state = default_mark)
     {
         try
         {
             binary_iarchive bi(isb, state);
-            bi & t;
+            bi & std::forward<T>(t);
             return true;
         }
         catch (std::exception&)
@@ -101,14 +98,13 @@ namespace Bex { namespace serialization
     }
 
     template <typename T>
-    std::size_t binary_load(BEX_SERIALIZATION_INTERFACE_REFERENCE(T) t
-        , char const * buffer, std::size_t size, archive_mark state = default_mark)
+    std::size_t binary_load(T && t , char const * buffer, std::size_t size, archive_mark state = default_mark)
     {
         try
         {
             static_streambuf isb(const_cast<char*>(buffer), size, false);
             binary_iarchive bi(isb, state);
-            bi & t;
+            bi & std::forward<T>(t);
             return (isb.capacity() - isb.size());
         }
         catch (std::exception&)

@@ -3,9 +3,8 @@
 
 #include <Bex/config.hpp>
 #include <Bex/type_traits/class_info.hpp>
-#include <Bex/stream/serialization/utility.hpp>
+#include <Bex/stream/serialization.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/type_traits/is_base_of.hpp>
 
 //////////////////////////////////////////////////////////////////////////
 /// 数据转换器(可与serialization库配合使用)
