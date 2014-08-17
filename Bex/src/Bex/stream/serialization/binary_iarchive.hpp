@@ -113,11 +113,22 @@ namespace Bex { namespace serialization
         }
     }
 
+    /// 数据持久化专用接口
+    template <typename T, typename ... Args>
+    FORCE_INLINE auto binary_load_persistence(T && t, Args && ... args)
+        -> decltype(binary_load(std::forward<T>(t), std::forward<Args>(args)...))
+    {
+        static_assert(has_serialize<T>::value, "The persistence data mustbe has serialize function.");
+        static_assert(has_version<T>::value, "The persistence data mustbe has version.");
+        return binary_load(std::forward<T>(t), std::forward<Args>(args)...);
+    }
+
 } //namespace serialization
 
 namespace {
     using serialization::binary_iarchive;
     using serialization::binary_load;
+    using serialization::binary_load_persistence;
 } //namespace
 
 } //namespace Bex

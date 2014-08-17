@@ -299,6 +299,26 @@ struct not_pod
     not_pod() {}
 };
 
+struct persistence_data_t
+{
+    int i_;
+
+    static unsigned int serialize_version()
+    {
+        return 1;
+    }
+
+};
+
+template <class Archive>
+void serialize(Archive & ar, persistence_data_t & data, const unsigned int version)
+{
+    BOOST_CHECK(version == Bex::serialization::get_version<persistence_data_t>());
+    BOOST_CHECK(version == 1);
+
+    ar & data.i_;
+}
+
 struct static_version
 {
     static unsigned int serialize_version()
@@ -1041,6 +1061,18 @@ BOOST_AUTO_TEST_CASE(t_stream_case)
         BOOST_CHECK_EQUAL(save_len, load_len);
 
         BOOST_CHECK(memcmp(obj, check, sizeof(obj)) == 0);
+    }
+
+    {
+        persistence_data_t pdt, check;
+
+        std::size_t len = binary_save_persistence(pdt, buf, sizeof(buf));
+        BOOST_CHECK(len == 5);
+        
+        len = binary_load_persistence(check, buf, sizeof(buf));
+        BOOST_CHECK(len == 5);
+
+        BOOST_CHECK(pdt.i_ == check.i_);
     }
 
 #if defined(BEX_SERIALIZATION_POD_EXTEND)

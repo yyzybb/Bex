@@ -89,7 +89,7 @@ namespace Bex { namespace serialization
     //////////////////////////////////////////////////////////////////////////
     /// text_save
     template <typename T>
-    bool text_save(T & t, std::ostream& os, archive_mark state = default_mark)
+    bool text_save(T const& t, std::ostream& os, archive_mark state = default_mark)
     {
         try
         {
@@ -106,7 +106,7 @@ namespace Bex { namespace serialization
     }
 
     template <typename T>
-    bool text_save(T & t, std::streambuf& osb, archive_mark state = default_mark)
+    bool text_save(T const& t, std::streambuf& osb, archive_mark state = default_mark)
     {
         try
         {
@@ -121,7 +121,7 @@ namespace Bex { namespace serialization
     }
 
     template <typename T>
-    std::size_t text_save(T & t, char * buffer, std::size_t size, archive_mark state = default_mark)
+    std::size_t text_save(T const& t, char * buffer, std::size_t size, archive_mark state = default_mark)
     {
         try
         {
@@ -136,11 +136,21 @@ namespace Bex { namespace serialization
         }
     }
 
+    /// 数据持久化专用接口
+    template <typename T, typename ... Args>
+    FORCE_INLINE auto text_save_persistence(T const& t, Args && ... args) -> decltype(text_save(t, std::forward<Args>(args)...))
+    {
+        static_assert(has_serialize<T>::value, "The persistence data mustbe has serialize function.");
+        static_assert(has_version<T>::value, "The persistence data mustbe has version.");
+        return text_save(t, std::forward<Args>(args)...);
+    }
+
 } //namespace serialization
 
 namespace {
     using serialization::text_oarchive;
     using serialization::text_save;
+    using serialization::text_save_persistence;
 } //namespace
 
 } //namespace Bex
