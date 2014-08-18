@@ -1,49 +1,38 @@
 #ifndef __BEX_STREAM_SERIALIZATION_BINARY_OARCHIVE__
 #define __BEX_STREAM_SERIALIZATION_BINARY_OARCHIVE__
 
-#include <iosfwd>
 #include "base_serializer.hpp"
+#include <Bex/stream/fast_buffer.hpp>
 
 //////////////////////////////////////////////////////////////////////////
 /// 序列化 out
 
 namespace Bex { namespace serialization
 {
-    class binary_oarchive
-        : public base_serializer<binary_oarchive>
+    template <typename Stream = std::streambuf>
+    class binary_oarchive;
+
+    template <>
+    class binary_oarchive<std::streambuf>
+        : public base_serializer<binary_oarchive<std::streambuf>>
         , public binary_base
         , public output_archive_base
     {
-        friend class rollback_sentry;
+        friend class base_serializer<binary_oarchive<std::streambuf>>;
 
-        std::streambuf& m_sb;
-        archive_mark m_state;
-        std::streamsize m_acc;
+        std::streambuf& buf_;
+        std::streamsize acc_;
+        int deep_;
 
     public:
-        explicit binary_oarchive(std::streambuf& sb, archive_mark state = default_mark)
-            : m_sb(sb), m_state(state), m_acc(0)
+        explicit binary_oarchive(std::streambuf& sb)
+            : buf_(sb), acc_(0), deep_(0)
         {
         }
 
-        explicit binary_oarchive(std::ostream& os, archive_mark state = default_mark)
-            : m_sb(*os.rdbuf()), m_state(state), m_acc(0)
+        explicit binary_oarchive(std::ostream& os)
+            : buf_(*os.rdbuf()), acc_(0), deep_(0)
         {
-        }
-
-        using base_serializer<binary_oarchive>::save;
-
-        inline bool save(char const* buffer, std::size_t size)
-        {
-            rollback_sentry sentry(this);
-            std::streamsize ls = m_sb.sputn(buffer, size);
-            m_acc += ls;
-            return sentry.wrap(ls == size);
-        }
-
-        inline bool save(binary_wrapper & wrapper)
-        {
-            return save(wrapper.data(), wrapper.size());
         }
 
         template <typename T>
@@ -55,62 +44,207 @@ namespace Bex { namespace serialization
         template <typename T>
         inline binary_oarchive & operator<<(T const& t)
         {
-            rollback_sentry sentry(this);
-            if (!sentry.wrap(save(const_cast<T&>(t))))
-                throw exception("output error!");
-
+            save(const_cast<T&>(t));
             return (*this);
         }
+
+        template <typename T>
+        inline bool save(T const& t)
+        {
+            if (!good()) return false;
+
+            int deep = deep_++;
+            if (!do_save(const_cast<T&>(t)))
+            {
+                state_ = archive_state::error;
+                -- deep_;
+                return false;
+            }
+            else
+            {
+                if (!deep)
+                    acc_ = 0;
+                -- deep_;
+                return true;
+            }
+        }
+
+        inline bool save(char const* buffer, std::size_t size)
+        {
+            if (!good()) return false;
+
+            int deep = deep_++;
+            if (!do_save(buffer, size))
+            {
+                state_ = archive_state::error;
+                -- deep_;
+                return false;
+            }
+            else
+            {
+                if (!deep)
+                    acc_ = 0;
+                -- deep_;
+                return true;
+            }
+        }
+
+    // @Todo: 改为private.
+    public:
+        inline bool do_save(char const* buffer, std::size_t size)
+        {
+            std::streamsize ls = buf_.sputn(buffer, size);
+            acc_ += ls;
+            return (ls == size);
+        }
+
+        template <typename T>
+        inline typename boost::disable_if<is_optimize<T, binary_oarchive>, bool>::type do_save(T const& t)
+        {
+            return base_serializer<binary_oarchive>::do_save(t);
+        }
+
+        template <typename T>
+        inline typename boost::enable_if<is_optimize<T, binary_oarchive>, bool>::type do_save(T const& t)
+        {
+            return do_save((char const*)boost::addressof(t), sizeof(T));
+        }
+    };
+
+
+    template <>
+    class binary_oarchive<fast_buffer>
+        : public base_serializer<binary_oarchive<fast_buffer>>
+        , public binary_base
+        , public output_archive_base
+    {
+        friend class base_serializer<binary_oarchive<fast_buffer>>;
+
+        fast_buffer& buf_;
+        fast_buffer::offset_type acc_;
+        int deep_;
+
+    public:
+        explicit binary_oarchive(fast_buffer& sb)
+            : buf_(sb), acc_(0), deep_(0)
+        {
+        }
+
+        template <typename T>
+        inline binary_oarchive & operator&(T const& t)
+        {
+            return (*this << t);
+        }
+
+        template <typename T>
+        inline binary_oarchive & operator<<(T const& t)
+        {
+            save(const_cast<T&>(t));
+            return (*this);
+        }
+
+        template <typename T>
+        inline bool save(T const& t)
+        {
+            if (!good()) return false;
+
+            int deep = deep_++;
+            if (!do_save(const_cast<T&>(t)))
+            {
+                state_ = archive_state::error;
+                -- deep_;
+                return false;
+            }
+            else
+            {
+                if (!deep)
+                    acc_ = 0;
+                -- deep_;
+                return true;
+            }
+        }
+
+        inline bool save(char const* buffer, std::size_t size)
+        {
+            if (!good()) return false;
+
+            int deep = deep_++;
+            if (!do_save(buffer, size))
+            {
+                state_ = archive_state::error;
+                -- deep_;
+                return false;
+            }
+            else
+            {
+                if (!deep)
+                    acc_ = 0;
+                -- deep_;
+                return true;
+            }
+        }
+
+    // @Todo: 改为private.
+    public:
+        inline bool do_save(char const* buffer, std::size_t size)
+        {
+            std::size_t ls = buf_.sputn(buffer, size);
+            acc_ += ls;
+            return (ls == size);
+        }
+
+        template <typename T>
+        inline typename boost::disable_if<is_optimize<T, binary_oarchive>, bool>::type do_save(T const& t)
+        {
+            return base_serializer<binary_oarchive>::do_save(t);
+        }
+
+        template <typename T>
+        inline typename boost::enable_if<is_optimize<T, binary_oarchive>, bool>::type do_save(T const& t)
+        {
+            bool result = buf_.put(t);
+            if (result) acc_ += sizeof(T);
+            return result;
+        }
+
     };
 
     //////////////////////////////////////////////////////////////////////////
     /// binary_save
     template <typename T>
-    bool binary_save(T & t, std::ostream& os, archive_mark state = default_mark)
+    bool binary_save(T const& t, std::ostream& os)
     {
-        try
-        {
-            boost::io::ios_flags_saver saver(os);
-            os.unsetf(std::ios_base::skipws);
-            binary_oarchive bo(os, state);
-            bo & t;
-            return true;
-        }
-        catch (std::exception&)
-        {
-            return false;
-        }
+        boost::io::ios_flags_saver saver(os);
+        os.unsetf(std::ios_base::skipws);
+        binary_oarchive<> bo(os);
+        bo & t;
+        return bo.good() ? true : (bo.clear(), false);
     }
 
     template <typename T>
-    bool binary_save(T & t, std::streambuf& osb, archive_mark state = default_mark)
+    bool binary_save(T const& t, std::streambuf& osb)
     {
-        try
-        {
-            binary_oarchive bo(osb, state);
-            bo & t;
-            return true;
-        }
-        catch (std::exception&)
-        {
-            return false;
-        }
+        binary_oarchive<> bo(osb);
+        bo & t;
+        return bo.good() ? true : (bo.clear(), false);
     }
 
     template <typename T>
-    std::size_t binary_save(T & t, char * buffer, std::size_t size, archive_mark state = default_mark)
+    std::size_t binary_save(T const& t, char * buffer, std::size_t size)
     {
-        try
-        {
-            static_streambuf osb(buffer, size);
-            binary_oarchive bo(osb, state);
-            bo & t;
-            return osb.size();
-        }
-        catch (std::exception&)
-        {
-            return (std::size_t)0;
-        }
+        fast_buffer osb(buffer, size);
+        binary_oarchive<fast_buffer> bo(osb);
+        bo & t;
+        return bo.good() ? osb.gcount() : (bo.clear(), 0);
+    }
+
+    /// 数据持久化专用接口
+    template <typename T, typename ... Args>
+    FORCE_INLINE auto binary_save_persistence(T const& t, Args && ... args) -> decltype(binary_save(t, std::forward<Args>(args)...))
+    {
+        static_assert(has_serialize<T>::value, "The persistence data mustbe has serialize function.");
+        static_assert(has_version<T>::value, "The persistence data mustbe has version.");
+        return binary_save(t, std::forward<Args>(args)...);
     }
 
 } //namespace serialization
@@ -118,6 +252,7 @@ namespace Bex { namespace serialization
 namespace {
     using serialization::binary_oarchive;
     using serialization::binary_save;
+    using serialization::binary_save_persistence;
 } //namespace
 
 } //namespace Bex

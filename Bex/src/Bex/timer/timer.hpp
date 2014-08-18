@@ -12,12 +12,18 @@ namespace Bex
     {
         typedef std::chrono::high_resolution_clock clock_type;
         typedef clock_type::time_point time_point;
-        const time_point start_;
+        time_point start_;
 
     public:
         high_resolution_timer()
-            : start_(clock_type::now())
-        {}
+        {
+            restart();
+        }
+
+        void restart()
+        {
+            start_ = clock_type::now();
+        }
 
         unsigned long long count_elapsed() const
         {

@@ -1,7 +1,6 @@
 #ifndef __BEX_STREAM_SERIALIZATION_TEXT_IARCHIVE__
 #define __BEX_STREAM_SERIALIZATION_TEXT_IARCHIVE__
 
-#include <iosfwd>
 #include "base_serializer.hpp"
 #include <boost/lexical_cast.hpp>
 
@@ -15,147 +14,147 @@ namespace Bex { namespace serialization
         , public text_base
         , public input_archive_base
     {
-        friend class rollback_sentry;
+        friend class base_serializer<text_iarchive>;
 
-        std::streambuf& m_sb;
-        archive_mark m_state;
-        std::streamsize m_acc;
+        std::streambuf& buf_;
+        std::streamsize acc_;
+        int deep_;
 
     public:
-        explicit text_iarchive(std::streambuf& sb, archive_mark state = default_mark)
-            : m_sb(sb), m_state(state), m_acc(0)
+        explicit text_iarchive(std::streambuf& sb)
+            : buf_(sb), acc_(0), deep_(0)
         {
         }
 
-        explicit text_iarchive(std::istream& is, archive_mark state = default_mark)
-            : m_sb(*is.rdbuf()), m_state(state), m_acc(0)
+        explicit text_iarchive(std::istream& is)
+            : buf_(*is.rdbuf()), acc_(0), deep_(0)
         {
-        }
-
-        using base_serializer<text_iarchive>::load;
-
-        inline bool load(char * buffer, std::size_t size)
-        {
-            rollback_sentry sentry(this);
-            std::streamsize ls = m_sb.sgetn(buffer, size);
-            m_acc += ls;
-            return sentry.wrap(ls == size);
-        }
-
-        inline bool load(text_wrapper<char> & wrapper)
-        {
-            rollback_sentry sentry(this);
-            char & ch = wrapper.data();
-            std::streamsize ls = m_sb.sgetn(&ch, 1);
-            m_acc += ls;
-            return sentry.wrap(ls == 1);
         }
 
         template <typename T>
-        inline bool load(text_wrapper<T> & wrapper)
+        inline text_iarchive & operator&(T && t)
+        {
+            return (*this >> std::forward<T>(t));
+        }
+
+        template <typename T>
+        inline text_iarchive & operator>>(T && t)
+        {
+            load(std::forward<T>(t));
+            return (*this);
+        }
+
+        template <typename T>
+        inline bool load(T && t)
+        {
+            if (!good()) return false;
+
+            int deep = deep_++;
+            if (!do_load(t))
+            {
+                state_ = archive_state::error;
+                -- deep_;
+                return false;
+            }
+            else
+            {
+                if (!deep)
+                    acc_ = 0;
+                -- deep_;
+                return true;
+            }
+        }
+
+    // @Todo: 改为private.
+    public:
+        using base_serializer<text_iarchive>::do_load;
+
+        inline bool do_load(char * buffer, std::size_t size)
+        {
+            std::streamsize ls = buf_.sgetn(buffer, size);
+            acc_ += ls;
+            return (ls == size);
+        }
+
+        inline bool do_load(text_wrapper<char> & wrapper)
+        {
+            char & ch = wrapper.data();
+            std::streamsize ls = buf_.sgetn(&ch, 1);
+            acc_ += ls;
+            return (ls == 1);
+        }
+
+        template <typename T>
+        inline bool do_load(text_wrapper<T> & wrapper)
         {
             BOOST_STATIC_ASSERT( (boost::is_arithmetic<T>::value) );
 
             T & t = wrapper.data();
-            try
+
+            std::istreambuf_iterator<char> input_first(&buf_);
+            std::istreambuf_iterator<char> input_last;
+            std::string buffer;
+            std::streamsize ls = 0;
+            while (input_first != input_last)
             {
-                rollback_sentry sentry(this);
-                std::istreambuf_iterator<char> input_first(&m_sb);
-                std::istreambuf_iterator<char> input_last;
-                std::string buffer;
-                std::streamsize ls = 0;
-                bool bOk = false;
-                while (input_first != input_last)
-                {
-                    ++ls;
-                    char ch = *input_first++;
-                    if (ch == ' ')
-                    {
-                        bOk = true;
-                        break;
-                    }
+                ++ls;
+                char ch = *input_first++;
+                if (ch == ' ')
+                    break;
 
-                    buffer += ch;
-                }
-                m_acc += ls;
-                t = boost::lexical_cast<T>(buffer);
-                return sentry.wrap(bOk);
+                buffer += ch;
             }
-            catch(std::exception &)
+
+            if (ls)
             {
-                return false;
+                try {
+                    acc_ += ls;
+                    t = boost::lexical_cast<T>(buffer);
+                    return true;
+                } catch (...) { return false; }
             }
+
+            return false;
         }
-
-        template <typename T>
-        inline text_iarchive & operator&(BEX_SERIALIZATION_INTERFACE_REFERENCE(T) t)
-        {
-            return (*this >> t);
-        }
-
-        template <typename T>
-        inline text_iarchive & operator>>(BEX_SERIALIZATION_INTERFACE_REFERENCE(T) t)
-        {
-            rollback_sentry sentry(this);
-            if (!sentry.wrap(load(t)))
-                throw exception("input error!");
-
-            return (*this);
-        }
-
     };
 
     //////////////////////////////////////////////////////////////////////////
     /// text_load
     template <typename T>
-    bool text_load(BEX_SERIALIZATION_INTERFACE_REFERENCE(T) t
-        , std::istream& is, archive_mark state = default_mark)
+    bool text_load(T && t , std::istream& is)
     {
-        try
-        {
-            boost::io::ios_flags_saver saver(is);
-            is.unsetf(std::ios_base::skipws);
-            text_iarchive bi(is, state);
-            bi & t;
-            return true;
-        }
-        catch (std::exception&)
-        {
-            return false;
-        }
+        boost::io::ios_flags_saver saver(is);
+        is.unsetf(std::ios_base::skipws);
+        text_iarchive bi(is);
+        bi & std::forward<T>(t);
+        return bi.good() ? true : (bi.clear(), false);
     }
 
     template <typename T>
-    bool text_load(BEX_SERIALIZATION_INTERFACE_REFERENCE(T) t
-        , std::streambuf& isb, archive_mark state = default_mark)
+    bool text_load(T && t , std::streambuf& isb)
     {
-        try
-        {
-            text_iarchive bi(isb, state);
-            bi & t;
-            return true;
-        }
-        catch (std::exception&)
-        {
-            return false;
-        }
+        text_iarchive bi(isb);
+        bi & std::forward<T>(t);
+        return bi.good() ? true : (bi.clear(), false);
     }
 
     template <typename T>
-    std::size_t text_load(BEX_SERIALIZATION_INTERFACE_REFERENCE(T) t
-        , char const * buffer, std::size_t size, archive_mark state = default_mark)
+    std::size_t text_load(T && t , char const * buffer, std::size_t size)
     {
-        try
-        {
-            static_streambuf isb(const_cast<char*>(buffer), size, false);
-            text_iarchive bi(isb, state);
-            bi & t;
-            return (isb.capacity() - isb.size());
-        }
-        catch (std::exception&)
-        {
-            return (std::size_t)0;
-        }
+        static_streambuf isb(const_cast<char*>(buffer), size, false);
+        text_iarchive bi(isb);
+        bi & std::forward<T>(t);
+        return bi.good() ? (isb.capacity() - isb.size()) : (bi.clear(), 0);
+    }
+
+    /// 数据持久化专用接口
+    template <typename T, typename ... Args>
+    FORCE_INLINE auto text_load_persistence(T && t, Args && ... args)
+        -> decltype(text_load(std::forward<T>(t), std::forward<Args>(args)...))
+    {
+        static_assert(has_serialize<T>::value, "The persistence data mustbe has serialize function.");
+        static_assert(has_version<T>::value, "The persistence data mustbe has version.");
+        return text_load(std::forward<T>(t), std::forward<Args>(args)...);
     }
 
 } //namespace serialization
@@ -163,6 +162,7 @@ namespace Bex { namespace serialization
 namespace {
     using serialization::text_iarchive;
     using serialization::text_load;
+    using serialization::text_load_persistence;
 } //namespace
 
 } //namespace Bex

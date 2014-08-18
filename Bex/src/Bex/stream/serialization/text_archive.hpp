@@ -13,19 +13,30 @@ namespace Bex { namespace serialization
         : public text_iarchive
         , public text_oarchive
     {
+        typedef text_iarchive in_type;
+        typedef text_oarchive out_type;
+
     public:
-        explicit text_archive(std::streambuf& sb, archive_mark state = default_mark)
-            : text_iarchive(sb, state), text_oarchive(sb, state)
+        explicit text_archive(std::streambuf& sb)
+            : in_type(sb), out_type(sb)
         {
         }
 
-        explicit text_archive(std::iostream& ios, archive_mark state = default_mark)
-            : text_iarchive(ios, state), text_oarchive(ios, state)
+        explicit text_archive(std::iostream& ios)
+            : in_type(ios), out_type(ios)
         {
         }
 
-        using text_iarchive::load;
-        using text_oarchive::save;
+        inline bool good() const
+        {
+            return in_type::good() && out_type::good();
+        }
+
+        inline void clear(bool rollback = true)
+        {
+            in_type::clear(rollback);
+            out_type::clear(rollback);
+        }
     };
 } //namespace serialization
 

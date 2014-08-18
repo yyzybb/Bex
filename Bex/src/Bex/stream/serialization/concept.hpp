@@ -1,60 +1,77 @@
 #ifndef __BEX_STREAM_SERIALIZATION_CONCEPT_HPP__
 #define __BEX_STREAM_SERIALIZATION_CONCEPT_HPP__
 
-#include <Bex/config.hpp>
-#include <Bex/stream/serialization/serialization_fwd.h>
-#include <Bex/type_traits/type_traits.hpp>
-#include <boost/type_traits.hpp>
+#include "serialization_fwd.h"
+#include "version_adl.hpp"
 
 namespace Bex { namespace serialization
 {
-    /// 类型是否有版本号判断
-    BEX_TT_HAS_CONSTEXPR(has_version_base, BEX_STREAM_SERIALIZATION_VERSION_NAME);
-    template <typename T>
-    struct has_version : has_version_base<typename remove_all<T>::type> {};
-
-    /// 是否定义为模糊的读写类型
-    //BEX_TT_HAS_TYPE(has_serialize_unkown_type, serialize_unkown_type);
-
     //////////////////////////////////////////////////////////////////////////
-    /// @{ 类型对应的版本号
-    template <typename T, bool _has_version>
-    struct get_version_helper
+    /// @{ 类型是否有版本号判断
+    namespace detail
     {
-        static const int value = 0;
-    };
+        template <typename T>
+        struct has_mem_version
+        {
+            template <typename U>
+            static no_type check(...);
+
+            template <typename U>
+            static yes_type check(decltype(std::declval<U*>()->serialize_version())*);
+
+            static const bool value = (sizeof(check<T>(nullptr)) == sizeof(yes_type));
+        };
+
+        template <typename T>
+        class has_free_version_helper
+        {
+            struct internal_type {};
+
+        public:
+            static const bool value = !boost::is_same<
+                decltype(serialize_version((T*)nullptr)),
+                decltype(serialize_version((internal_type*)nullptr))
+            >::value;
+        };
+
+        template <>
+        class has_free_version_helper<void> : public boost::false_type {};
+
+        template <typename T>
+        struct has_free_version : has_free_version_helper<T> {};
+    } //namespace detail
 
     template <typename T>
-    struct get_version_helper<T, true>
-    {
-        static const int value = T::BEX_STREAM_SERIALIZATION_VERSION_NAME;
-    };
-
-    template <typename T>
-    struct get_version_base
-        : get_version_helper<T, has_version<T>::value>
+    struct has_version
+        : boost::type_traits::ice_or<
+            detail::has_mem_version<typename remove_all<T>::type>::value,
+            detail::has_free_version<typename remove_all<T>::type>::value
+        >
     {};
 
+    // 类型对应的版本号
     template <typename T>
-    struct get_version
-        : get_version_base<typename remove_all<T>::type>
-    {};
+    typename boost::enable_if<has_version<T>, unsigned int>::type get_version()
+    {
+        return serialize_version_adl((typename remove_all<T>::type*)nullptr);
+    }
+
+    template <typename T>
+    typename boost::disable_if<has_version<T>, unsigned int>::type get_version()
+    {
+        return 0;
+    }
     /// @}
     //////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////
     /// @{ 判断类型是否已特化为配接器
     template <typename T>
+    struct is_adapter_type;
+
+    template <typename T>
     struct is_adapter_type_base
         : boost::false_type
-    {};
-    template <typename T>
-    struct is_adapter_type_base<T*>
-        : boost::true_type
-    {};
-    template <typename T, int N>
-    struct is_adapter_type_base<T[N]>
-        : boost::true_type
     {};
     template <typename T, typename Alloc>
     struct is_adapter_type_base<std::vector<T, Alloc> >
@@ -85,92 +102,91 @@ namespace Bex { namespace serialization
         : boost::true_type
     {};
     template <typename T>
+    struct is_adapter_type<T*>
+        : boost::true_type
+    {};
+    template <typename T, int N>
+    struct is_adapter_type<T[N]>
+        : boost::true_type
+    {};
+    template <typename T>
     struct is_adapter_type
         : is_adapter_type_base<typename boost::remove_cv<T>::type>
     {};
     /// @}
     //////////////////////////////////////////////////////////////////////////
 
-#if !defined(BEX_SUPPORT_CXX11)
-    BEX_TT_HAS_TEMPLATE_FUNCTION(has_serialize, serialize);
-#else  //!defined(BEX_SUPPORT_CXX11)
-    template <class C, bool>
-    struct has_serialize_helper
-    {
-        struct Ar {};
-        static Ar sar;
-
-        template <class U>
-        static no_type test(...);
-
-        template <class U>
-        static yes_type test(U*, decltype(make<U>().template serialize<Ar>(sar, unsigned()))* = nullptr);
-
-        static const bool value = sizeof(test<C>(nullptr)) == sizeof(yes_type);
-    };
-
-    template <class C>
-    struct has_serialize_helper<C, false> : std::false_type
-    {};
-
-    template <class C>
-    struct has_serialize_base
-        : has_serialize_helper<C, std::is_class<C>::value || std::is_union<C>::value>
-    {};
-
-    template <class C>
-    struct has_serialize
-        : has_serialize_base<C>
-    {};
-#endif //!defined(BEX_SUPPORT_CXX11)
-
-
-#if !defined(BOOST_NO_CXX11_DECLTYPE)
-    template <typename T>
-    struct has_free_serialize_helper
-    {
-        struct Ar {};
-
-        static const bool value = !std::is_same<
-            decltype(serialize(std::declval<Ar&>(), std::declval<T&>(), (unsigned int)0)),
-            decltype(serialize(std::declval<Ar&>(), std::declval<Ar&>(), (unsigned int)0))
-        >::value;
-    };
-
-    template <>
-    struct has_free_serialize_helper<void>
-        : std::false_type
-    {};
-
-    template <typename T>
-    struct has_free_serialize
-        : has_free_serialize_helper<typename remove_all<T>::type>
-    {};
-
     //////////////////////////////////////////////////////////////////////////
-    /// @{ concept组合
-    /// binary平凡类型判断(直接处理二进制流)
+    /// @{ optimize
+    namespace detail
+    {
+        template <class T, bool>
+        struct has_mem_serialize_helper
+        {
+            struct Ar {};
+
+            template <class U>
+            static no_type test(...);
+
+            template <class U>
+            static yes_type test(U*
+                , decltype(std::declval<U>().template serialize<Ar>(std::declval<Ar&>(), unsigned()))* = nullptr);
+
+            static const bool value = sizeof(test<T>(nullptr)) == sizeof(yes_type);
+        };
+
+        template <class T>
+        struct has_mem_serialize_helper<T, false> : boost::false_type {};
+
+        template <class T>
+        struct has_mem_serialize 
+            : has_mem_serialize_helper<T, boost::is_class<T>::value || boost::is_union<T>::value>
+        {};
+
+        template <typename T>
+        struct has_free_serialize_helper
+        {
+            struct Ar {};
+
+            static const bool value = !std::is_same<
+                decltype(serialize(std::declval<Ar&>(), std::declval<T&>(), (unsigned int)0)),
+                decltype(serialize(std::declval<Ar&>(), std::declval<Ar&>(), (unsigned int)0))
+            >::value;
+        };
+
+        template <>
+        struct has_free_serialize_helper<void> : std::false_type {};
+
+        template <typename T>
+        struct has_free_serialize
+            : has_free_serialize_helper<T>
+        {};
+    } //namespace detail
+
+    template <typename T>
+    struct has_serialize
+        : boost::type_traits::ice_or<
+            detail::has_mem_serialize<typename remove_all<T>::type>::value,
+            detail::has_free_serialize<typename remove_all<T>::type>::value
+        >
+    {};
+
+    // binary平凡类型判断(直接处理二进制流)
     template <typename T>
     struct is_binary_trivial
     {
         static const bool value = !boost::type_traits::ice_or<
             is_adapter_type<T>::value,
             has_serialize<T>::value,
-            has_version<T>::value,
-            has_free_serialize<T>::value
-        >::value;
+            has_version<T>::value
+        >::value 
+#if !defined(BEX_SERIALIZATION_USE_POD_EXTEND)
+        && std::is_pod<typename remove_all<T>::type>::value
+#endif //!defined(BEX_SERIALIZATION_USE_POD_EXTEND)
+        ;
     };
-    /// @}
-    //////////////////////////////////////////////////////////////////////////
-#else  //!defined(BOOST_NO_CXX11_DECLTYPE)
-    template <typename T>
-    struct is_binary_trivial
-        : boost::is_arithmetic<T>
-    {};
-#endif //!defined(BOOST_NO_CXX11_DECLTYPE)
 
-    //////////////////////////////////////////////////////////////////////////
-    /// @{ 判断是否可批量处理优化
+    // 判断是否可批量处理优化
     template <typename T, typename ModeTag>
     struct is_optimize_helper;
 
@@ -191,7 +207,7 @@ namespace Bex { namespace serialization
     /// @}
     //////////////////////////////////////////////////////////////////////////
 
-} //namespace
+} //namespace serialization
 } //namespace Bex
 
 #endif //__BEX_STREAM_SERIALIZATION_CONCEPT_HPP__

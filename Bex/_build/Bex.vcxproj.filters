@@ -216,9 +216,6 @@
     <ClInclude Include="..\src\Bex\stream\serialization\stl_adapter.hpp">
       <Filter>src\stream\serialization</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Bex\stream\serialization\utility.hpp">
-      <Filter>src\stream\serialization</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Bex\stream\convert\base_convert.hpp">
       <Filter>src\stream\convert</Filter>
     </ClInclude>
@@ -425,6 +422,24 @@
     </ClInclude>
     <ClInclude Include="..\src\Bex\bexio\regexs.h">
       <Filter>src\bexio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization\version_adl.hpp">
+      <Filter>src\stream\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization\wrappers.hpp">
+      <Filter>src\stream\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization\archive_traits.hpp">
+      <Filter>src\stream\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\serialization\config.h">
+      <Filter>src\stream\serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\utility\fast_allocator.hpp">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\fast_buffer.hpp">
+      <Filter>src\stream</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

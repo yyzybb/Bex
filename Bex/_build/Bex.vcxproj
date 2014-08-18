@@ -78,6 +78,7 @@
     <ClInclude Include="..\src\Bex\stream\convert\a2w_convert.hpp" />
     <ClInclude Include="..\src\Bex\stream\convert\base_convert.hpp" />
     <ClInclude Include="..\src\Bex\stream\convert\inc_convert.hpp" />
+    <ClInclude Include="..\src\Bex\stream\fast_buffer.hpp" />
     <ClInclude Include="..\src\Bex\stream\multi_ringbuf.hpp" />
     <ClInclude Include="..\src\Bex\stream\ring_buf.hpp" />
     <ClInclude Include="..\src\Bex\stream\ring_streambuf.hpp" />
@@ -89,13 +90,16 @@
     <ClInclude Include="..\src\Bex\stream\serialization\binary_oarchive.hpp" />
     <ClInclude Include="..\src\Bex\stream\serialization\boost_container_adapter.hpp" />
     <ClInclude Include="..\src\Bex\stream\serialization\concept.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\config.h" />
     <ClInclude Include="..\src\Bex\stream\serialization\serialization_fwd.h" />
     <ClInclude Include="..\src\Bex\stream\serialization\serialize_adl.hpp" />
     <ClInclude Include="..\src\Bex\stream\serialization\stl_adapter.hpp" />
     <ClInclude Include="..\src\Bex\stream\serialization\text_archive.hpp" />
     <ClInclude Include="..\src\Bex\stream\serialization\text_iarchive.hpp" />
     <ClInclude Include="..\src\Bex\stream\serialization\text_oarchive.hpp" />
-    <ClInclude Include="..\src\Bex\stream\serialization\utility.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\archive_traits.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\version_adl.hpp" />
+    <ClInclude Include="..\src\Bex\stream\serialization\wrappers.hpp" />
     <ClInclude Include="..\src\Bex\stream\static_streambuf.hpp" />
     <ClInclude Include="..\src\Bex\thread.hpp" />
     <ClInclude Include="..\src\Bex\thread\lock\assert_lock.hpp" />
@@ -119,6 +123,7 @@
     <ClInclude Include="..\src\Bex\type_traits\static_debug.hpp" />
     <ClInclude Include="..\src\Bex\type_traits\type_traits.hpp" />
     <ClInclude Include="..\src\Bex\utility\exception.h" />
+    <ClInclude Include="..\src\Bex\utility\fast_allocator.hpp" />
     <ClInclude Include="..\src\Bex\utility\format.hpp" />
     <ClInclude Include="..\src\Bex\utility\lexical_cast.hpp" />
     <ClInclude Include="..\src\Bex\utility\lock_ptr.hpp" />

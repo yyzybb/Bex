@@ -1,83 +1,10 @@
 #ifndef __BEX_STREAM_SERIALIZATION_UTILITY__
 #define __BEX_STREAM_SERIALIZATION_UTILITY__
 
-#include <boost/type_traits.hpp>
-#include <Bex/stream/serialization/serialization_fwd.h>
-#include <Bex/stream/serialization/concept.hpp>
-#include <Bex/config.hpp>
-#include <Bex/type_traits/type_traits.hpp>
-
-// stl containers adapter
-#include <vector> // vector<T> and vector<bool>
-#include <set>
-#include <list>
-#include <string>
-#include <map>
-#include <deque>
-
-#if defined(_MSC_VER)
-# include <hash_map>
-#endif //defined(_MSC_VER)
-
-#if defined(BOOST_HAS_TR1_UNORDERED_MAP)
-# include <unordered_map>
-#endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
-
-#if defined(BOOST_HAS_TR1_UNORDERED_SET)
-# include <unordered_set>
-#endif //defined(BOOST_HAS_TR1_UNORDERED_SET)
-
-#if defined(BEX_SUPPORT_CXX11)
-# include <array>
-#endif //defined(BEX_SUPPORT_CXX11)
-
-// boost containers adapter
-#include <boost/bimap.hpp>
-#include <boost/array.hpp>
+#include "serialization_fwd.h"
 
 namespace Bex { namespace serialization
 {
-    //////////////////////////////////////////////////////////////////////////
-    /// 二进制数据流包装类
-    struct binary_wrapper
-    {
-        char *      m_data;
-        std::size_t m_size;
-    
-        binary_wrapper(char * data, std::size_t size)
-            : m_data(data), m_size(size)
-        {
-        }
-
-        inline char * data()
-        {
-            return m_data;
-        }
-
-        inline std::size_t size()
-        {
-            return m_size;
-        }
-    };
-
-    //////////////////////////////////////////////////////////////////////////
-    /// 文本数据流包装类
-    template <typename T>
-    struct text_wrapper
-    {
-        T & m_data;
-
-        explicit text_wrapper(T & data)
-            : m_data(data) 
-        {
-        }
-
-        inline T & data()
-        {
-            return m_data;
-        }
-    };
-
     /// archive traits
     template <class Archive>
     struct archive_traits_base
@@ -121,10 +48,9 @@ namespace Bex { namespace serialization
 namespace {
     using serialization::binary_wrapper;
     using serialization::archive_traits;
-} //namespace
 
+} //namespace serialization
 } //namespace Bex
 
-#define BEX_STREAM_SERIALIZATION_IS_POD(Type) (Bex::serialization::is_binary_trivial<Type>::value)
 
 #endif //__BEX_STREAM_SERIALIZATION_UTILITY__

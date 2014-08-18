@@ -46,6 +46,12 @@
 # define BEX_CONSTEXPR constexpr
 #endif //defined(BOOST_NO_CXX11_CONSTEXPR)
 
+#if defined(BOOST_MSVC) || defined(__GUNC__)
+# define FORCE_INLINE __forceinline
+#else
+# define FORCE_INLINE inline
+#endif //defined(BOOST_MSVC) || defined(__GUNC__)
+
 # define BEX_MOVE_ARG BOOST_ASIO_MOVE_ARG
 # define BEX_MOVE_CAST BOOST_ASIO_MOVE_CAST
 
