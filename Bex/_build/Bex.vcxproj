@@ -78,6 +78,7 @@
     <ClInclude Include="..\src\Bex\stream\convert\a2w_convert.hpp" />
     <ClInclude Include="..\src\Bex\stream\convert\base_convert.hpp" />
     <ClInclude Include="..\src\Bex\stream\convert\inc_convert.hpp" />
+    <ClInclude Include="..\src\Bex\stream\fast_buffer.hpp" />
     <ClInclude Include="..\src\Bex\stream\multi_ringbuf.hpp" />
     <ClInclude Include="..\src\Bex\stream\ring_buf.hpp" />
     <ClInclude Include="..\src\Bex\stream\ring_streambuf.hpp" />

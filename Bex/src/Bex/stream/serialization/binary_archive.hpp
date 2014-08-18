@@ -9,30 +9,38 @@
 
 namespace Bex { namespace serialization
 {
+    template <typename Stream = std::streambuf>
     class binary_archive
-        : public binary_iarchive
-        , public binary_oarchive
+        : public binary_iarchive<Stream>
+        , public binary_oarchive<Stream>
     {
+        typedef binary_iarchive<Stream> in_type;
+        typedef binary_oarchive<Stream> out_type;
+
     public:
-        explicit binary_archive(std::streambuf& sb, archive_mark state = default_mark)
-            : binary_iarchive(sb, state), binary_oarchive(sb, state)
+        template <typename Arg>
+        explicit binary_archive(Arg& arg)
+            : in_type(arg), out_type(arg)
         {
         }
 
-        explicit binary_archive(std::iostream& ios, archive_mark state = default_mark)
-            : binary_iarchive(ios, state), binary_oarchive(ios, state)
+        inline bool good() const
         {
+            return in_type::good() && out_type::good();
         }
 
-        using binary_iarchive::load;
-        using binary_oarchive::save;
+        inline void clear(bool rollback = true)
+        {
+            in_type::clear(rollback);
+            out_type::clear(rollback);
+        }
     };
 } //namespace serialization
 
 namespace {
     using serialization::binary_archive;
-} //namespace
 
+} //namespace
 } //namespace Bex
 
 #endif //__BEX_STREAM_SERIALIZATION_BINARY_ARCHIVE__

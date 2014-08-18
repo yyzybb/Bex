@@ -32,29 +32,29 @@ struct array_adapter
         return arr.size();
     }
 
-    inline static bool save(Array const& arrayT, Ar & ar)
+    inline static bool do_save(Array const& arrayT, Ar & ar)
     {
         std::size_t N = size(arrayT);
         typedef typename vt<Array>::type T;
         if (is_optimize<T, Ar>::value)
-            return ar.save((char*)&arrayT[0], N * sizeof(T));
+            return ar.do_save((char*)&arrayT[0], N * sizeof(T));
         
         for (std::size_t i = 0; i < N; ++i)
-            if (!ar.save(arrayT[i]))
+            if (!ar.do_save(arrayT[i]))
                 return false;
 
         return true;
     }
 
-    inline static bool load(Array & arrayT, Ar & ar)
+    inline static bool do_load(Array & arrayT, Ar & ar)
     {
         std::size_t N = size(arrayT);
         typedef typename vt<Array>::type T;
         if (is_optimize<T, Ar>::value)
-            return ar.load((char*)&arrayT[0], N * sizeof(T));
+            return ar.do_load((char*)&arrayT[0], N * sizeof(T));
         
         for (std::size_t i = 0; i < N; ++i)
-            if (!ar.load(arrayT[i]))
+            if (!ar.do_load(arrayT[i]))
                 return false;
 
         return true;

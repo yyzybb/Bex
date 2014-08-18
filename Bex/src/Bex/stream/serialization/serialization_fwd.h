@@ -43,6 +43,7 @@
 
 #if defined(BEX_SUPPORT_CXX11)
 # include <array>
+# include <type_traits>
 #endif //defined(BEX_SUPPORT_CXX11)
 
 // boost containers adapter
@@ -64,8 +65,7 @@ namespace Bex { namespace serialization
     enum class archive_state 
         : unsigned char
     {
-        idle,
-        running,
+        good,
         error,
     };
     //////////////////////////////////////////////////////////////////////////

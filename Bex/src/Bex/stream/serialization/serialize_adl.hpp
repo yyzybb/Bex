@@ -14,8 +14,9 @@ namespace Bex { namespace serialization
         template <class Archive, typename T>
         inline void mode_serialize(Archive & ar, T & t, binary_mode_tag)
         {
-            binary_wrapper bwrap(t);
-            ar & bwrap;
+            BOOST_STATIC_ASSERT(false);
+            //binary_wrapper bwrap(t);
+            //ar & bwrap;
         }
 
         template <class Archive, typename T>
@@ -78,8 +79,7 @@ namespace Bex { namespace serialization
     template <class Archive, typename T>
     inline void serialize_adl(Archive & ar, T & t)
     {
-        unsigned int version = get_version<T>();
-        serialize_with_version(ar, t, version
+        serialize_with_version(ar, t, get_version<T>()
             , typename boost::mpl::if_c<has_version<T>::value
                 , detail::has_version_tag, detail::no_version_tag>::type());
     }

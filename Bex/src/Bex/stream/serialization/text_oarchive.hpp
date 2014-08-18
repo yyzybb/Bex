@@ -14,52 +14,21 @@ namespace Bex { namespace serialization
         , public text_base
         , public output_archive_base
     {
-        friend class sentry;
+        friend class base_serializer<text_oarchive>;
 
         std::streambuf& buf_;
-        archive_mark mark_;
         std::streamsize acc_;
+        int deep_;
 
     public:
-        explicit text_oarchive(std::streambuf& sb, archive_mark state = default_mark)
-            : buf_(sb), mark_(state), acc_(0)
+        explicit text_oarchive(std::streambuf& sb)
+            : buf_(sb), acc_(0), deep_(0)
         {
         }
 
-        explicit text_oarchive(std::ostream& os, archive_mark state = default_mark)
-            : buf_(*os.rdbuf()), mark_(state), acc_(0)
+        explicit text_oarchive(std::ostream& os)
+            : buf_(*os.rdbuf()), acc_(0), deep_(0)
         {
-        }
-
-        using base_serializer<text_oarchive>::save;
-
-        inline bool save(char const* buffer, std::size_t size)
-        {
-            sentry sentry(this);
-            std::streamsize ls = buf_.sputn(buffer, size);
-            acc_ += ls;
-            return sentry.wrap(ls == size);
-        }
-
-        inline bool save(text_wrapper<char> & wrapper)
-        {
-            sentry sentry(this);
-            char & ch = wrapper.data();
-            std::streamsize ls = buf_.sputn(&ch, 1);
-            acc_ += ls;
-            return sentry.wrap(ls == 1);
-        }
-
-        template <typename T>
-        inline bool save(text_wrapper<T> & wrapper)
-        {
-            BOOST_STATIC_ASSERT( (boost::is_arithmetic<T>::value) );
-
-            sentry sentry(this);
-            std::string buffer = boost::lexical_cast<std::string>(wrapper.data()) + " ";
-            std::streamsize ls = buf_.sputn(buffer.c_str(), buffer.length());
-            acc_ += ls;
-            return sentry.wrap(ls == buffer.length());
         }
 
         template <typename T>
@@ -71,62 +40,95 @@ namespace Bex { namespace serialization
         template <typename T>
         inline text_oarchive & operator<<(T const& t)
         {
-            sentry sentry(this);
-            if (!sentry.wrap(save(const_cast<T&>(t))))
-                throw exception("output error!");
-
+            save(t);
             return (*this);
         }
+
+        template <typename T>
+        inline bool save(T const& t)
+        {
+            if (!good()) return false;
+
+            int deep = deep_++;
+            if (!do_save(const_cast<T&>(t)))
+            {
+                state_ = archive_state::error;
+                -- deep_;
+                return false;
+            }
+            else
+            {
+                if (!deep)
+                    acc_ = 0;
+                -- deep_;
+                return true;
+            }
+        }
+
+    // @Todo: 改为private.
+    public:
+        using base_serializer<text_oarchive>::do_save;
+
+        inline bool do_save(char const* buffer, std::size_t size)
+        {
+            std::streamsize ls = buf_.sputn(buffer, size);
+            acc_ += ls;
+            return (ls == size);
+        }
+
+        inline bool do_save(text_wrapper<char> & wrapper)
+        {
+            char & ch = wrapper.data();
+            std::streamsize ls = buf_.sputn(&ch, 1);
+            acc_ += ls;
+            return (ls == 1);
+        }
+
+        template <typename T>
+        inline bool do_save(text_wrapper<T> & wrapper)
+        {
+            BOOST_STATIC_ASSERT( (boost::is_arithmetic<T>::value) );
+
+            std::string buffer;
+
+            try {
+                buffer = boost::lexical_cast<std::string>(wrapper.data()) + " ";
+            } catch (...) { return false; }
+
+            std::streamsize ls = buf_.sputn(buffer.c_str(), buffer.length());
+            acc_ += ls;
+            return (ls == buffer.length());
+        }
+
     };
 
     //////////////////////////////////////////////////////////////////////////
     /// text_save
     template <typename T>
-    bool text_save(T const& t, std::ostream& os, archive_mark state = default_mark)
+    bool text_save(T const& t, std::ostream& os)
     {
-        try
-        {
-            boost::io::ios_flags_saver saver(os);
-            os.unsetf(std::ios_base::skipws);
-            text_oarchive bo(os, state);
-            bo & t;
-            return true;
-        }
-        catch (std::exception&)
-        {
-            return false;
-        }
+        boost::io::ios_flags_saver saver(os);
+        os.unsetf(std::ios_base::skipws);
+        text_oarchive bo(os);
+        bo & t;
+        return bo.good() ? true : (bo.clear(), false);
     }
 
     template <typename T>
-    bool text_save(T const& t, std::streambuf& osb, archive_mark state = default_mark)
+    bool text_save(T const& t, std::streambuf& osb)
     {
-        try
-        {
-            text_oarchive bo(osb, state);
-            bo & t;
-            return true;
-        }
-        catch (std::exception&)
-        {
-            return false;
-        }
+        text_oarchive bo(osb);
+        bo & t;
+        return bo.good() ? true : (bo.clear(), false);
     }
 
     template <typename T>
-    std::size_t text_save(T const& t, char * buffer, std::size_t size, archive_mark state = default_mark)
+    std::size_t text_save(T const& t, char * buffer, std::size_t size)
     {
-        try
-        {
-            static_streambuf osb(buffer, size);
-            text_oarchive bo(osb, state);
-            bo & t;
-            return osb.size();
-        }
-        catch (std::exception&)
-        {
-            return (std::size_t)0;
-        }
+        static_streambuf osb(buffer, size);
+        text_oarchive bo(osb);
+        bo & t;
+        return bo.good() ? osb.size() : (bo.clear(), 0);
     }
 
     /// 数据持久化专用接口

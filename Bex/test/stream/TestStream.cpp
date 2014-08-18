@@ -438,8 +438,8 @@ BOOST_AUTO_TEST_CASE(t_stream_convert_case)
     XDump("开始测试 stream.convert");
 
     std::string str;
-    assert_convert(a2w_cvt<binary_iarchive>(str), true, true, false, false);
-    assert_convert(a2w_cvt<binary_oarchive>(str), true, false, true, false);
+    assert_convert(a2w_cvt<binary_iarchive<>>(str), true, true, false, false);
+    assert_convert(a2w_cvt<binary_oarchive<>>(str), true, false, true, false);
     assert_convert(str, false, false, false, true);
 
     char buf[4096] = {};
@@ -554,9 +554,9 @@ BOOST_AUTO_TEST_CASE(t_stream_case)
 {
     XDump("开始测试 stream");
     
-    /// binary_oarchive -> std::cout
+    /// binary_oarchive<> -> std::cout
     {
-        binary_oarchive bo(std::cout);
+        binary_oarchive<> bo(std::cout);
         bo << std::string("abcdefghijabcdefghijabcdefghijabcdefghij@\n");
         bo << "abc" << "\n";
     }
@@ -573,8 +573,8 @@ BOOST_AUTO_TEST_CASE(t_stream_case)
     {
         static_streambuf ssb(buf, 12);
         {
-            binary_oarchive bo(ssb);
-            binary_iarchive bi(ssb);
+            binary_oarchive<> bo(ssb);
+            binary_iarchive<> bi(ssb);
 
             char data[15] = "12345678901234";
             char check[15] = {};
@@ -593,19 +593,21 @@ BOOST_AUTO_TEST_CASE(t_stream_case)
 
         {
             ssb.reset();
-            binary_oarchive bo(ssb, amb_rollback);
-            binary_iarchive bi(ssb, amb_rollback);
+            binary_oarchive<> bo(ssb);
+            binary_iarchive<> bi(ssb);
 
             char data[15] = "12345678901234";
             char check[15] = {};
 
             BOOST_CHECK(!bo.save(data, sizeof(data)));
+            bo.clear();
             BOOST_CHECK(ssb.size() == 0);
 
             BOOST_CHECK(bo.save(data, 12));
             BOOST_CHECK(ssb.size() == 12);
 
             BOOST_CHECK(!bi.load(check, sizeof(check)));
+            bi.clear();
             BOOST_CHECK(ssb.size() == 12);
 
             BOOST_CHECK(memcmp(data, check, 15) != 0);
@@ -618,9 +620,10 @@ BOOST_AUTO_TEST_CASE(t_stream_case)
             TestRollback obj;
 
             static_streambuf rb_ssb(buf, 7);
-            binary_archive bio(rb_ssb, amb_rollback);
+            binary_archive<> bio(rb_ssb);
 
             BOOST_CHECK(!bio.save(obj));
+            bio.clear();
             BOOST_CHECK(rb_ssb.size() == 0);
 
             char data[7] = {};
@@ -628,6 +631,9 @@ BOOST_AUTO_TEST_CASE(t_stream_case)
             BOOST_CHECK(rb_ssb.size() == 7);
 
             BOOST_CHECK(!bio.load(obj));
+            BOOST_CHECK(rb_ssb.size() == 0);
+
+            bio.clear();
             BOOST_CHECK(rb_ssb.size() == 7);
         }
     }
@@ -637,8 +643,8 @@ BOOST_AUTO_TEST_CASE(t_stream_case)
         /// single thread
         {
             ring_streambuf rsb(buf, 13);
-            binary_oarchive bo(rsb);
-            binary_iarchive bi(rsb);
+            binary_oarchive<> bo(rsb);
+            binary_iarchive<> bi(rsb);
 
             char data[15] = "12345678901234";
             char check[15] = {};
@@ -862,8 +868,8 @@ BOOST_AUTO_TEST_CASE(t_stream_case)
     /// iarchive oarchive
     {
         ring_streambuf rsb(buf, sizeof(buf));
-        binary_oarchive bo(rsb);
-        binary_iarchive bi(rsb);
+        binary_oarchive<> bo(rsb);
+        binary_iarchive<> bi(rsb);
 
         BOOST_CHECK_EQUAL(rsb.size(), 0);
 
@@ -885,7 +891,7 @@ BOOST_AUTO_TEST_CASE(t_stream_case)
     /// io_archive class
     {
         ring_streambuf rsb(buf, sizeof(buf));
-        binary_archive bio(rsb);
+        binary_archive<> bio(rsb);
 
         BOOST_CHECK_EQUAL(rsb.size(), 0);
 
@@ -1109,7 +1115,7 @@ BOOST_AUTO_TEST_CASE(t_stream_property_case)
         const int len = 160 * tc;
         char *buf = new char[len];
         static_streambuf ssb(buf, len);
-        binary_archive bio(ssb);
+        binary_archive<> bio(ssb);
         TestStreamStruct obj;
 
         //DumpX(detail::has_version<TestStreamStruct>::value);

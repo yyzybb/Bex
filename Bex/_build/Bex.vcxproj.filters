@@ -438,6 +438,9 @@
     <ClInclude Include="..\src\Bex\utility\fast_allocator.hpp">
       <Filter>src\utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Bex\stream\fast_buffer.hpp">
+      <Filter>src\stream</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Bex\platform\win32\win32_service.ipp">

@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_SUITE(s_stream_suite)
 /// ≤‚ ‘serialization–‘ƒ‹
 BOOST_AUTO_TEST_CASE(t_serialization_property)
 {
-    const int buf_size = 1024 * 1024 * 100;
+    const int buf_size = 1024 * 1024 * 400;
     char* buf = new char[buf_size];
 
 #if defined(_DEBUG) || defined(DEBUG)
@@ -74,86 +74,86 @@ BOOST_AUTO_TEST_CASE(t_serialization_property)
 
     // ‘§»»
     {
-        static_streambuf ssb(buf, buf_size);
-        binary_oarchive bo(ssb);
+        fast_buffer ssb(buf, buf_size);
+        binary_oarchive<fast_buffer> bo(ssb);
         for (int i = 0; i < tc; ++i)
             bo << i;
     }
 
     /// 1.test int
     {
-        static_streambuf ssb(buf, buf_size);
-        binary_oarchive bo(ssb);
+        fast_buffer ssb(buf, buf_size);
+        binary_oarchive<fast_buffer> bo(ssb);
 
         // save
         Bex::timer bt;
-        for (int i = 0; i < tc; ++i)
+        for (int i = 0; i < tc * 10; ++i)
             bo << i;
-        Dump("data size:" << ssb.size());
+        Dump("data size:" << ssb.gcount());
         Dump("binary save int cost time:" << bt.elapsed() << "s");
     }
 
     /// 2.test byte
     {
-        static_streambuf ssb(buf, buf_size);
-        binary_oarchive bo(ssb);
+        fast_buffer ssb(buf, buf_size);
+        binary_oarchive<fast_buffer> bo(ssb);
 
         // save
         Bex::timer bt;
-        for (int i = 0; i < tc; ++i)
+        for (int i = 0; i < tc * 10; ++i)
             bo << (unsigned char)i;
-        Dump("data size:" << ssb.size());
+        Dump("data size:" << ssb.gcount());
         Dump("binary save unsigned char cost time:" << bt.elapsed() << "s");
     }
 
     /// 2.test string
     {
-        static_streambuf ssb(buf, buf_size);
-        binary_oarchive bo(ssb);
+        fast_buffer ssb(buf, buf_size);
+        binary_oarchive<fast_buffer> bo(ssb);
 
         // save
         std::string str = "abcdefghijklmnopqrstuvwxyz@1234567890";
         Bex::timer bt;
         for (int i = 0; i < tc / 10; ++i)
             bo << str;
-        Dump("data size:" << ssb.size());
+        Dump("data size:" << ssb.gcount());
         Dump("binary save std::string cost time:" << bt.elapsed() << "s");
     }
 
     /// 2.test array optimize
     {
-        static_streambuf ssb(buf, buf_size);
-        binary_oarchive bo(ssb);
+        fast_buffer ssb(buf, buf_size);
+        binary_oarchive<fast_buffer> bo(ssb);
 
         // save
         Pod_t3 obj;
         Bex::timer bt;
         for (int i = 0; i < tc / 100; ++i)
             bo << obj;
-        Dump("data size:" << ssb.size());
+        Dump("data size:" << ssb.gcount());
         Dump("binary save Pod_t3 cost time:" << bt.elapsed() << "s");
     }
 
     /// 2.test array optimize
     {
-        static_streambuf ssb(buf, buf_size);
-        binary_oarchive bo(ssb);
-        binary_iarchive bi(ssb);
+        fast_buffer ssb(buf, buf_size);
+        binary_oarchive<fast_buffer> bo(ssb);
+        //binary_iarchive bi(ssb);
 
         // save
         Obj_t3 obj;
         Bex::timer bt;
         for (int i = 0; i < tc / 100; ++i)
             bo << obj;
-        Dump("data size:" << ssb.size());
+        Dump("data size:" << ssb.gcount());
         Dump("binary save Obj_t3 cost time:" << bt.elapsed() << "s");
 
         // load
-        bt.restart();
-        for (int i = 0; i < tc / 100; ++i)
-            bi >> obj;
-        BOOST_CHECK(ssb.size() == 0);
-        Dump("binary load Obj_t3 cost time:" << bt.elapsed() << "s");
+        //bt.restart();
+        //for (int i = 0; i < tc / 100; ++i)
+        //    bi >> obj;
+        //BOOST_CHECK(ssb.gcount() == 0);
+        //Dump("binary load Obj_t3 cost time:" << bt.elapsed() << "s");
     }
 }
 

@@ -5,34 +5,20 @@
 struct sized_adapter
 {
     template <class Container, class Ar>
-    inline static bool save(Container const& container, Ar & ar)
+    inline static bool do_save(Container const& container, Ar & ar)
     {
         cn32 size(container.size());
-        try
-        {
-            serialize_adl(ar, size);
-            return true;
-        }
-        catch(std::exception &)
-        {
-            return false;
-        }
+        serialize_adl(ar, size);
+        return ar.good();
     }
 
     template <class Ar>
-    inline static bool load(std::size_t & out_size, Ar & ar)
+    inline static bool do_load(std::size_t & out_size, Ar & ar)
     {
         cn32 size;
-        try
-        {
-            serialize_adl(ar, size);
-            out_size = size.get();
-            return true;
-        }
-        catch(std::exception &)
-        {
-            return false;
-        }
+        serialize_adl(ar, size);
+        out_size = size.get();
+        return ar.good();
     }
 };
 
@@ -55,29 +41,29 @@ struct Insert
 template <class Ar, class Container, class Inserter>
 struct container_adapter
 {
-    inline static bool save(Container const& c, Ar & ar)
+    inline static bool do_save(Container const& c, Ar & ar)
     {
-        if (!sized_adapter::save(c, ar)) return false;
+        if (!sized_adapter::do_save(c, ar)) return false;
         if (c.empty()) return true;
 
         BOOST_AUTO(it, c.begin());
         for (; it != c.end(); ++it)
-            if (!ar.save(*it))
+            if (!ar.do_save(*it))
                 return false;
 
         return true;
     }
 
-    inline static bool load(Container & c, Ar & ar)
+    inline static bool do_load(Container & c, Ar & ar)
     {
         c.clear();
         std::size_t size = 0;
-        if (!sized_adapter::load(size, ar)) return false;
+        if (!sized_adapter::do_load(size, ar)) return false;
 
         typename Container::value_type v;
         for (std::size_t ui = 0; ui < size; ++ui)
         {
-            if (!ar.load(v))
+            if (!ar.do_load(v))
                 return false;
 
             Inserter()(c, v);
@@ -93,26 +79,26 @@ struct adapter<Ar, std::vector<T, Alloc> >
 {
     typedef std::vector<T, Alloc> Vector;
 
-    inline static bool save(Vector const& vecT, Ar & ar)
+    inline static bool do_save(Vector const& vecT, Ar & ar)
     {
-        if (!sized_adapter::save(vecT, ar)) return false;
+        if (!sized_adapter::do_save(vecT, ar)) return false;
         if (vecT.empty()) return true;
             
         if (is_optimize<T, Ar>::value)
-            return ar.save((char*)&vecT[0], vecT.size() * sizeof(T));
+            return ar.do_save((char*)&vecT[0], vecT.size() * sizeof(T));
         
         for (std::size_t ui = 0; ui < vecT.size(); ++ui)
-            if (!ar.save(vecT[ui]))
+            if (!ar.do_save(vecT[ui]))
                 return false;
 
         return true;
     }
 
-    inline static bool load(Vector & vecT, Ar & ar)
+    inline static bool do_load(Vector & vecT, Ar & ar)
     {
         vecT.clear();
         std::size_t size = 0;
-        if (!sized_adapter::load(size, ar)) return false;
+        if (!sized_adapter::do_load(size, ar)) return false;
 
         std::size_t count = size;
         while (count)
@@ -123,12 +109,12 @@ struct adapter<Ar, std::vector<T, Alloc> >
             vecT.resize(vecT.size() + once);
             if (is_optimize<T, Ar>::value)
             {
-                if (!ar.load((char*)&vecT[start], once * sizeof(T)))
+                if (!ar.do_load((char*)&vecT[start], once * sizeof(T)))
                     return false;
             }
             else
                 for (std::size_t i = 0; i < once; ++i)
-                    if (!ar.load(vecT[start + i]))
+                    if (!ar.do_load(vecT[start + i]))
                         return false;
         }
 
@@ -143,9 +129,9 @@ struct adapter<Ar, std::vector<bool, Alloc> >
 {
     typedef std::vector<bool, Alloc> Vector;
 
-    inline static bool save(Vector const& vecT, Ar & ar)
+    inline static bool do_save(Vector const& vecT, Ar & ar)
     {
-        if (!sized_adapter::save(vecT, ar)) return false;
+        if (!sized_adapter::do_save(vecT, ar)) return false;
         if (vecT.empty()) return true;
 
         unsigned char byte[1024] = {};
@@ -156,7 +142,7 @@ struct adapter<Ar, std::vector<bool, Alloc> >
 
             if (((i + 1) & (8 * sizeof(byte) - 1)) == 0)
             {
-                if (!ar.save((char*)byte, sizeof(byte)))
+                if (!ar.do_save((char*)byte, sizeof(byte)))
                     return false;
 
                 memset(byte, 0, sizeof(byte));
@@ -165,15 +151,15 @@ struct adapter<Ar, std::vector<bool, Alloc> >
 
         std::size_t avail = bit_to_byte(vecT.size() & (8 * sizeof(byte) - 1));
         if (avail)
-            return ar.save((char*)byte, avail);
+            return ar.do_save((char*)byte, avail);
 
         return true;
     }
 
-    inline static bool load(Vector & vecT, Ar & ar)
+    inline static bool do_load(Vector & vecT, Ar & ar)
     {
         std::size_t bit_c;
-        if (!sized_adapter::load(bit_c, ar)) return false;
+        if (!sized_adapter::do_load(bit_c, ar)) return false;
 
         vecT.clear();
         if (!bit_c) return true;
@@ -182,7 +168,7 @@ struct adapter<Ar, std::vector<bool, Alloc> >
         while (bit_c)
         {
             std::size_t n = (std::min<std::size_t>)(1024 * 8, bit_c);
-            if (!ar.load((char*)byte, bit_to_byte(n))) return false;
+            if (!ar.do_load((char*)byte, bit_to_byte(n))) return false;
             bit_c -= n;
 
             vecT.reserve(vecT.size() + n);
@@ -205,25 +191,25 @@ struct adapter<Ar, std::vector<bool, Alloc> >
 {
     typedef std::vector<bool, Alloc> Vector;
 
-    inline static bool save(Vector const& vecT, Ar & ar)
+    inline static bool do_save(Vector const& vecT, Ar & ar)
     {
-        if (!sized_adapter::save(vecT, ar)) return false;
+        if (!sized_adapter::do_save(vecT, ar)) return false;
 
         if (!vecT.empty())
         {
             char * pBase = get_base(vecT);
             std::size_t bits = vecT.size();
             std::size_t bytes = (bits >> 3) + ((bits & 0x7) > 0 ? 1 : 0);
-            if (!ar.save(pBase, bytes)) return false;
+            if (!ar.do_save(pBase, bytes)) return false;
         }
         
         return true;
     }
 
-    inline static bool load(Vector & vecT, Ar & ar)
+    inline static bool do_load(Vector & vecT, Ar & ar)
     {
         std::size_t bits;
-        if (!sized_adapter::load(bits, ar)) return false;
+        if (!sized_adapter::do_load(bits, ar)) return false;
 
         vecT.clear();
         if (bits)
@@ -236,7 +222,7 @@ struct adapter<Ar, std::vector<bool, Alloc> >
                 std::size_t ls = (std::min)(bytes, once);
                 vecT.resize( (std::min)((ls + size) * 8, bits) );
                 char * pNext = get_base(vecT) + size;
-                if (!ar.load(pNext, ls)) return false;
+                if (!ar.do_load(pNext, ls)) return false;
 
                 bytes -= ls;
                 size += ls;
@@ -262,28 +248,28 @@ struct adapter<Ar, std::basic_string<T, Traits, Alloc> >
 {
     typedef std::basic_string<T, Traits, Alloc> String;
 
-    inline static bool save(String const& stringT, Ar & ar)
+    inline static bool do_save(String const& stringT, Ar & ar)
     {
         BOOST_STATIC_ASSERT((boost::is_same<T, char>::value || boost::is_same<T, wchar_t>::value));
 
-        if (!sized_adapter::save(stringT, ar)) return false;
+        if (!sized_adapter::do_save(stringT, ar)) return false;
         if (stringT.empty()) return true;
-        return ar.save((char *)&stringT[0], stringT.size() * sizeof(T));
+        return ar.do_save((char *)&stringT[0], stringT.size() * sizeof(T));
     }
 
-    inline static bool load(String & stringT, Ar & ar)
+    inline static bool do_load(String & stringT, Ar & ar)
     {
         BOOST_STATIC_ASSERT((boost::is_same<T, char>::value || boost::is_same<T, wchar_t>::value));
 
         stringT.clear();
         std::size_t size = 0;
-        if (!sized_adapter::load(size, ar)) return false;
+        if (!sized_adapter::do_load(size, ar)) return false;
 
         T buf[128];
         while (size)
         {
             std::size_t ls = (std::min)(size, sizeof(buf) / sizeof(T));
-            if (!ar.load((char *)&buf[0], ls * sizeof(T))) return false;
+            if (!ar.do_load((char *)&buf[0], ls * sizeof(T))) return false;
             size -= ls;
             stringT.append(&buf[0], ls);
         }
@@ -340,15 +326,15 @@ struct adapter<Ar, std::pair<T1, T2> >
 {
     typedef std::pair<T1, T2> Pair;
 
-    inline static bool save(Pair & pairT, Ar & ar)
+    inline static bool do_save(Pair & pairT, Ar & ar)
     {
-        return ar.save(pairT.first) && ar.save(pairT.second);
+        return ar.do_save(pairT.first) && ar.do_save(pairT.second);
     }
 
-    inline static bool load(Pair & pairT, Ar & ar)
+    inline static bool do_load(Pair & pairT, Ar & ar)
     {
-        return ar.load((typename boost::remove_cv<T1>::type&)pairT.first) 
-            && ar.load((typename boost::remove_cv<T2>::type&)pairT.second);
+        return ar.do_load((typename boost::remove_cv<T1>::type&)pairT.first) 
+            && ar.do_load((typename boost::remove_cv<T2>::type&)pairT.second);
     }
 };
 

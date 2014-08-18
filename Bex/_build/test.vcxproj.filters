@@ -48,9 +48,6 @@
     <ClCompile Include="..\test\base\TestBit.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\test\stream\TestStream.cpp">
-      <Filter>stream</Filter>
-    </ClCompile>
     <ClCompile Include="..\test\thread\TestThreadPool.cpp">
       <Filter>thread</Filter>
     </ClCompile>
@@ -87,9 +84,6 @@
     <ClCompile Include="..\test\type_traits\Test_remove_all.cpp">
       <Filter>type_traits</Filter>
     </ClCompile>
-    <ClCompile Include="..\test\stream\TestTextArchive.cpp">
-      <Filter>stream</Filter>
-    </ClCompile>
     <ClCompile Include="..\test\bind\TestForwardBind.cpp">
       <Filter>bind</Filter>
     </ClCompile>
@@ -109,6 +103,12 @@
       <Filter>bexio</Filter>
     </ClCompile>
     <ClCompile Include="..\test\stream\TestSerializationProperty.cpp">
+      <Filter>stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\stream\TestStream.cpp">
+      <Filter>stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\stream\TestTextArchive.cpp">
       <Filter>stream</Filter>
     </ClCompile>
   </ItemGroup>
