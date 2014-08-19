@@ -20,6 +20,7 @@
 #include <Bex/utility/exception.h>
 #include <Bex/math/compress_numeric.hpp>
 #include <iosfwd>
+#include <type_traits>
 
 // stl containers adapter
 #include <vector> // vector<T> and vector<bool>
@@ -28,23 +29,15 @@
 #include <string>
 #include <map>
 #include <deque>
+#include <unordered_map>
+#include <unordered_set>
+#include <array>
+#include <tuple>
 
 #if defined(_MSC_VER)
 # include <hash_map>
 #endif //defined(_MSC_VER)
 
-#if defined(BOOST_HAS_TR1_UNORDERED_MAP)
-# include <unordered_map>
-#endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
-
-#if defined(BOOST_HAS_TR1_UNORDERED_SET)
-# include <unordered_set>
-#endif //defined(BOOST_HAS_TR1_UNORDERED_SET)
-
-#if defined(BEX_SUPPORT_CXX11)
-# include <array>
-# include <type_traits>
-#endif //defined(BEX_SUPPORT_CXX11)
 
 // boost containers adapter
 #include <boost/bimap.hpp>
