@@ -79,6 +79,9 @@
     <Filter Include="src\bexio\http">
       <UniqueIdentifier>{c4209100-d3bc-4c60-b6e2-fbc2d955f489}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\crypto">
+      <UniqueIdentifier>{6e06c09f-62ee-47ba-9a57-82a1742824a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Bex\base\bit.hpp">
@@ -440,6 +443,9 @@
     </ClInclude>
     <ClInclude Include="..\src\Bex\stream\fast_buffer.hpp">
       <Filter>src\stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bex\crypto\rsa_stream.hpp">
+      <Filter>src\crypto</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

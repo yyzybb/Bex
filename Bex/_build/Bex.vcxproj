@@ -56,6 +56,7 @@
     <ClInclude Include="..\src\Bex\config\config.hpp" />
     <ClInclude Include="..\src\Bex\config\stl.hpp" />
     <ClInclude Include="..\src\Bex\config\windows.h" />
+    <ClInclude Include="..\src\Bex\crypto\rsa_stream.hpp" />
     <ClInclude Include="..\src\Bex\filesystem\filestream.hpp" />
     <ClInclude Include="..\src\Bex\functor.hpp" />
     <ClInclude Include="..\src\Bex\functor\functor.hpp" />
