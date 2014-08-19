@@ -348,7 +348,6 @@ struct adapter<Ar, stdext::hash_map<K, T, Tr, Alloc> >
 #endif //defined(_MSC_VER)
 
 
-#if defined(BOOST_HAS_TR1_UNORDERED_MAP)
 //////////////////////////////////////////////////////////////////////////
 /// unordered_map
 template <class Ar, typename K, typename T, typename H, typename Eq, typename Alloc>
@@ -361,9 +360,7 @@ template <class Ar, typename K, typename T, typename H, typename Eq, typename Al
 struct adapter<Ar, std::unordered_multimap<K, T, H, Eq, Alloc> >
     : public container_adapter<Ar, std::unordered_multimap<K, T, H, Eq, Alloc>, Insert>
 {};
-#endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
 
-#if defined(BOOST_HAS_TR1_UNORDERED_SET)
 //////////////////////////////////////////////////////////////////////////
 /// unordered_set
 template <class Ar, typename T, typename H, typename Eq, typename Alloc>
@@ -376,4 +373,62 @@ template <class Ar, typename T, typename H, typename Eq, typename Alloc>
 struct adapter<Ar, std::unordered_multiset<T, H, Eq, Alloc> >
     : public container_adapter<Ar, std::unordered_multiset<T, H, Eq, Alloc>, Insert>
 {};
-#endif //defined(BOOST_HAS_TR1_UNORDERED_SET)
+
+//////////////////////////////////////////////////////////////////////////
+/// std::tuple
+template <class Ar, typename ... CArgs>
+struct adapter<Ar, std::tuple<CArgs...> >
+{
+    typedef std::tuple<CArgs...> Tuple;
+
+private:
+    template <int I, typename ... Args>
+    inline static typename boost::enable_if_c<(I < sizeof...(Args)), bool>::type
+        do_save_one(std::tuple<Args...> const& c, Ar & ar, int index)
+    {
+        if (!index) return ar.do_save(std::get<I>(c));
+        return do_save_one<I + 1>(c, ar, --index);
+    }
+
+    template <int I, typename ... Args>
+    inline static typename boost::disable_if_c<(I < sizeof...(Args)), bool>::type
+        do_save_one(std::tuple<Args...> const&, Ar &, int)
+    {
+        return false;
+    }
+
+    template <int I, typename ... Args>
+    inline static typename boost::enable_if_c<(I < sizeof...(Args)), bool>::type
+        do_load_one(std::tuple<Args...> & c, Ar & ar, int index)
+    {
+        if (!index) return ar.do_load(std::get<I>(c));
+        return do_load_one<I + 1>(c, ar, --index);
+    }
+
+    template <int I, typename ... Args>
+    inline static typename boost::disable_if_c<(I < sizeof...(Args)), bool>::type
+        do_load_one(std::tuple<Args...> &, Ar &, int)
+    {
+        return false;
+    }
+
+public:
+    inline static bool do_save(Tuple const& c, Ar & ar)
+    {
+        for (int i = 0; i < std::tuple_size<Tuple>::value; ++i)
+            if (!do_save_one<0>(c, ar, i))
+                return false;
+
+        return true;
+    }
+
+    template <typename T, typename ... Args>
+    inline static bool do_load(std::tuple<T, Args...> & c, Ar & ar)
+    {
+        for (int i = 0; i < std::tuple_size<Tuple>::value; ++i)
+            if (!do_load_one<0>(c, ar, i))
+                return false;
+
+        return true;
+    }
+};

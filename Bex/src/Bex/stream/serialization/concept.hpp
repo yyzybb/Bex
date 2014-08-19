@@ -70,49 +70,82 @@ namespace Bex { namespace serialization
     struct is_adapter_type;
 
     template <typename T>
-    struct is_adapter_type_base
-        : boost::false_type
-    {};
+    struct is_adapter_type_impl : boost::false_type {};
+
+    /// ------- STL Containers
     template <typename T, typename Alloc>
-    struct is_adapter_type_base<std::vector<T, Alloc> >
-        : boost::true_type
-    {};
-    template <typename T, typename Alloc>
-    struct is_adapter_type_base<std::list<T, Alloc> >
-        : boost::true_type
-    {};
+    struct is_adapter_type_impl<std::vector<T, Alloc> > : boost::true_type {};
+
     template <typename T, typename Traits, typename Alloc>
-    struct is_adapter_type_base<std::basic_string<T, Traits, Alloc> >
-        : boost::true_type
-    {};
+    struct is_adapter_type_impl<std::basic_string<T, Traits, Alloc> > : boost::true_type {};
+
+    template <typename T, typename Alloc>
+    struct is_adapter_type_impl<std::list<T, Alloc> > : boost::true_type {};
+
+    template <typename T, typename Alloc>
+    struct is_adapter_type_impl<std::deque<T, Alloc> > : boost::true_type {};
+
+    template <typename T, typename Pr, typename Alloc>
+    struct is_adapter_type_impl<std::set<T, Pr, Alloc> > : boost::true_type {};
+
+    template <typename T, typename Pr, typename Alloc>
+    struct is_adapter_type_impl<std::multiset<T, Pr, Alloc> > : boost::true_type {};
+
     template <typename K, typename T, typename Pr, typename Alloc>
-    struct is_adapter_type_base<std::map<K, T, Pr, Alloc> >
-        : boost::true_type
-    {};
+    struct is_adapter_type_impl<std::map<K, T, Pr, Alloc> > : boost::true_type {};
+
+    template <typename K, typename T, typename Pr, typename Alloc>
+    struct is_adapter_type_impl<std::multimap<K, T, Pr, Alloc> > : boost::true_type {};
+
+#if defined(_MSC_VER)
+    template <typename K, typename T, typename Pr, typename Alloc>
+    struct is_adapter_type_impl<stdext::hash_map<K, T, Pr, Alloc> > : boost::true_type {};
+#endif //defined(_MSC_VER)
+
+    template <typename K, typename T, typename H, typename Eq, typename Alloc>
+    struct is_adapter_type_impl<std::unordered_map<K, T, H, Eq, Alloc> > : boost::true_type {};
+
+    template <typename K, typename T, typename H, typename Eq, typename Alloc>
+    struct is_adapter_type_impl<std::unordered_multimap<K, T, H, Eq, Alloc> > : boost::true_type {};
+
+    template <typename T, typename H, typename Eq, typename Alloc>
+    struct is_adapter_type_impl<std::unordered_set<T, H, Eq, Alloc> > : boost::true_type {};
+
+    template <typename T, typename H, typename Eq, typename Alloc>
+    struct is_adapter_type_impl<std::unordered_multiset<T, H, Eq, Alloc> > : boost::true_type {};
+
     template <typename T1, typename T2>
-    struct is_adapter_type_base<std::pair<T1, T2> >
-        : boost::true_type
-    {};
+    struct is_adapter_type_impl<std::pair<T1, T2> > : boost::true_type {};
+
+    template <typename T, std::size_t N>
+    struct is_adapter_type_impl<std::array<T, N> > : boost::true_type {};
+
+    template <typename ... CArgs>
+    struct is_adapter_type_impl<std::tuple<CArgs...> > : boost::true_type {};
+
+    /// -------- Boost Containers
+    template <typename T, std::size_t N>
+    struct is_adapter_type_impl<boost::array<T, N> > : boost::true_type {};
+
+    template <typename K1, typename K2, typename AP1, typename AP2, typename AP3>
+    struct is_adapter_type_impl<boost::bimap<K1, K2, AP1, AP2, AP3> > : boost::true_type {};
+
+    /// -------- Wrappers
     template <>
-    struct is_adapter_type_base<binary_wrapper>
-        : boost::true_type
-    {};
+    struct is_adapter_type_impl<binary_wrapper> : boost::true_type {};
+
     template <typename T>
-    struct is_adapter_type_base<text_wrapper<T> >
-        : boost::true_type
-    {};
+    struct is_adapter_type_impl<text_wrapper<T> > : boost::true_type {};
+
+    /// -------- pointer and C-style array
     template <typename T>
-    struct is_adapter_type<T*>
-        : boost::true_type
-    {};
+    struct is_adapter_type<T*> : boost::true_type {};
+
     template <typename T, int N>
-    struct is_adapter_type<T[N]>
-        : boost::true_type
-    {};
+    struct is_adapter_type<T[N]> : boost::true_type {};
+
     template <typename T>
-    struct is_adapter_type
-        : is_adapter_type_base<typename boost::remove_cv<T>::type>
-    {};
+    struct is_adapter_type : is_adapter_type_impl<typename remove_all<T>::type> {};
     /// @}
     //////////////////////////////////////////////////////////////////////////
 

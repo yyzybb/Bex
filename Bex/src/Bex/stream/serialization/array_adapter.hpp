@@ -70,7 +70,6 @@ struct adapter<Ar, T[N]>
     BOOST_STATIC_ASSERT(N > 0);
 };
 
-#if defined(BEX_SUPPORT_CXX11)
 /// std::array
 template <class Ar, typename T, std::size_t N>
 struct adapter<Ar, std::array<T, N> >
@@ -78,7 +77,6 @@ struct adapter<Ar, std::array<T, N> >
 {
     BOOST_STATIC_ASSERT(N > 0);
 };
-#endif //defined(BEX_SUPPORT_CXX11)
 
 /// boost::array
 template <class Ar, typename T, std::size_t N>

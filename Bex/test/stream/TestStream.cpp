@@ -20,19 +20,14 @@ struct TestStreamStruct
     typedef stdext::hash_map<int, std::string> HashMap;
 #endif //defined(_MSC_VER)
 
-#if defined(BOOST_HAS_TR1_UNORDERED_MAP)
     typedef std::unordered_map<int, std::string>        UnorderedMap;
     typedef std::unordered_multimap<int, std::string>   UnorderedMultiMap;
-#endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
 
-#if defined(BOOST_HAS_TR1_UNORDERED_SET)
     typedef std::unordered_set<std::string>             UnorderedSet;
     typedef std::unordered_multiset<std::string>        UnorderedMultiSet;
-#endif //defined(BOOST_HAS_TR1_UNORDERED_SET)
 
-#if defined(BEX_SUPPORT_CXX11)
     typedef std::array<std::string, 7>                  StdArray;
-#endif //defined(BEX_SUPPORT_CXX11)
+    typedef std::tuple<int, double, float>              StdTuple;
 
     typedef boost::array<int, 3> BoostArray;
     typedef boost::bimap<int, int> BoostBimap;
@@ -54,17 +49,12 @@ struct TestStreamStruct
 #if defined(_MSC_VER)
     HashMap hmap;
 #endif //defined(_MSC_VER)
-#if defined(BOOST_HAS_TR1_UNORDERED_MAP)
     UnorderedMap umap;
     UnorderedMultiMap ummap;
-#endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
-#if defined(BOOST_HAS_TR1_UNORDERED_SET)
     UnorderedSet uset;
     UnorderedMultiSet umset;
-#endif //defined(BOOST_HAS_TR1_UNORDERED_SET)
-#if defined(BEX_SUPPORT_CXX11)
     StdArray sarray;
-#endif //defined(BEX_SUPPORT_CXX11)
+    StdTuple stuple;
     BoostArray barray;
     BoostBimap bbimap;
 
@@ -169,25 +159,22 @@ struct TestStreamStruct
 #if defined(_MSC_VER)
         ret &= check_hashmap_container(hmap, rhs.hmap, Bex::equal_to<>() );
 #endif //defined(_MSC_VER)
-#if defined(BOOST_HAS_TR1_UNORDERED_MAP)
         ret &= check_hashmap_container(umap, rhs.umap, Bex::equal_to<>() );
         ret &= check_hashmultimap_container(ummap, rhs.ummap, Bex::equal_to<>() );
-#endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
-#if defined(BOOST_HAS_TR1_UNORDERED_SET)
         ret &= check_hashset_container(uset, rhs.uset);
         ret &= check_hashmultiset_container(umset, rhs.umset);
-#endif //defined(BOOST_HAS_TR1_UNORDERED_SET)
-#if defined(BEX_SUPPORT_CXX11)
         ret &= check_container(sarray, rhs.sarray);
-#endif //defined(BEX_SUPPORT_CXX11)
         ret &= check_container(barray, rhs.barray);
         ret &= check_hashmap_container(bbimap.left, rhs.bbimap.left, Bex::equal_to<>() );
+
+        ret &= (std::get<0>(stuple) == std::get<0>(rhs.stuple));
+        ret &= (std::get<1>(stuple) == std::get<1>(rhs.stuple));
+        ret &= (std::get<2>(stuple) == std::get<2>(rhs.stuple));
         return ret;
     }
 
     void init_ext_containers()
     {
-#if defined(BEX_SUPPORT_CXX11)
         list = List{1, 2, 3, 5, 7};
         deque = Deque{"abc", "xxd", "fffff", ""};
         set = Set{"abc", "xxd", "fffff", ""};
@@ -197,20 +184,16 @@ struct TestStreamStruct
 #if defined(_MSC_VER)
         hmap = HashMap{{1, "abc"}, {2, "ddc"}, {1024, ""}};
 #endif //defined(_MSC_VER)
-#if defined(BOOST_HAS_TR1_UNORDERED_MAP)
         umap = UnorderedMap{{1, "abc"}, {2, "ddc"}, {1024, ""}};;
         ummap = UnorderedMultiMap{{1, "abc"}, {1, "ddc"}, {1024, ""}};;
-#endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
-#if defined(BOOST_HAS_TR1_UNORDERED_SET)
         uset = UnorderedSet{"abc", "xxd", "fffff", ""};
         umset = UnorderedMultiSet{"abc", "xxd", "fffff", "", "", "xxd"};
-#endif //defined(BOOST_HAS_TR1_UNORDERED_SET)
         sarray = StdArray{"a", "ab", "abc", "abcd", "abcde", ""};
         barray = BoostArray{1, 2, 3};
         bbimap.left.insert(std::make_pair(1, 2));
         bbimap.left.insert(std::make_pair(3, 4));
         bbimap.left.insert(std::make_pair(5, 6));
-#endif //defined(BEX_SUPPORT_CXX11)
+        stuple = StdTuple{1, 2.5, 3.0f};
     }
 
     unsigned int serialize_version() const
@@ -238,19 +221,14 @@ void serialize(Archive & ar, TestStreamStruct & t, const unsigned int version)
 #if defined(_MSC_VER)
     ar & t.hmap;
 #endif //defined(_MSC_VER)
-#if defined(BOOST_HAS_TR1_UNORDERED_MAP)
     ar & t.umap;
     ar & t.ummap;
-#endif //defined(BOOST_HAS_TR1_UNORDERED_MAP)
-#if defined(BOOST_HAS_TR1_UNORDERED_SET)
     ar & t.uset;
     ar & t.umset;
-#endif //defined(BOOST_HAS_TR1_UNORDERED_SET)
-#if defined(BEX_SUPPORT_CXX11)
     ar & t.sarray;
-#endif //defined(BEX_SUPPORT_CXX11)
     ar & t.barray;
     ar & t.bbimap;
+    ar & t.stuple;
 }
 
 struct fake_pod_struct
