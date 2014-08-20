@@ -3,8 +3,18 @@
 
 //////////////////////////////////////////////////////////////////////////
 /// 利用openssl.RSA进行加解密和签名的工具
+#include <cstdio>
+#include <string>
+#include <openssl/ssl.h>
+#include <openssl/rsa.h>
+#include <openssl/pem.h>
+#include <boost/asio/basic_streambuf.hpp>
+#include <boost/static_assert.hpp>
 
-namespace Bex {
+#pragma comment(lib, "ssleay32.lib")
+#pragma comment(lib, "libeay32.lib")
+
+namespace Bex { namespace crypto {
 
 class rsa_stream
 {
@@ -28,6 +38,7 @@ public:
     rsa_stream() : rsa_(0), type_(pri_encrypt) {}
 
     rsa_stream(const char* filename, transfer_type type, pem_password_cb* pem_pwd = 0)
+        : rsa_(0)
     {
         open(filename, type, pem_pwd);
     }
@@ -72,8 +83,13 @@ public:
 
     void close()
     {
-        ::RSA_free(rsa_);
+        if (rsa_) ::RSA_free(rsa_);
         rsa_ = 0;
+        clear();
+    }
+
+    void clear()
+    {
         buf_.consume(buf_.size());
         out_.consume(out_.size());
     }
@@ -88,9 +104,15 @@ public:
         return (type_ == pri_encrypt || type_ == pub_encrypt);
     }
 
+    RSA* & native_handle()
+    {
+        return rsa_;
+    }
+
     template <typename Sequence>
     std::size_t sputn(Sequence const& seq)
     {
+        if (!is_open()) return 0;
         std::size_t s = seq.size() * sizeof(typename Sequence::value_type);
         if (!s) return 0;
 
@@ -103,6 +125,7 @@ public:
     {
         BOOST_STATIC_ASSERT(sizeof(typename Sequence::value_type) == 1);
 
+        if (!is_open()) return 0;
         int rsa_len = ::RSA_size(rsa_);
         int ret_len = 0;
 
@@ -160,15 +183,17 @@ public:
         return s;
     }
 
-    rsa_stream& operator<<(std::string const& str)
+    template <typename Sequence>
+    rsa_stream& operator<<(Sequence const& seq)
     {
-        sputn(str);
+        sputn(seq);
         return (*this);
     }
 
-    rsa_stream& operator>>(std::string & str)
+    template <typename Sequence>
+    rsa_stream& operator>>(Sequence & seq)
     {
-        sgetn(str);
+        sgetn(seq);
         return (*this);
     }
 
@@ -177,6 +202,7 @@ public:
     {
         BOOST_STATIC_ASSERT(sizeof(typename Sequence::value_type) == 1);
 
+        if (!is_open()) return false;
         if (type_ != pri_sign) return false;
 
         unsigned char md[20] = {};
@@ -190,12 +216,14 @@ public:
 
         sign.resize(siglen);
         memcpy(&sign[0], sigbuf, siglen);
+        out_.consume(out_.size());
         return true;
     }
 
     template <typename Sequence>
     bool verify(Sequence const& sign)
     {
+        if (!is_open()) return false;
         if (sign.empty()) return false;
         if (type_ != pub_verify) return false;
 
@@ -212,6 +240,7 @@ public:
     }
 };
 
+} //namespace crypto
 } //namespace Bex
 
 #endif //__BEX_CRYPTO_RSA_STREAM_HPP__
