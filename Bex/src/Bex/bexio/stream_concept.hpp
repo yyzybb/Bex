@@ -11,7 +11,7 @@ namespace Bex { namespace bexio
     {
         template <typename U>
         static char _check(U *
-            , decltype(std::declval(U).handshake((typename Stream::handshake_type)0, boost::throws()))* = nullptr);
+            , decltype(std::declval<U>().handshake((typename Stream::handshake_type)0, boost::throws()))* = nullptr);
 
         template <typename U>
         static short _check(...);
@@ -27,7 +27,7 @@ namespace Bex { namespace bexio
 
         template <typename U>
         static char _check(U *
-            , decltype(std::declval(U).async_handshake((typename Stream::handshake_type)0, &_handler))* = nullptr);
+            , decltype(std::declval<U>().async_handshake((typename Stream::handshake_type)0, &_handler))* = nullptr);
 
         template <typename U>
         static short _check(...);

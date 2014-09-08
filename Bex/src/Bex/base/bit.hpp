@@ -3,6 +3,7 @@
 
 #include "cstdtype.hpp"
 #include <boost/static_assert.hpp>
+#include <boost/type_traits.hpp>
 
 //////////////////////////////////////////////////////////////////////////
 /// ------ BIT操作
@@ -12,10 +13,8 @@ namespace Bex
     /// ------ least bit integer
     template <int Bit>
     struct least_bv
-    {
-        typedef typename boost::uint_t<Bit + 1>::least type;
-        static const type value = (type)1 << Bit;
-    };
+        : boost::integral_constant<typename boost::uint_t<Bit + 1>::least, (1 << Bit)>
+    {};
 
     /// ------ get strong
     template <typename L, typename R>

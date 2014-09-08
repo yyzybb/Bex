@@ -53,8 +53,7 @@ public:
         if (rsa_) 
             close();
 
-        FILE * f = 0;
-        fopen_s(&f, filename, "r");
+        FILE * f = fopen(filename, "r");
         if (!f)
             return false;
 

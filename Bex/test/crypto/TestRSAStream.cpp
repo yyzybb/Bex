@@ -58,8 +58,7 @@ BOOST_AUTO_TEST_CASE(t_rsa_stream)
     return ;
 
     // private key encrypt
-    FILE * f = 0;
-    fopen_s(&f, "e:\\rsa.pri", "r");
+    FILE * f = fopen("e:\\rsa.pri", "r");
     if (!f)
         return ;
 
@@ -81,7 +80,7 @@ BOOST_AUTO_TEST_CASE(t_rsa_stream)
     ::RSA_free(private_key_rsa);
 
     // public key decrypt
-    fopen_s(&f, "e:\\rsa.pub", "r");
+    f = fopen("e:\\rsa.pub", "r");
     if (!f)
         return ;
 
