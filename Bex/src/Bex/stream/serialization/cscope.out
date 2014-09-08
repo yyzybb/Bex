@@ -1,0 +1,10985 @@
+cscope 15 $HOME/C/Bex/Bex/src/Bex/stream/serialization               0000050967
+	@archive_traits.hpp
+
+1 #i‚de‡
+__BEX_STREAM_SERIALIZATION_UTILITY__
+
+
+2 
+	#__BEX_STREAM_SERIALIZATION_UTILITY__
+
+
+	)
+
+4 
+	~"£rüliz©i⁄_fwd.h
+"
+
+6 
+«me•a˚
+ 
+	gBex
+ {Çame•a˚ 
+	g£rüliz©i⁄
+
+
+9 
+	gãm∂©e
+ <
+˛ass
+ 
+	gArchive
+>
+
+10 
+	s¨chive_åaôs_ba£
+
+
+12 
+Archive
+ 
+	t¨chive_ty≥
+;
+
+16 c⁄° 
+boﬁ
+ 
+	gis_bö¨y_mode
+ = 
+boo°
+::
+is_ba£_of
+<
+bö¨y_ba£
+, 
+	gArchive
+>::
+vÆue
+;
+
+17 c⁄° 
+boﬁ
+ 
+	gis_ãxt_mode
+ = 
+boo°
+::
+is_ba£_of
+<
+ãxt_ba£
+, 
+	gArchive
+>::
+vÆue
+;
+
+18 c⁄° 
+boﬁ
+ 
+	gis_unkown_mode
+ = !
+is_bö¨y_mode
+ && !
+is_ãxt_mode
+;
+
+20 c⁄° 
+¨chive_mode_íum
+ 
+	gmode
+ = (
+is_bö¨y_mode
+ ?árchive_mode_íum::
+¨chive_mode_bö¨y
+ :
+
+21 (
+is_ãxt_mode
+ ? 
+¨chive_mode_íum
+::
+¨chive_mode_ãxt
+ :árchive_mode_íum::
+¨chive_mode_unkown
+));
+
+23 
+ty≥«me
+ 
+	tboo°
+::
+	tm∂
+::
+	tif_c
+<
+	tis_bö¨y_mode
+, 
+	tbö¨y_mode_èg
+,
+
+24 
+	tty≥«me
+ 
+	tboo°
+::
+	tm∂
+::
+	tif_c
+<
+	tis_ãxt_mode
+, 
+	tãxt_mode_èg
+, 
+	tunkown_mode_èg
+>::
+	tty≥
+>::type
+
+25 
+	tmode_èg
+;
+
+29 c⁄° 
+boﬁ
+ 
+	gis_lﬂd
+ = 
+boo°
+::
+is_ba£_of
+<
+öput_¨chive_ba£
+, 
+	gArchive
+>::
+vÆue
+;
+
+30 c⁄° 
+boﬁ
+ 
+	gis_ßve
+ = 
+boo°
+::
+is_ba£_of
+<
+ouçut_¨chive_ba£
+, 
+	gArchive
+>::
+vÆue
+;;
+
+31 c⁄° 
+boﬁ
+ 
+	gis_unkown
+ = (!
+is_lﬂd
+ && !
+is_ßve
+);
+
+33 c⁄° 
+¨chive_›î_íum
+ 
+	g›î
+ = 
+is_unkown
+ ?árchive_›î_íum::
+¨chive_›î_unkown
+ :
+
+34 (
+is_lﬂd
+ ? 
+¨chive_›î_íum
+::
+¨chive_›î_lﬂd
+ :árchive_›î_íum::
+¨chive_›î_ßve
+);
+
+36 
+ty≥«me
+ 
+	tboo°
+::
+	tm∂
+::
+	tif_c
+<
+	tis_lﬂd
+, 
+	tlﬂd_›î_èg
+,
+
+37 
+	tty≥«me
+ 
+	tboo°
+::
+	tm∂
+::
+	tif_c
+<
+	tis_ßve
+, 
+	tßve_›î_èg
+, 
+	tunkown_›î_èg
+>::
+	tty≥
+>::type
+
+38 
+	t›î_èg
+;
+
+41 
+	gãm∂©e
+ <
+˛ass
+ 
+	gArchive
+>
+
+42 
+	g¨chive_åaôs
+
+
+43 : 
+¨chive_åaôs_ba£
+<
+ty≥«me
+ 
+ªmove_Æl
+<
+Archive
+>::
+ty≥
+>
+
+48 
+	g«me•a˚
+ {
+
+49 
+usög
+ 
+	g£rüliz©i⁄
+::
+bö¨y_wøµî
+;
+
+50 
+usög
+ 
+	g£rüliz©i⁄
+::
+¨chive_åaôs
+;
+
+	@array_adapter.hpp
+
+5 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gAºay
+>
+
+6 
+	s¨øy_ad≠ãr
+
+
+8 
+	mãm∂©e
+ <
+ty≥«me
+ 
+	mA
+>
+
+9 
+	svt
+
+
+11 
+ty≥«me
+ 
+	tA
+::
+	tvÆue_ty≥
+ 
+	tty≥
+;
+
+14 
+	mãm∂©e
+ <
+ty≥«me
+ 
+	mT
+, 
+	m°d
+::
+size_t
+ 
+N
+>
+
+15 
+vt
+<
+T
+[
+N
+]>
+
+17 
+T
+ 
+	tty≥
+;
+
+18 c⁄° 
+	m°d
+::
+size_t
+ 
+size
+ = 
+N
+;
+
+21 
+	mãm∂©e
+ <
+ty≥«me
+ 
+	mA
+>
+
+22 
+ölöe
+ 
+ty≥«me
+ 
+	mboo°
+::
+íabÀ_if
+<
+boo°
+::
+is_¨øy
+<
+A
+>, 
+	m°d
+::
+size_t
+>::
+ty≥
+
+
+23 
+size
+(
+A
+ c⁄°& 
+¨r
+)
+
+25  
+vt
+<
+A
+>::
+size
+;
+
+28 
+	mãm∂©e
+ <
+ty≥«me
+ 
+	mA
+>
+
+29 
+ölöe
+ 
+ty≥«me
+ 
+	mboo°
+::
+dißbÀ_if
+<
+boo°
+::
+is_¨øy
+<
+A
+>, 
+	m°d
+::
+size_t
+>::
+ty≥
+
+
+30 
+size
+(
+A
+ c⁄°& 
+¨r
+)
+
+32  
+¨r
+.
+size
+();
+
+35 
+ölöe
+ 
+boﬁ
+ 
+do_ßve
+(
+Aºay
+ c⁄°& 
+¨øyT
+, 
+Ar
+ & 
+¨
+)
+
+37 
+	m°d
+::
+size_t
+ 
+N
+ = 
+size
+(
+¨øyT
+);
+
+38 
+ty≥«me
+ 
+	tvt
+<
+	tAºay
+>::
+	tty≥
+ 
+	tT
+;
+
+39 i‡(
+	mis_›timize
+<
+	mT
+, 
+	mAr
+>::
+vÆue
+)
+
+40  
+¨
+.
+do_ßve
+((*)&
+¨øyT
+[0], 
+N
+ * (
+T
+));
+
+42 
+	m°d
+::
+size_t
+ 
+i
+ = 0; 
+	mi
+ < 
+	mN
+; ++i)
+
+43 i‡(!
+	m¨
+.
+do_ßve
+(
+¨øyT
+[
+i
+]))
+
+44  
+	mÁl£
+;
+
+46  
+	måue
+;
+
+49 
+ölöe
+ 
+boﬁ
+ 
+do_lﬂd
+(
+Aºay
+ & 
+¨øyT
+, 
+Ar
+ & 
+¨
+)
+
+51 
+	m°d
+::
+size_t
+ 
+N
+ = 
+size
+(
+¨øyT
+);
+
+52 
+ty≥«me
+ 
+	tvt
+<
+	tAºay
+>::
+	tty≥
+ 
+	tT
+;
+
+53 i‡(
+	mis_›timize
+<
+	mT
+, 
+	mAr
+>::
+vÆue
+)
+
+54  
+¨
+.
+do_lﬂd
+((*)&
+¨øyT
+[0], 
+N
+ * (
+T
+));
+
+56 
+	m°d
+::
+size_t
+ 
+i
+ = 0; 
+	mi
+ < 
+	mN
+; ++i)
+
+57 i‡(!
+	m¨
+.
+do_lﬂd
+(
+¨øyT
+[
+i
+]))
+
+58  
+	mÁl£
+;
+
+60  
+	måue
+;
+
+66 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gT
+, 
+	gN
+>
+
+67 
+	gad≠ãr
+<
+	gAr
+, 
+	gT
+[
+N
+]>
+
+68 : 
+public
+ 
+¨øy_ad≠ãr
+<
+Ar
+, 
+	gT
+[
+N
+]>
+
+70 
+BOOST_STATIC_ASSERT
+(
+N
+ > 0);
+
+74 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gT
+, 
+	g°d
+::
+size_t
+ 
+N
+>
+
+75 
+ad≠ãr
+<
+Ar
+, 
+	g°d
+::
+¨øy
+<
+T
+, 
+	gN
+> >
+
+76 : 
+public
+ 
+¨øy_ad≠ãr
+<
+Ar
+, 
+	g°d
+::
+¨øy
+<
+T
+, 
+	gN
+> >
+
+78 
+BOOST_STATIC_ASSERT
+(
+N
+ > 0);
+
+82 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gT
+, 
+	g°d
+::
+size_t
+ 
+N
+>
+
+83 
+ad≠ãr
+<
+Ar
+, 
+	gboo°
+::
+¨øy
+<
+T
+, 
+	gN
+> >
+
+84 : 
+public
+ 
+¨øy_ad≠ãr
+<
+Ar
+, 
+	gboo°
+::
+¨øy
+<
+T
+, 
+	gN
+> >
+
+86 
+BOOST_STATIC_ASSERT
+(
+N
+ > 0);
+
+	@base_serializer.hpp
+
+1 #i‚de‡
+__BEX_STREAM_SERIALIZATION_BASE_SERIALIZER__
+
+
+2 
+	#__BEX_STREAM_SERIALIZATION_BASE_SERIALIZER__
+
+
+	)
+
+4 
+	~"£rüliz©i⁄_fwd.h
+"
+
+5 
+	~"c⁄˚±.hµ
+"
+
+6 
+	~"¨chive_åaôs.hµ
+"
+
+7 
+	~"£rülize_adl.hµ
+"
+
+12 
+«me•a˚
+ 
+	gBex
+ {Çame•a˚ 
+	g£rüliz©i⁄
+
+
+14 
+	gãm∂©e
+ <
+˛ass
+ 
+	gArchive
+>
+
+15 ˛as†
+	cba£_£rülizî
+
+
+17 
+ölöe
+ 
+	gArchive
+ & 
+gë
+()
+
+19  
+	g°©ic_ˇ°
+<
+	gArchive
+&>(*
+	gthis
+);
+
+22 
+	g¥Ÿe˘ed
+:
+
+23 
+ãm∂©e
+ <
+˛ass
+ 
+Ar
+, 
+ty≥«me
+ 
+	gT
+>
+
+24 
+	sad≠ãr
+
+
+26 
+ölöe
+ 
+boﬁ
+ 
+do_ßve
+(
+T
+ & 
+t
+, 
+Ar
+ & 
+¨
+)
+
+28 
+£rülize_adl
+(
+¨
+, 
+t
+);
+
+29  
+	g¨
+.
+good
+();
+
+32 
+ölöe
+ 
+boﬁ
+ 
+do_lﬂd
+(
+T
+ & 
+t
+, 
+Ar
+ & 
+¨
+)
+
+34 
+£rülize_adl
+(
+¨
+, 
+t
+);
+
+35  
+	g¨
+.
+good
+();
+
+39 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gT
+>
+
+40 
+	gad≠ãr
+<
+	gAr
+, 
+	gT
+*>
+
+42 
+ölöe
+ 
+boﬁ
+ 
+do_ßve
+(
+T
+ * 
+±
+, 
+Ar
+ & 
+¨
+)
+
+44 
+BOOST_ASSERT
+(
+±
+ != 0);
+
+45  
+	gad≠ãr
+<
+	gAr
+, 
+	gT
+>::
+do_ßve
+(*
+±
+, 
+¨
+);
+
+48 
+ölöe
+ 
+boﬁ
+ 
+do_lﬂd
+(
+T
+ * 
+±
+, 
+Ar
+ & 
+¨
+)
+
+50 
+BOOST_ASSERT
+(
+±
+ != 0);
+
+51  
+	gad≠ãr
+<
+	gAr
+, 
+	gT
+>::
+do_lﬂd
+(*
+±
+, 
+¨
+);
+
+55 
+	~"°l_ad≠ãr.hµ
+"
+
+56 
+	~"¨øy_ad≠ãr.hµ
+"
+
+57 
+	~"boo°_c⁄èöî_ad≠ãr.hµ
+"
+
+59 
+	gpublic
+:
+
+60 
+ba£_£rülizî
+(Ë: 
+°©e_
+(
+¨chive_°©e
+::
+good
+) {}
+
+62 
+¥Ÿe˘ed
+:
+
+65 
+ãm∂©e
+ <
+ty≥«me
+ 
+T
+>
+
+66 
+ölöe
+ 
+boﬁ
+ 
+do_ßve
+(
+T
+ c⁄°& 
+t
+)
+
+68  
+ad≠ãr
+<
+Archive
+, 
+	gT
+>::
+do_ßve
+(
+c⁄°_ˇ°
+<
+T
+&>(
+t
+), 
+gë
+());
+
+73 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+74 
+ölöe
+ 
+boﬁ
+ 
+do_lﬂd
+(
+T
+ && 
+t
+)
+
+76  
+	gad≠ãr
+<
+	gArchive
+, 
+ty≥«me
+ 
+	gboo°
+::
+ªmove_ª„ªn˚
+<
+T
+>::
+ty≥
+>::
+do_lﬂd
+(
+t
+, 
+gë
+());
+
+79 
+	gpublic
+:
+
+80 
+ölöe
+ 
+boﬁ
+ 
+good
+() const
+
+82  
+°©e_
+ !
+¨chive_°©e
+::
+îr‹
+;
+
+85 
+ölöe
+ 
+˛ór
+(
+boﬁ
+ 
+rﬁlback
+ = 
+åue
+)
+
+87 i‡(!
+good
+())
+
+89 
+°©e_
+ = 
+¨chive_°©e
+::
+good
+;
+
+90 i‡(
+	grﬁlback
+)
+
+91 
+gë
+().
+	gbuf_
+.
+pub£ekoff
+(-gë().
+acc_
+, 
+°d
+::
+ios_ba£
+::
+cur
+, 
+mode
+(
+ty≥«me
+ 
+¨chive_åaôs
+<
+Archive
+>::
+›î_èg
+()));
+
+92 
+gë
+().
+	gacc_
+ = 0;
+
+96 
+	g¥Ÿe˘ed
+:
+
+97 
+¨chive_°©e
+ 
+°©e_
+;
+
+99 
+ölöe
+ 
+	g°d
+::
+ios_ba£
+::
+›ímode
+ 
+mode
+(
+lﬂd_›î_èg
+)
+
+101  
+°d
+::
+ios_ba£
+::
+ö
+;
+
+104 
+ölöe
+ 
+	g°d
+::
+ios_ba£
+::
+›ímode
+ 
+mode
+(
+ßve_›î_èg
+)
+
+106  
+°d
+::
+ios_ba£
+::
+out
+;
+
+109 
+ölöe
+ 
+	g°d
+::
+ios_ba£
+::
+›ímode
+ 
+mode
+(
+unkown_›î_èg
+)
+
+111  
+°d
+::
+ios_ba£
+::
+ö
+ | std::ios_ba£::
+out
+;
+
+	@binary_archive.hpp
+
+1 #i‚de‡
+__BEX_STREAM_SERIALIZATION_BINARY_ARCHIVE__
+
+
+2 
+	#__BEX_STREAM_SERIALIZATION_BINARY_ARCHIVE__
+
+
+	)
+
+4 
+	~"bö¨y_ürchive.hµ
+"
+
+5 
+	~"bö¨y_ﬂrchive.hµ
+"
+
+10 
+«me•a˚
+ 
+	gBex
+ {Çame•a˚ 
+	g£rüliz©i⁄
+
+
+12 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gSåóm
+ = 
+°d
+::
+°ªambuf
+>
+
+13 
+˛ass
+ 
+bö¨y_¨chive
+
+
+14 : 
+public
+ 
+bö¨y_ürchive
+<
+Såóm
+>
+
+15 , 
+public
+ 
+	gbö¨y_ﬂrchive
+<
+	gSåóm
+>
+
+17 
+	gbö¨y_ürchive
+<
+	tSåóm
+> 
+	tö_ty≥
+;
+
+18 
+	gbö¨y_ﬂrchive
+<
+	tSåóm
+> 
+	tout_ty≥
+;
+
+20 
+	gpublic
+:
+
+21 
+ãm∂©e
+ <
+ty≥«me
+ 
+Arg
+>
+
+22 
+ex∂icô
+ 
+bö¨y_¨chive
+(
+Arg
+& 
+¨g
+)
+
+23 : 
+ö_ty≥
+(
+¨g
+), 
+out_ty≥
+(arg)
+
+27 
+ölöe
+ 
+boﬁ
+ 
+good
+() const
+
+29  
+	gö_ty≥
+::
+good
+(Ë&& 
+out_ty≥
+::good();
+
+32 
+ölöe
+ 
+˛ór
+(
+boﬁ
+ 
+rﬁlback
+ = 
+åue
+)
+
+34 
+ö_ty≥
+::
+˛ór
+(
+rﬁlback
+);
+
+35 
+	gout_ty≥
+::
+˛ór
+(
+rﬁlback
+);
+
+40 
+	g«me•a˚
+ {
+
+41 
+usög
+ 
+	g£rüliz©i⁄
+::
+bö¨y_¨chive
+;
+
+	@binary_iarchive.hpp
+
+1 #i‚de‡
+__BEX_STREAM_SERIALIZATION_BINARY_IARCHIVE__
+
+
+2 
+	#__BEX_STREAM_SERIALIZATION_BINARY_IARCHIVE__
+
+
+	)
+
+4 
+	~"ba£_£rülizî.hµ
+"
+
+5 
+	~<Bex/°ªam/Á°_buf„r.hµ
+>
+
+10 
+«me•a˚
+ 
+	gBex
+ {Çame•a˚ 
+	g£rüliz©i⁄
+
+
+12 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gSåóm
+ = 
+°d
+::
+°ªambuf
+>
+
+13 
+˛ass
+ 
+bö¨y_ürchive
+;
+
+15 
+	gãm∂©e
+ <>
+
+16 
+˛ass
+ 
+	gbö¨y_ürchive
+<
+	g°d
+::
+°ªambuf
+>
+
+17 : 
+public
+ 
+ba£_£rülizî
+<
+bö¨y_ürchive
+<
+°d
+::
+°ªambuf
+>>
+
+18 , 
+public
+ 
+	gbö¨y_ba£
+
+
+19 , 
+public
+ 
+	göput_¨chive_ba£
+
+
+21 
+‰õnd
+ 
+˛ass
+ 
+	gba£_£rülizî
+<
+	gbö¨y_ürchive
+<
+	g°d
+::
+°ªambuf
+>>;
+
+23 
+	g°d
+::
+°ªambuf
+& 
+buf_
+;
+
+24 
+	g°d
+::
+°ªamsize
+ 
+acc_
+;
+
+25 
+	gdìp_
+;
+
+27 
+	gpublic
+:
+
+28 
+ex∂icô
+ 
+bö¨y_ürchive
+(
+°d
+::
+°ªambuf
+& 
+sb
+)
+
+29 : 
+buf_
+(
+sb
+), 
+acc_
+(0), 
+dìp_
+(0)
+
+33 
+ex∂icô
+ 
+bö¨y_ürchive
+(
+°d
+::
+i°ªam
+& 
+is
+)
+
+34 : 
+buf_
+(*
+is
+.
+rdbuf
+()), 
+acc_
+(0), 
+dìp_
+(0)
+
+38 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+39 
+ölöe
+ 
+	gbö¨y_ürchive
+ & 
+	g›î©‹
+&(
+	gT
+ && 
+	gt
+)
+
+41  (*
+	gthis
+ >> 
+	g°d
+::
+f‹w¨d
+<
+T
+>(
+t
+));
+
+44 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+45 
+ölöe
+ 
+	gbö¨y_ürchive
+ & 
+	g›î©‹
+>>(
+	gT
+ && 
+	gt
+)
+
+47 
+lﬂd
+(
+°d
+::
+f‹w¨d
+<
+T
+>(
+t
+));
+
+48  (*
+	gthis
+);
+
+51 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+52 
+ölöe
+ 
+boﬁ
+ 
+lﬂd
+(
+T
+ && 
+t
+)
+
+54 i‡(!
+good
+()Ë 
+	gÁl£
+;
+
+56 
+	gdìp
+ = 
+dìp_
+++;
+
+57 i‡(!
+do_lﬂd
+(
+t
+))
+
+59 
+	g°©e_
+ = 
+¨chive_°©e
+::
+îr‹
+;
+
+60 -- 
+	gdìp_
+;
+
+61  
+	gÁl£
+;
+
+65 i‡(!
+	gdìp
+)
+
+66 
+	gacc_
+ = 0;
+
+67 -- 
+	gdìp_
+;
+
+68  
+	gåue
+;
+
+72 
+ölöe
+ 
+boﬁ
+ 
+lﬂd
+(* 
+buf„r
+, 
+°d
+::
+size_t
+ 
+size
+)
+
+74 i‡(!
+good
+()Ë 
+Ál£
+;
+
+76 
+	gdìp
+ = 
+dìp_
+++;
+
+77 i‡(!
+do_lﬂd
+(
+buf„r
+, 
+size
+))
+
+79 
+	g°©e_
+ = 
+¨chive_°©e
+::
+îr‹
+;
+
+80 -- 
+	gdìp_
+;
+
+81  
+	gÁl£
+;
+
+85 i‡(!
+	gdìp
+)
+
+86 
+	gacc_
+ = 0;
+
+87 -- 
+	gdìp_
+;
+
+88  
+	gåue
+;
+
+93 
+	gpublic
+:
+
+94 
+ölöe
+ 
+boﬁ
+ 
+do_lﬂd
+(* 
+buf„r
+, 
+°d
+::
+size_t
+ 
+size
+)
+
+96 
+°d
+::
+°ªamsize
+ 
+ls
+ = 
+buf_
+.
+sgën
+(
+buf„r
+, 
+size
+);
+
+97 
+	gacc_
+ +
+ls
+;
+
+98  (
+	gls
+ =
+size
+);
+
+101 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+102 
+ölöe
+ 
+ty≥«me
+ 
+	gboo°
+::
+dißbÀ_if
+<
+is_›timize
+<ty≥«mê
+boo°
+::
+ªmove_ª„ªn˚
+<
+T
+>::
+ty≥
+, 
+	gbö¨y_ürchive
+>, 
+	gboﬁ
+>::ty≥ 
+do_lﬂd
+(T && 
+t
+)
+
+104  
+ba£_£rülizî
+<
+bö¨y_ürchive
+>::
+do_lﬂd
+(
+t
+);
+
+107 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+108 
+ölöe
+ 
+ty≥«me
+ 
+	gboo°
+::
+íabÀ_if
+<
+is_›timize
+<ty≥«mê
+boo°
+::
+ªmove_ª„ªn˚
+<
+T
+>::
+ty≥
+, 
+	gbö¨y_ürchive
+>, 
+	gboﬁ
+>::ty≥ 
+do_lﬂd
+(T && 
+t
+)
+
+110  
+do_lﬂd
+((*)
+boo°
+::
+addªssof
+(
+t
+), (
+ty≥«me
+ boo°::
+ªmove_ª„ªn˚
+<
+T
+>::
+ty≥
+));
+
+114 
+	gãm∂©e
+ <>
+
+115 
+˛ass
+ 
+	gbö¨y_ürchive
+<
+	gÁ°_buf„r
+>
+
+116 : 
+public
+ 
+ba£_£rülizî
+<
+bö¨y_ürchive
+<
+Á°_buf„r
+>>
+
+117 , 
+public
+ 
+	gbö¨y_ba£
+
+
+118 , 
+public
+ 
+	göput_¨chive_ba£
+
+
+120 
+‰õnd
+ 
+˛ass
+ 
+	gba£_£rülizî
+<
+	gbö¨y_ürchive
+<
+	gÁ°_buf„r
+>>;
+
+122 
+	gÁ°_buf„r
+& 
+	gbuf_
+;
+
+123 
+	gÁ°_buf„r
+::
+off£t_ty≥
+ 
+acc_
+;
+
+124 
+	gdìp_
+;
+
+126 
+	gpublic
+:
+
+127 
+ex∂icô
+ 
+bö¨y_ürchive
+(
+Á°_buf„r
+& 
+sb
+)
+
+128 : 
+buf_
+(
+sb
+), 
+acc_
+(0), 
+dìp_
+(0)
+
+132 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+133 
+ölöe
+ 
+	gbö¨y_ürchive
+ & 
+	g›î©‹
+&(
+	gT
+ && 
+	gt
+)
+
+135  (*
+	gthis
+ >> 
+	g°d
+::
+f‹w¨d
+<
+T
+>(
+t
+));
+
+138 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+139 
+ölöe
+ 
+	gbö¨y_ürchive
+ & 
+	g›î©‹
+>>(
+	gT
+ && 
+	gt
+)
+
+141 
+lﬂd
+(
+°d
+::
+f‹w¨d
+<
+T
+>(
+t
+));
+
+142  (*
+	gthis
+);
+
+145 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+146 
+ölöe
+ 
+boﬁ
+ 
+lﬂd
+(
+T
+ && 
+t
+)
+
+148 i‡(!
+good
+()Ë 
+	gÁl£
+;
+
+150 
+	gdìp
+ = 
+dìp_
+++;
+
+151 i‡(!
+do_lﬂd
+(
+t
+))
+
+153 
+	g°©e_
+ = 
+¨chive_°©e
+::
+îr‹
+;
+
+154 -- 
+	gdìp_
+;
+
+155  
+	gÁl£
+;
+
+159 i‡(!
+	gdìp
+)
+
+160 
+	gacc_
+ = 0;
+
+161 -- 
+	gdìp_
+;
+
+162  
+	gåue
+;
+
+166 
+ölöe
+ 
+boﬁ
+ 
+lﬂd
+(* 
+buf„r
+, 
+°d
+::
+size_t
+ 
+size
+)
+
+168 i‡(!
+good
+()Ë 
+Ál£
+;
+
+170 
+	gdìp
+ = 
+dìp_
+++;
+
+171 i‡(!
+do_lﬂd
+(
+buf„r
+, 
+size
+))
+
+173 
+	g°©e_
+ = 
+¨chive_°©e
+::
+îr‹
+;
+
+174 -- 
+	gdìp_
+;
+
+175  
+	gÁl£
+;
+
+179 i‡(!
+	gdìp
+)
+
+180 
+	gacc_
+ = 0;
+
+181 -- 
+	gdìp_
+;
+
+182  
+	gåue
+;
+
+187 
+	gpublic
+:
+
+188 
+ölöe
+ 
+boﬁ
+ 
+do_lﬂd
+(* 
+buf„r
+, 
+°d
+::
+size_t
+ 
+size
+)
+
+190 
+°d
+::
+size_t
+ 
+ls
+ = 
+buf_
+.
+sgën
+(
+buf„r
+, 
+size
+);
+
+191 
+	gacc_
+ +
+ls
+;
+
+192  (
+	gls
+ =
+size
+);
+
+195 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+196 
+ölöe
+ 
+ty≥«me
+ 
+	gboo°
+::
+dißbÀ_if
+<
+is_›timize
+<ty≥«mê
+boo°
+::
+ªmove_ª„ªn˚
+<
+T
+>::
+ty≥
+, 
+	gbö¨y_ürchive
+>, 
+	gboﬁ
+>::ty≥ 
+do_lﬂd
+(T && 
+t
+)
+
+198  
+ba£_£rülizî
+<
+bö¨y_ürchive
+>::
+do_lﬂd
+(
+t
+);
+
+201 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+202 
+ölöe
+ 
+ty≥«me
+ 
+	gboo°
+::
+íabÀ_if
+<
+is_›timize
+<ty≥«mê
+boo°
+::
+ªmove_ª„ªn˚
+<
+T
+>::
+ty≥
+, 
+	gbö¨y_ürchive
+>, 
+	gboﬁ
+>::ty≥ 
+do_lﬂd
+(T && 
+t
+)
+
+204 
+boﬁ
+ 
+ªsu…
+ = 
+buf_
+.
+gë
+(
+t
+);
+
+205 i‡(
+	gªsu…
+Ë
+	gacc_
+ +(
+ty≥«me
+ 
+boo°
+::
+ªmove_ª„ªn˚
+<
+T
+>::
+ty≥
+);
+
+206  
+	gªsu…
+;
+
+212 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+213 
+boﬁ
+ 
+bö¨y_lﬂd
+(
+T
+ && 
+t
+ , 
+°d
+::
+i°ªam
+& 
+is
+)
+
+215 
+boo°
+::
+io
+::
+ios_Êags_ßvî
+ 
+ßvî
+(
+is
+);
+
+216 
+	gis
+.
+un£tf
+(
+°d
+::
+ios_ba£
+::
+skùws
+);
+
+217 
+	gbö¨y_ürchive
+<> 
+bi
+(
+is
+);
+
+218 
+	gbi
+ & 
+	g°d
+::
+f‹w¨d
+<
+T
+>(
+t
+);
+
+219  
+	gbi
+.
+good
+(Ë? 
+	gåue
+ : (
+bi
+.
+˛ór
+(), 
+	gÁl£
+);
+
+222 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+223 
+boﬁ
+ 
+bö¨y_lﬂd
+(
+T
+ && 
+t
+ , 
+°d
+::
+°ªambuf
+& 
+isb
+)
+
+225 
+bö¨y_ürchive
+<> 
+bi
+(
+isb
+);
+
+226 
+	gbi
+ & 
+	g°d
+::
+f‹w¨d
+<
+T
+>(
+t
+);
+
+227  
+	gbi
+.
+good
+(Ë? 
+	gåue
+ : (
+bi
+.
+˛ór
+(), 
+	gÁl£
+);
+
+230 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+231 
+	g°d
+::
+size_t
+ 
+bö¨y_lﬂd
+(
+T
+ && 
+t
+ , c⁄° * 
+buf„r
+, 
+°d
+::size_à
+size
+)
+
+233 
+Á°_buf„r
+ 
+isb
+(
+c⁄°_ˇ°
+<*>(
+buf„r
+), 
+size
+);
+
+234 
+	gisb
+.
+pbump
+(
+isb
+.
+ˇ∑côy
+());
+
+235 
+	gbö¨y_ürchive
+<
+	gÁ°_buf„r
+> 
+bi
+(
+isb
+);
+
+236 
+	gbi
+ & 
+	g°d
+::
+f‹w¨d
+<
+T
+>(
+t
+);
+
+237  
+	gbi
+.
+good
+(Ë? (
+	gisb
+.
+ˇ∑côy
+(Ë- isb.
+gcou¡
+()) : 0;
+
+241 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+, 
+	gty≥«me
+ ... 
+	gArgs
+>
+
+242 
+FORCE_INLINE
+áutÿ
+bö¨y_lﬂd_≥rsi°í˚
+(
+T
+ && 
+t
+, 
+Args
+ && ... 
+¨gs
+)
+
+243 -> 
+de˛ty≥
+(
+bö¨y_lﬂd
+(
+°d
+::
+f‹w¨d
+<
+T
+>(
+t
+), std::f‹w¨d<
+Args
+>(
+¨gs
+)...))
+
+245 
+°©ic_as£π
+(
+has_£rülize
+<
+T
+>::
+vÆue
+, "TheÖersistence data mustbe has serialize function.");
+
+246 
+°©ic_as£π
+(
+has_vîsi⁄
+<
+T
+>::
+vÆue
+, "TheÖersistence data mustbe has version.");
+
+247  
+bö¨y_lﬂd
+(
+°d
+::
+f‹w¨d
+<
+T
+>(
+t
+), std::f‹w¨d<
+Args
+>(
+¨gs
+)...);
+
+252 
+	g«me•a˚
+ {
+
+253 
+usög
+ 
+	g£rüliz©i⁄
+::
+bö¨y_ürchive
+;
+
+254 
+usög
+ 
+	g£rüliz©i⁄
+::
+bö¨y_lﬂd
+;
+
+255 
+usög
+ 
+	g£rüliz©i⁄
+::
+bö¨y_lﬂd_≥rsi°í˚
+;
+
+	@binary_oarchive.hpp
+
+1 #i‚de‡
+__BEX_STREAM_SERIALIZATION_BINARY_OARCHIVE__
+
+
+2 
+	#__BEX_STREAM_SERIALIZATION_BINARY_OARCHIVE__
+
+
+	)
+
+4 
+	~"ba£_£rülizî.hµ
+"
+
+5 
+	~<Bex/°ªam/Á°_buf„r.hµ
+>
+
+10 
+«me•a˚
+ 
+	gBex
+ {Çame•a˚ 
+	g£rüliz©i⁄
+
+
+12 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gSåóm
+ = 
+°d
+::
+°ªambuf
+>
+
+13 
+˛ass
+ 
+bö¨y_ﬂrchive
+;
+
+15 
+	gãm∂©e
+ <>
+
+16 
+˛ass
+ 
+	gbö¨y_ﬂrchive
+<
+	g°d
+::
+°ªambuf
+>
+
+17 : 
+public
+ 
+ba£_£rülizî
+<
+bö¨y_ﬂrchive
+<
+°d
+::
+°ªambuf
+>>
+
+18 , 
+public
+ 
+	gbö¨y_ba£
+
+
+19 , 
+public
+ 
+	gouçut_¨chive_ba£
+
+
+21 
+‰õnd
+ 
+˛ass
+ 
+	gba£_£rülizî
+<
+	gbö¨y_ﬂrchive
+<
+	g°d
+::
+°ªambuf
+>>;
+
+23 
+	g°d
+::
+°ªambuf
+& 
+buf_
+;
+
+24 
+	g°d
+::
+°ªamsize
+ 
+acc_
+;
+
+25 
+	gdìp_
+;
+
+27 
+	gpublic
+:
+
+28 
+ex∂icô
+ 
+bö¨y_ﬂrchive
+(
+°d
+::
+°ªambuf
+& 
+sb
+)
+
+29 : 
+buf_
+(
+sb
+), 
+acc_
+(0), 
+dìp_
+(0)
+
+33 
+ex∂icô
+ 
+bö¨y_ﬂrchive
+(
+°d
+::
+o°ªam
+& 
+os
+)
+
+34 : 
+buf_
+(*
+os
+.
+rdbuf
+()), 
+acc_
+(0), 
+dìp_
+(0)
+
+38 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+39 
+ölöe
+ 
+	gbö¨y_ﬂrchive
+ & 
+	g›î©‹
+&(
+T
+ c⁄°& 
+	gt
+)
+
+41  (*
+	gthis
+ << 
+	gt
+);
+
+44 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+45 
+ölöe
+ 
+	gbö¨y_ﬂrchive
+ & 
+	g›î©‹
+<<(
+T
+ c⁄°& 
+	gt
+)
+
+47 
+ßve
+(
+c⁄°_ˇ°
+<
+T
+&>(
+t
+));
+
+48  (*
+	gthis
+);
+
+51 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+52 
+ölöe
+ 
+boﬁ
+ 
+ßve
+(
+T
+ c⁄°& 
+t
+)
+
+54 i‡(!
+good
+()Ë 
+	gÁl£
+;
+
+56 
+	gdìp
+ = 
+dìp_
+++;
+
+57 i‡(!
+do_ßve
+(
+c⁄°_ˇ°
+<
+T
+&>(
+t
+)))
+
+59 
+	g°©e_
+ = 
+¨chive_°©e
+::
+îr‹
+;
+
+60 -- 
+	gdìp_
+;
+
+61  
+	gÁl£
+;
+
+65 i‡(!
+	gdìp
+)
+
+66 
+	gacc_
+ = 0;
+
+67 -- 
+	gdìp_
+;
+
+68  
+	gåue
+;
+
+72 
+ölöe
+ 
+boﬁ
+ 
+ßve
+(c⁄°* 
+buf„r
+, 
+°d
+::
+size_t
+ 
+size
+)
+
+74 i‡(!
+good
+()Ë 
+Ál£
+;
+
+76 
+	gdìp
+ = 
+dìp_
+++;
+
+77 i‡(!
+do_ßve
+(
+buf„r
+, 
+size
+))
+
+79 
+	g°©e_
+ = 
+¨chive_°©e
+::
+îr‹
+;
+
+80 -- 
+	gdìp_
+;
+
+81  
+	gÁl£
+;
+
+85 i‡(!
+	gdìp
+)
+
+86 
+	gacc_
+ = 0;
+
+87 -- 
+	gdìp_
+;
+
+88  
+	gåue
+;
+
+93 
+	gpublic
+:
+
+94 
+ölöe
+ 
+boﬁ
+ 
+do_ßve
+(c⁄°* 
+buf„r
+, 
+°d
+::
+size_t
+ 
+size
+)
+
+96 
+°d
+::
+°ªamsize
+ 
+ls
+ = 
+buf_
+.
+•uä
+(
+buf„r
+, 
+size
+);
+
+97 
+	gacc_
+ +
+ls
+;
+
+98  (
+	gls
+ =
+size
+);
+
+101 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+102 
+ölöe
+ 
+ty≥«me
+ 
+	gboo°
+::
+dißbÀ_if
+<
+is_›timize
+<
+T
+, 
+	gbö¨y_ﬂrchive
+>, 
+	gboﬁ
+>::
+ty≥
+ 
+do_ßve
+(T c⁄°& 
+t
+)
+
+104  
+ba£_£rülizî
+<
+bö¨y_ﬂrchive
+>::
+do_ßve
+(
+t
+);
+
+107 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+108 
+ölöe
+ 
+ty≥«me
+ 
+	gboo°
+::
+íabÀ_if
+<
+is_›timize
+<
+T
+, 
+	gbö¨y_ﬂrchive
+>, 
+	gboﬁ
+>::
+ty≥
+ 
+do_ßve
+(T c⁄°& 
+t
+)
+
+110  
+do_ßve
+((c⁄°*)
+boo°
+::
+addªssof
+(
+t
+), (
+T
+));
+
+115 
+	gãm∂©e
+ <>
+
+116 
+˛ass
+ 
+	gbö¨y_ﬂrchive
+<
+	gÁ°_buf„r
+>
+
+117 : 
+public
+ 
+ba£_£rülizî
+<
+bö¨y_ﬂrchive
+<
+Á°_buf„r
+>>
+
+118 , 
+public
+ 
+	gbö¨y_ba£
+
+
+119 , 
+public
+ 
+	gouçut_¨chive_ba£
+
+
+121 
+‰õnd
+ 
+˛ass
+ 
+	gba£_£rülizî
+<
+	gbö¨y_ﬂrchive
+<
+	gÁ°_buf„r
+>>;
+
+123 
+	gÁ°_buf„r
+& 
+	gbuf_
+;
+
+124 
+	gÁ°_buf„r
+::
+off£t_ty≥
+ 
+acc_
+;
+
+125 
+	gdìp_
+;
+
+127 
+	gpublic
+:
+
+128 
+ex∂icô
+ 
+bö¨y_ﬂrchive
+(
+Á°_buf„r
+& 
+sb
+)
+
+129 : 
+buf_
+(
+sb
+), 
+acc_
+(0), 
+dìp_
+(0)
+
+133 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+134 
+ölöe
+ 
+	gbö¨y_ﬂrchive
+ & 
+	g›î©‹
+&(
+T
+ c⁄°& 
+	gt
+)
+
+136  (*
+	gthis
+ << 
+	gt
+);
+
+139 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+140 
+ölöe
+ 
+	gbö¨y_ﬂrchive
+ & 
+	g›î©‹
+<<(
+T
+ c⁄°& 
+	gt
+)
+
+142 
+ßve
+(
+c⁄°_ˇ°
+<
+T
+&>(
+t
+));
+
+143  (*
+	gthis
+);
+
+146 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+147 
+ölöe
+ 
+boﬁ
+ 
+ßve
+(
+T
+ c⁄°& 
+t
+)
+
+149 i‡(!
+good
+()Ë 
+	gÁl£
+;
+
+151 
+	gdìp
+ = 
+dìp_
+++;
+
+152 i‡(!
+do_ßve
+(
+c⁄°_ˇ°
+<
+T
+&>(
+t
+)))
+
+154 
+	g°©e_
+ = 
+¨chive_°©e
+::
+îr‹
+;
+
+155 -- 
+	gdìp_
+;
+
+156  
+	gÁl£
+;
+
+160 i‡(!
+	gdìp
+)
+
+161 
+	gacc_
+ = 0;
+
+162 -- 
+	gdìp_
+;
+
+163  
+	gåue
+;
+
+167 
+ölöe
+ 
+boﬁ
+ 
+ßve
+(c⁄°* 
+buf„r
+, 
+°d
+::
+size_t
+ 
+size
+)
+
+169 i‡(!
+good
+()Ë 
+Ál£
+;
+
+171 
+	gdìp
+ = 
+dìp_
+++;
+
+172 i‡(!
+do_ßve
+(
+buf„r
+, 
+size
+))
+
+174 
+	g°©e_
+ = 
+¨chive_°©e
+::
+îr‹
+;
+
+175 -- 
+	gdìp_
+;
+
+176  
+	gÁl£
+;
+
+180 i‡(!
+	gdìp
+)
+
+181 
+	gacc_
+ = 0;
+
+182 -- 
+	gdìp_
+;
+
+183  
+	gåue
+;
+
+188 
+	gpublic
+:
+
+189 
+ölöe
+ 
+boﬁ
+ 
+do_ßve
+(c⁄°* 
+buf„r
+, 
+°d
+::
+size_t
+ 
+size
+)
+
+191 
+°d
+::
+size_t
+ 
+ls
+ = 
+buf_
+.
+•uä
+(
+buf„r
+, 
+size
+);
+
+192 
+	gacc_
+ +
+ls
+;
+
+193  (
+	gls
+ =
+size
+);
+
+196 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+197 
+ölöe
+ 
+ty≥«me
+ 
+	gboo°
+::
+dißbÀ_if
+<
+is_›timize
+<
+T
+, 
+	gbö¨y_ﬂrchive
+>, 
+	gboﬁ
+>::
+ty≥
+ 
+do_ßve
+(T c⁄°& 
+t
+)
+
+199  
+ba£_£rülizî
+<
+bö¨y_ﬂrchive
+>::
+do_ßve
+(
+t
+);
+
+202 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+203 
+ölöe
+ 
+ty≥«me
+ 
+	gboo°
+::
+íabÀ_if
+<
+is_›timize
+<
+T
+, 
+	gbö¨y_ﬂrchive
+>, 
+	gboﬁ
+>::
+ty≥
+ 
+do_ßve
+(T c⁄°& 
+t
+)
+
+205 
+boﬁ
+ 
+ªsu…
+ = 
+buf_
+.
+put
+(
+t
+);
+
+206 i‡(
+	gªsu…
+Ë
+	gacc_
+ +(
+T
+);
+
+207  
+	gªsu…
+;
+
+214 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+215 
+boﬁ
+ 
+bö¨y_ßve
+(
+T
+ c⁄°& 
+t
+, 
+°d
+::
+o°ªam
+& 
+os
+)
+
+217 
+boo°
+::
+io
+::
+ios_Êags_ßvî
+ 
+ßvî
+(
+os
+);
+
+218 
+	gos
+.
+un£tf
+(
+°d
+::
+ios_ba£
+::
+skùws
+);
+
+219 
+	gbö¨y_ﬂrchive
+<> 
+bo
+(
+os
+);
+
+220 
+	gbo
+ & 
+	gt
+;
+
+221  
+	gbo
+.
+good
+(Ë? 
+	gåue
+ : (
+bo
+.
+˛ór
+(), 
+	gÁl£
+);
+
+224 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+225 
+boﬁ
+ 
+bö¨y_ßve
+(
+T
+ c⁄°& 
+t
+, 
+°d
+::
+°ªambuf
+& 
+osb
+)
+
+227 
+bö¨y_ﬂrchive
+<> 
+bo
+(
+osb
+);
+
+228 
+	gbo
+ & 
+	gt
+;
+
+229  
+	gbo
+.
+good
+(Ë? 
+	gåue
+ : (
+bo
+.
+˛ór
+(), 
+	gÁl£
+);
+
+232 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+233 
+	g°d
+::
+size_t
+ 
+bö¨y_ßve
+(
+T
+ c⁄°& 
+t
+, * 
+buf„r
+, 
+°d
+::size_à
+size
+)
+
+235 
+Á°_buf„r
+ 
+osb
+(
+buf„r
+, 
+size
+);
+
+236 
+	gbö¨y_ﬂrchive
+<
+	gÁ°_buf„r
+> 
+bo
+(
+osb
+);
+
+237 
+	gbo
+ & 
+	gt
+;
+
+238  
+	gbo
+.
+good
+(Ë? 
+	gosb
+.
+gcou¡
+(Ë: (
+bo
+.
+˛ór
+(), 0);
+
+242 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+, 
+	gty≥«me
+ ... 
+	gArgs
+>
+
+243 
+FORCE_INLINE
+áutÿ
+bö¨y_ßve_≥rsi°í˚
+(
+T
+ c⁄°& 
+t
+, 
+Args
+ && ... 
+¨gs
+Ë-> 
+de˛ty≥
+(
+bö¨y_ßve
+—, 
+°d
+::
+f‹w¨d
+<Args>(args)...))
+
+245 
+°©ic_as£π
+(
+has_£rülize
+<
+T
+>::
+vÆue
+, "TheÖersistence data mustbe has serialize function.");
+
+246 
+°©ic_as£π
+(
+has_vîsi⁄
+<
+T
+>::
+vÆue
+, "TheÖersistence data mustbe has version.");
+
+247  
+bö¨y_ßve
+(
+t
+, 
+°d
+::
+f‹w¨d
+<
+Args
+>(
+¨gs
+)...);
+
+252 
+	g«me•a˚
+ {
+
+253 
+usög
+ 
+	g£rüliz©i⁄
+::
+bö¨y_ﬂrchive
+;
+
+254 
+usög
+ 
+	g£rüliz©i⁄
+::
+bö¨y_ßve
+;
+
+255 
+usög
+ 
+	g£rüliz©i⁄
+::
+bö¨y_ßve_≥rsi°í˚
+;
+
+	@boost_container_adapter.hpp
+
+5 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gK1
+,Åy≥«mê
+	gK2
+,Åy≥«mê
+	gAP1
+,Åy≥«mê
+	gAP2
+,Åy≥«mê
+	gAP3
+>
+
+6 
+	gad≠ãr
+<
+	gAr
+, 
+	gboo°
+::
+bim≠
+<
+K1
+, 
+	gK2
+, 
+	gAP1
+, 
+	gAP2
+, 
+	gAP3
+> >
+
+8 
+	gboo°
+::
+	tbim≠
+<
+	tK1
+, 
+	tK2
+, 
+	tAP1
+, 
+	tAP2
+, 
+	tAP3
+> 
+	tBoo°Bim≠
+;
+
+9 
+ty≥«me
+ 
+	tBoo°Bim≠
+::
+	tÀ·_m≠
+ 
+	tC⁄èöî
+;
+
+10 
+ty≥«me
+ 
+	tC⁄èöî
+::
+	tvÆue_ty≥
+ 
+	tPaú
+;
+
+11 
+ty≥«me
+ 
+	tPaú
+::
+	tfú°_ty≥
+ first_type;
+
+12 
+ty≥«me
+ 
+	tPaú
+::
+	t£c⁄d_ty≥
+ second_type;
+
+13 
+ty≥«me
+ 
+	tboo°
+::
+	tªmove_ª„ªn˚
+<
+	tfú°_ty≥
+>::
+	tty≥
+ 
+	tfú°_˘
+;
+
+14 
+ty≥«me
+ 
+	tboo°
+::
+	tªmove_ª„ªn˚
+<
+	t£c⁄d_ty≥
+>::
+	tty≥
+ 
+	t£c⁄d_˘
+;
+
+15 
+ty≥«me
+ 
+	tboo°
+::
+	tªmove_cv
+<
+	tfú°_˘
+>::
+	tty≥
+ 
+	tfú°_t
+;
+
+16 
+ty≥«me
+ 
+	tboo°
+::
+	tªmove_cv
+<
+	t£c⁄d_˘
+>::
+	tty≥
+ 
+	t£c⁄d_t
+;
+
+18 
+ölöe
+ 
+boﬁ
+ 
+do_ßve
+(
+Boo°Bim≠
+ c⁄°& 
+bm
+, 
+Ar
+ & 
+¨
+)
+
+20 i‡(!
+	gsized_ad≠ãr
+::
+do_ßve
+(
+bm
+.
+À·
+, 
+¨
+)Ë 
+	gÁl£
+;
+
+21 i‡(
+	gbm
+.
+	gÀ·
+.
+em±y
+()Ë 
+	gåue
+;
+
+23 
+BOOST_AUTO
+(
+ô
+, 
+bm
+.
+À·
+.
+begö
+());
+
+24 ; 
+	gô
+ !
+bm
+.
+À·
+.
+íd
+(); ++it)
+
+25 i‡(!
+	g¨
+.
+do_ßve
+(
+ô
+->
+fú°
+Ë|| !¨.do_ßve(ô->
+£c⁄d
+))
+
+26  
+	gÁl£
+;
+
+28  
+	gåue
+;
+
+31 
+ölöe
+ 
+boﬁ
+ 
+do_lﬂd
+(
+Boo°Bim≠
+ & 
+bm
+, 
+Ar
+ & 
+¨
+)
+
+33 
+	gbm
+.
+	gÀ·
+.
+˛ór
+();
+
+34 
+	g°d
+::
+size_t
+ 
+size
+ = 0;
+
+35 i‡(!
+	gsized_ad≠ãr
+::
+do_lﬂd
+(
+size
+, 
+¨
+)Ë 
+	gÁl£
+;
+
+37 
+fú°_t
+ 
+	gf
+;
+
+38 
+£c⁄d_t
+ 
+	gs
+;
+
+39 
+	g°d
+::
+size_t
+ 
+ui
+ = 0; 
+	gui
+ < 
+	gsize
+; ++ui)
+
+41 i‡(!
+	g¨
+.
+do_lﬂd
+(
+f
+Ë|| !¨.do_lﬂd(
+s
+))
+
+42  
+	gÁl£
+;
+
+44 
+In£π
+()(
+	gbm
+.
+	gÀ·
+, 
+Paú
+(
+°d
+::
+make_∑ú
+(
+f
+, 
+s
+)));
+
+46  
+	gåue
+;
+
+	@concept.hpp
+
+1 #i‚de‡
+__BEX_STREAM_SERIALIZATION_CONCEPT_HPP__
+
+
+2 
+	#__BEX_STREAM_SERIALIZATION_CONCEPT_HPP__
+
+
+	)
+
+4 
+	~"£rüliz©i⁄_fwd.h
+"
+
+5 
+	~"vîsi⁄_adl.hµ
+"
+
+7 
+«me•a˚
+ 
+	gBex
+ {Çame•a˚ 
+	g£rüliz©i⁄
+
+
+11 
+«me•a˚
+ 
+	gdëaû
+
+
+13 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+14 
+	shas_mem_vîsi⁄
+
+
+16 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gU
+>
+
+17 
+no_ty≥
+ 
+check
+(...);
+
+19 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gU
+>
+
+20 
+yes_ty≥
+ 
+check
+(
+de˛ty≥
+(
+°d
+::
+de˛vÆ
+<
+U
+*>()->
+£rülize_vîsi⁄
+())*);
+
+22 c⁄° 
+boﬁ
+ 
+	gvÆue
+ = ((
+check
+<
+T
+>(
+nuŒ±r
+)Ë=(
+yes_ty≥
+));
+
+25 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+26 ˛as†
+	chas_‰ì_vîsi⁄_hñ≥r
+
+
+28 
+	söã∫Æ_ty≥
+ {};
+
+30 
+	gpublic
+:
+
+31 c⁄° 
+boﬁ
+ 
+vÆue
+ = !
+boo°
+::
+is_ßme
+<
+
+32 
+de˛ty≥
+(
+£rülize_vîsi⁄
+((
+T
+*)
+nuŒ±r
+)),
+
+33 
+de˛ty≥
+(
+£rülize_vîsi⁄
+((
+öã∫Æ_ty≥
+*)
+nuŒ±r
+))
+
+34 >::
+vÆue
+;
+
+37 
+	gãm∂©e
+ <>
+
+38 
+˛ass
+ 
+	ghas_‰ì_vîsi⁄_hñ≥r
+<> : 
+public
+ 
+boo°
+::
+Ál£_ty≥
+ {};
+
+40 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+41 
+	ghas_‰ì_vîsi⁄
+ : 
+has_‰ì_vîsi⁄_hñ≥r
+<
+T
+> {};
+
+44 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+45 
+	ghas_vîsi⁄
+
+
+46 : 
+boo°
+::
+ty≥_åaôs
+::
+i˚_‹
+<
+
+47 
+dëaû
+::
+has_mem_vîsi⁄
+<
+ty≥«me
+ 
+ªmove_Æl
+<
+T
+>::
+ty≥
+>::
+vÆue
+,
+
+48 
+	gdëaû
+::
+has_‰ì_vîsi⁄
+<
+ty≥«me
+ 
+ªmove_Æl
+<
+T
+>::
+ty≥
+>::
+vÆue
+
+
+53 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+54 
+ty≥«me
+ 
+	gboo°
+::
+íabÀ_if
+<
+has_vîsi⁄
+<
+T
+>, >::
+ty≥
+ 
+gë_vîsi⁄
+()
+
+56  
+£rülize_vîsi⁄_adl
+((
+ty≥«me
+ 
+ªmove_Æl
+<
+T
+>::
+ty≥
+*)
+nuŒ±r
+);
+
+59 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+60 
+ty≥«me
+ 
+	gboo°
+::
+dißbÀ_if
+<
+has_vîsi⁄
+<
+T
+>, >::
+ty≥
+ 
+gë_vîsi⁄
+()
+
+69 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+70 
+	gis_ad≠ãr_ty≥
+;
+
+72 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+73 
+	gis_ad≠ãr_ty≥_im∂
+ : 
+boo°
+::
+Ál£_ty≥
+ {};
+
+76 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+,Åy≥«mê
+	gAŒoc
+>
+
+77 
+	gis_ad≠ãr_ty≥_im∂
+<
+	g°d
+::
+ve˘‹
+<
+T
+, 
+	gAŒoc
+> > : 
+boo°
+::
+åue_ty≥
+ {};
+
+79 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+,Åy≥«mê
+	gTøôs
+,Åy≥«mê
+	gAŒoc
+>
+
+80 
+	gis_ad≠ãr_ty≥_im∂
+<
+	g°d
+::
+basic_°rög
+<
+T
+, 
+	gTøôs
+, 
+	gAŒoc
+> > : 
+boo°
+::
+åue_ty≥
+ {};
+
+82 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+,Åy≥«mê
+	gAŒoc
+>
+
+83 
+	gis_ad≠ãr_ty≥_im∂
+<
+	g°d
+::
+li°
+<
+T
+, 
+	gAŒoc
+> > : 
+boo°
+::
+åue_ty≥
+ {};
+
+85 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+,Åy≥«mê
+	gAŒoc
+>
+
+86 
+	gis_ad≠ãr_ty≥_im∂
+<
+	g°d
+::
+deque
+<
+T
+, 
+	gAŒoc
+> > : 
+boo°
+::
+åue_ty≥
+ {};
+
+88 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+,Åy≥«mê
+	gPr
+,Åy≥«mê
+	gAŒoc
+>
+
+89 
+	gis_ad≠ãr_ty≥_im∂
+<
+	g°d
+::
+£t
+<
+T
+, 
+	gPr
+, 
+	gAŒoc
+> > : 
+boo°
+::
+åue_ty≥
+ {};
+
+91 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+,Åy≥«mê
+	gPr
+,Åy≥«mê
+	gAŒoc
+>
+
+92 
+	gis_ad≠ãr_ty≥_im∂
+<
+	g°d
+::
+mu…i£t
+<
+T
+, 
+	gPr
+, 
+	gAŒoc
+> > : 
+boo°
+::
+åue_ty≥
+ {};
+
+94 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gK
+,Åy≥«mê
+	gT
+,Åy≥«mê
+	gPr
+,Åy≥«mê
+	gAŒoc
+>
+
+95 
+	gis_ad≠ãr_ty≥_im∂
+<
+	g°d
+::
+m≠
+<
+K
+, 
+	gT
+, 
+	gPr
+, 
+	gAŒoc
+> > : 
+boo°
+::
+åue_ty≥
+ {};
+
+97 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gK
+,Åy≥«mê
+	gT
+,Åy≥«mê
+	gPr
+,Åy≥«mê
+	gAŒoc
+>
+
+98 
+	gis_ad≠ãr_ty≥_im∂
+<
+	g°d
+::
+mu…im≠
+<
+K
+, 
+	gT
+, 
+	gPr
+, 
+	gAŒoc
+> > : 
+boo°
+::
+åue_ty≥
+ {};
+
+100 #i‡
+deföed
+(
+_MSC_VER
+)
+
+101 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gK
+,Åy≥«mê
+	gT
+,Åy≥«mê
+	gPr
+,Åy≥«mê
+	gAŒoc
+>
+
+102 
+	gis_ad≠ãr_ty≥_im∂
+<
+	g°dext
+::
+hash_m≠
+<
+K
+, 
+	gT
+, 
+	gPr
+, 
+	gAŒoc
+> > : 
+boo°
+::
+åue_ty≥
+ {};
+
+105 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gK
+,Åy≥«mê
+	gT
+,Åy≥«mê
+	gH
+,Åy≥«mê
+	gEq
+,Åy≥«mê
+	gAŒoc
+>
+
+106 
+	gis_ad≠ãr_ty≥_im∂
+<
+	g°d
+::
+un‹dîed_m≠
+<
+K
+, 
+	gT
+, 
+	gH
+, 
+	gEq
+, 
+	gAŒoc
+> > : 
+boo°
+::
+åue_ty≥
+ {};
+
+108 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gK
+,Åy≥«mê
+	gT
+,Åy≥«mê
+	gH
+,Åy≥«mê
+	gEq
+,Åy≥«mê
+	gAŒoc
+>
+
+109 
+	gis_ad≠ãr_ty≥_im∂
+<
+	g°d
+::
+un‹dîed_mu…im≠
+<
+K
+, 
+	gT
+, 
+	gH
+, 
+	gEq
+, 
+	gAŒoc
+> > : 
+boo°
+::
+åue_ty≥
+ {};
+
+111 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+,Åy≥«mê
+	gH
+,Åy≥«mê
+	gEq
+,Åy≥«mê
+	gAŒoc
+>
+
+112 
+	gis_ad≠ãr_ty≥_im∂
+<
+	g°d
+::
+un‹dîed_£t
+<
+T
+, 
+	gH
+, 
+	gEq
+, 
+	gAŒoc
+> > : 
+boo°
+::
+åue_ty≥
+ {};
+
+114 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+,Åy≥«mê
+	gH
+,Åy≥«mê
+	gEq
+,Åy≥«mê
+	gAŒoc
+>
+
+115 
+	gis_ad≠ãr_ty≥_im∂
+<
+	g°d
+::
+un‹dîed_mu…i£t
+<
+T
+, 
+	gH
+, 
+	gEq
+, 
+	gAŒoc
+> > : 
+boo°
+::
+åue_ty≥
+ {};
+
+117 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT1
+,Åy≥«mê
+	gT2
+>
+
+118 
+	gis_ad≠ãr_ty≥_im∂
+<
+	g°d
+::
+∑ú
+<
+T1
+, 
+	gT2
+> > : 
+boo°
+::
+åue_ty≥
+ {};
+
+120 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+, 
+	g°d
+::
+size_t
+ 
+N
+>
+
+121 
+is_ad≠ãr_ty≥_im∂
+<
+°d
+::
+¨øy
+<
+T
+, 
+	gN
+> > : 
+boo°
+::
+åue_ty≥
+ {};
+
+123 
+	gãm∂©e
+ <
+	gty≥«me
+ ... 
+	gCArgs
+>
+
+124 
+	gis_ad≠ãr_ty≥_im∂
+<
+	g°d
+::
+tu∂e
+<
+CArgs
+...> > : 
+boo°
+::
+åue_ty≥
+ {};
+
+127 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+, 
+	g°d
+::
+size_t
+ 
+N
+>
+
+128 
+is_ad≠ãr_ty≥_im∂
+<
+boo°
+::
+¨øy
+<
+T
+, 
+	gN
+> > : boo°::
+åue_ty≥
+ {};
+
+130 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gK1
+,Åy≥«mê
+	gK2
+,Åy≥«mê
+	gAP1
+,Åy≥«mê
+	gAP2
+,Åy≥«mê
+	gAP3
+>
+
+131 
+	gis_ad≠ãr_ty≥_im∂
+<
+	gboo°
+::
+bim≠
+<
+K1
+, 
+	gK2
+, 
+	gAP1
+, 
+	gAP2
+, 
+	gAP3
+> > : 
+boo°
+::
+åue_ty≥
+ {};
+
+134 
+	gãm∂©e
+ <>
+
+135 
+	gis_ad≠ãr_ty≥_im∂
+<
+	gbö¨y_wøµî
+> : 
+boo°
+::
+åue_ty≥
+ {};
+
+137 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+138 
+	gis_ad≠ãr_ty≥_im∂
+<
+	gãxt_wøµî
+<
+	gT
+> > : 
+boo°
+::
+åue_ty≥
+ {};
+
+141 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+142 
+	gis_ad≠ãr_ty≥
+<
+	gT
+*> : 
+boo°
+::
+åue_ty≥
+ {};
+
+144 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+, 
+	gN
+>
+
+145 
+	gis_ad≠ãr_ty≥
+<
+	gT
+[
+N
+]> : 
+boo°
+::
+åue_ty≥
+ {};
+
+147 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+148 
+	gis_ad≠ãr_ty≥
+ : 
+is_ad≠ãr_ty≥_im∂
+<
+ty≥«me
+ 
+ªmove_Æl
+<
+T
+>::
+ty≥
+> {};
+
+154 
+«me•a˚
+ 
+	gdëaû
+
+
+156 
+	gãm∂©e
+ <
+˛ass
+ 
+	gT
+, 
+	gboﬁ
+>
+
+157 
+	shas_mem_£rülize_hñ≥r
+
+
+159 
+	sAr
+ {};
+
+161 
+	gãm∂©e
+ <
+˛ass
+ 
+	gU
+>
+
+162 
+no_ty≥
+ 
+ã°
+(...);
+
+164 
+	gãm∂©e
+ <
+˛ass
+ 
+	gU
+>
+
+165 
+yes_ty≥
+ 
+ã°
+(
+U
+*
+
+166 , 
+de˛ty≥
+(
+°d
+::
+de˛vÆ
+<
+U
+>().
+ãm∂©e
+ 
+£rülize
+<
+Ar
+>(°d::de˛vÆ<Ar&>(), ()))* = 
+nuŒ±r
+);
+
+168 c⁄° 
+boﬁ
+ 
+	gvÆue
+ = (
+ã°
+<
+T
+>(
+nuŒ±r
+)Ë=(
+yes_ty≥
+);
+
+171 
+	gãm∂©e
+ <
+˛ass
+ 
+	gT
+>
+
+172 
+	ghas_mem_£rülize_hñ≥r
+<
+	gT
+, 
+	gÁl£
+> : 
+boo°
+::
+Ál£_ty≥
+ {};
+
+174 
+	gãm∂©e
+ <
+˛ass
+ 
+	gT
+>
+
+175 
+	ghas_mem_£rülize
+
+
+176 : 
+has_mem_£rülize_hñ≥r
+<
+T
+, 
+	gboo°
+::
+is_˛ass
+<T>::
+vÆue
+ || 
+boo°
+::
+is_uni⁄
+<T>::value>
+
+179 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+180 
+	shas_‰ì_£rülize_hñ≥r
+
+
+182 
+	sAr
+ {};
+
+184 c⁄° 
+boﬁ
+ 
+	gvÆue
+ = !
+°d
+::
+is_ßme
+<
+
+185 
+de˛ty≥
+(
+£rülize
+(
+°d
+::
+de˛vÆ
+<
+Ar
+&>(), std::de˛vÆ<
+T
+&>(), ()0)),
+
+186 
+de˛ty≥
+(
+£rülize
+(
+°d
+::
+de˛vÆ
+<
+Ar
+&>(), std::declval<Ar&>(), ()0))
+
+187 >::
+vÆue
+;
+
+190 
+	gãm∂©e
+ <>
+
+191 
+	ghas_‰ì_£rülize_hñ≥r
+<> : 
+°d
+::
+Ál£_ty≥
+ {};
+
+193 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+194 
+	ghas_‰ì_£rülize
+
+
+195 : 
+has_‰ì_£rülize_hñ≥r
+<
+T
+>
+
+199 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+200 
+	ghas_£rülize
+
+
+201 : 
+boo°
+::
+ty≥_åaôs
+::
+i˚_‹
+<
+
+202 
+dëaû
+::
+has_mem_£rülize
+<
+ty≥«me
+ 
+ªmove_Æl
+<
+T
+>::
+ty≥
+>::
+vÆue
+,
+
+203 
+	gdëaû
+::
+has_‰ì_£rülize
+<
+ty≥«me
+ 
+ªmove_Æl
+<
+T
+>::
+ty≥
+>::
+vÆue
+
+
+208 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+209 
+	sis_bö¨y_åivül
+
+
+211 c⁄° 
+boﬁ
+ 
+	gvÆue
+ = !
+boo°
+::
+ty≥_åaôs
+::
+i˚_‹
+<
+
+212 
+is_ad≠ãr_ty≥
+<
+T
+>::
+vÆue
+,
+
+213 
+	ghas_£rülize
+<
+	gT
+>::
+vÆue
+,
+
+214 
+	ghas_vîsi⁄
+<
+	gT
+>::
+vÆue
+
+
+215 >::
+vÆue
+
+
+216 #i‡!
+deföed
+(
+BEX_SERIALIZATION_USE_POD_EXTEND
+)
+
+217 && 
+°d
+::
+is_pod
+<
+ty≥«me
+ 
+ªmove_Æl
+<
+T
+>::
+ty≥
+>::
+vÆue
+
+
+223 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+,Åy≥«mê
+	gModeTag
+>
+
+224 
+	gis_›timize_hñ≥r
+;
+
+226 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+227 
+	gis_›timize_hñ≥r
+<
+	gT
+, 
+	gbö¨y_mode_èg
+>
+
+228 : 
+is_bö¨y_åivül
+<
+T
+>
+
+231 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+232 
+	gis_›timize_hñ≥r
+<
+	gT
+, 
+	gãxt_mode_èg
+>
+
+233 : 
+boo°
+::
+is_ßme
+<
+T
+, >
+
+236 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+, 
+˛ass
+ 
+	gAr
+>
+
+237 
+	gis_›timize
+
+
+238 : 
+is_›timize_hñ≥r
+<
+T
+, 
+ty≥«me
+ 
+	g¨chive_åaôs
+<
+	gAr
+>::
+mode_èg
+>
+
+	@config.h
+
+1 #i‚de‡
+__BEX_SERIALIZATION_CONFIG_H__
+
+
+2 
+	#__BEX_SERIALIZATION_CONFIG_H__
+
+
+	)
+
+11 #i‡
+deföed
+(
+BEX_SERIALIZATION_POD_EXTEND
+)
+
+12 
+	#BEX_SERIALIZATION_USE_POD_EXTEND
+ 1
+
+	)
+
+	@serialization_fwd.h
+
+1 #i‚de‡
+__BEX_STREAM_SERIALIZATION_SERIALIZATION_FWD_HPP__
+
+
+2 
+	#__BEX_STREAM_SERIALIZATION_SERIALIZATION_FWD_HPP__
+
+
+	)
+
+18 
+	~<Bex/c⁄fig.hµ
+>
+
+19 
+	~<Bex/ty≥_åaôs/ty≥_åaôs.hµ
+>
+
+20 
+	~<Bex/utûôy/ex˚±i⁄.h
+>
+
+21 
+	~<Bex/m©h/com¥ess_numîic.hµ
+>
+
+22 
+	~<iosfwd
+>
+
+23 
+	~<ty≥_åaôs
+>
+
+26 
+	~<ve˘‹
+>
+
+27 
+	~<£t
+>
+
+28 
+	~<li°
+>
+
+29 
+	~<°rög
+>
+
+30 
+	~<m≠
+>
+
+31 
+	~<deque
+>
+
+32 
+	~<un‹dîed_m≠
+>
+
+33 
+	~<un‹dîed_£t
+>
+
+34 
+	~<¨øy
+>
+
+35 
+	~<tu∂e
+>
+
+37 #i‡
+deföed
+(
+_MSC_VER
+)
+
+38 
+	~<hash_m≠
+>
+
+43 
+	~<boo°/bim≠.hµ
+>
+
+44 
+	~<boo°/¨øy.hµ
+>
+
+45 
+	~<boo°/as£π.hµ
+>
+
+46 
+	~<boo°/°©ic_as£π.hµ
+>
+
+47 
+	~<boo°/ty≥of/ty≥of.hµ
+>
+
+48 
+	~<boo°/ty≥_åaôs.hµ
+>
+
+49 
+	~<boo°/io/ios_°©e.hµ
+>
+
+51 
+	~"c⁄fig.h
+"
+
+52 
+	~"wøµîs.hµ
+"
+
+54 
+«me•a˚
+ 
+	gBex
+ {Çame•a˚ 
+	g£rüliz©i⁄
+
+
+58 ˛as†
+	c¨chive_°©e
+
+
+61 
+good
+,
+
+62 
+	gîr‹
+,
+
+68 
+	e¨chive_m¨k_bô
+
+
+70 
+	gamb_n⁄e
+ = 0x0,
+
+71 
+	gamb_rﬁlback
+ = 0x1,
+
+73 
+	t¨chive_m¨k
+;
+
+74 c⁄° 
+¨chive_m¨k
+ 
+	gdeÁu…_m¨k
+ = 
+amb_n⁄e
+;
+
+78 
+BEX_ENUM_CLASS
+ 
+	g¨chive_mode_íum
+
+
+80 
+	g¨chive_mode_bö¨y
+,
+
+81 
+	g¨chive_mode_ãxt
+,
+
+82 
+	g¨chive_mode_unkown
+,
+
+84 
+	sbö¨y_mode_èg
+ {};
+
+85 
+	sãxt_mode_èg
+ {};
+
+86 
+	sunkown_mode_èg
+ {};
+
+92 
+BEX_ENUM_CLASS
+ 
+	g¨chive_›î_íum
+
+
+94 
+	g¨chive_›î_lﬂd
+,
+
+95 
+	g¨chive_›î_ßve
+,
+
+96 
+	g¨chive_›î_unkown
+,
+
+98 
+	slﬂd_›î_èg
+ {};
+
+99 
+	sßve_›î_èg
+ {};
+
+100 
+	sunkown_›î_èg
+ {};
+
+107 
+	gbö¨y_wøµî
+;
+
+110 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+111 
+	gãxt_wøµî
+;
+
+117 
+	sbö¨y_ba£
+ {};
+
+120 
+	sãxt_ba£
+ {};
+
+123 
+	söput_¨chive_ba£
+ {};
+
+124 
+	souçut_¨chive_ba£
+ {};
+
+127 
+	gãm∂©e
+ <
+˛ass
+ 
+	gArchive
+>
+
+128 
+	g¨chive_åaôs
+;
+
+131 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+132 
+	gis_ad≠ãr_ty≥
+;
+
+137 
+	g«me•a˚
+ {
+
+138 
+usög
+ 
+	g£rüliz©i⁄
+::
+¨chive_m¨k
+;
+
+139 
+usög
+ 
+	g£rüliz©i⁄
+::
+amb_n⁄e
+;
+
+140 
+usög
+ 
+	g£rüliz©i⁄
+::
+amb_rﬁlback
+;
+
+142 
+usög
+ 
+	g£rüliz©i⁄
+::
+lﬂd_›î_èg
+;
+
+143 
+usög
+ 
+	g£rüliz©i⁄
+::
+ßve_›î_èg
+;
+
+144 
+usög
+ 
+	g£rüliz©i⁄
+::
+unkown_›î_èg
+;
+
+	@serialize_adl.hpp
+
+1 #i‚de‡
+__BEX_STREAM_SERIALIZATION_SERIALIZE_ADL__
+
+
+2 
+	#__BEX_STREAM_SERIALIZATION_SERIALIZE_ADL__
+
+
+	)
+
+4 
+	~"£rüliz©i⁄_fwd.h
+"
+
+5 
+	~"vîsi⁄_adl.hµ
+"
+
+7 
+«me•a˚
+ 
+	gBex
+ {Çame•a˚ 
+	g£rüliz©i⁄
+
+
+9 
+«me•a˚
+ 
+	gdëaû
+
+
+11 
+	shas_vîsi⁄_èg
+ {};
+
+12 
+	sno_vîsi⁄_èg
+ {};
+
+14 
+	gãm∂©e
+ <
+˛ass
+ 
+	gArchive
+, 
+ty≥«me
+ 
+	gT
+>
+
+15 
+ölöe
+ 
+mode_£rülize
+(
+Archive
+ & 
+¨
+, 
+T
+ & 
+t
+, 
+bö¨y_mode_èg
+)
+
+17 
+BOOST_STATIC_ASSERT
+(
+Ál£
+);
+
+22 
+	gãm∂©e
+ <
+˛ass
+ 
+	gArchive
+, 
+ty≥«me
+ 
+	gT
+>
+
+23 
+ölöe
+ 
+mode_£rülize
+(
+Archive
+ & 
+¨
+, 
+T
+ & 
+t
+, 
+ãxt_mode_èg
+)
+
+25 
+	gãxt_wøµî
+<
+	gT
+> 
+twøp
+(
+t
+);
+
+26 
+	g¨
+ & 
+	gtwøp
+;
+
+29 
+	gãm∂©e
+ <
+˛ass
+ 
+	gArchive
+, 
+ty≥«me
+ 
+	gT
+>
+
+30 
+ölöe
+ 
+mode_£rülize
+(
+Archive
+ & 
+¨
+, 
+T
+ & 
+t
+, 
+unkown_mode_èg
+)
+
+35 
+	gãm∂©e
+ <
+˛ass
+ 
+	gArchive
+, 
+ty≥«me
+ 
+	gT
+>
+
+36 
+ölöe
+ 
+ty≥«me
+ 
+	gboo°
+::
+íabÀ_if
+<
+dëaû
+::
+has_mem_£rülize
+<
+T
+>, >::
+ty≥
+
+
+37 
+mem_£rülize
+(
+Archive
+ & 
+¨
+, 
+T
+ & 
+t
+, c⁄° 
+vîsi⁄
+)
+
+39 
+	gt
+.
+£rülize
+(
+¨
+, 
+vîsi⁄
+);
+
+42 
+	gãm∂©e
+ <
+˛ass
+ 
+	gArchive
+, 
+ty≥«me
+ 
+	gT
+>
+
+43 
+ölöe
+ 
+ty≥«me
+ 
+	gboo°
+::
+dißbÀ_if
+<
+dëaû
+::
+has_mem_£rülize
+<
+T
+>, >::
+ty≥
+
+
+44 
+mem_£rülize
+(
+Archive
+ & 
+¨
+, 
+T
+ & 
+t
+, const )
+
+46 
+mode_£rülize
+(
+¨
+, 
+t
+, 
+ty≥«me
+ 
+¨chive_åaôs
+<
+Archive
+>::
+mode_èg
+());
+
+50 ˛as†
+	c¥iv©e_ty≥_wøµî
+
+
+52 
+	sty≥
+ {};
+
+54 
+	gãm∂©e
+ <
+˛ass
+ 
+	gArchive
+, 
+ty≥«me
+ 
+	gT
+>
+
+55 
+‰õnd
+ 
+ty≥
+ 
+£rülize
+(
+Archive
+ &, 
+T
+ &, const );
+
+58 
+	gãm∂©e
+ <
+˛ass
+ 
+	gArchive
+, 
+ty≥«me
+ 
+	gT
+>
+
+59 
+ölöe
+ 
+	g¥iv©e_ty≥_wøµî
+::
+ty≥
+ 
+£rülize
+(
+Archive
+ & 
+¨
+, 
+T
+ & 
+t
+, c⁄° 
+vîsi⁄
+)
+
+61 
+	gdëaû
+::
+mem_£rülize
+(
+¨
+, 
+t
+, 
+vîsi⁄
+);
+
+62  
+	g¥iv©e_ty≥_wøµî
+::
+ty≥
+();
+
+65 
+	gãm∂©e
+ <
+˛ass
+ 
+	gArchive
+, 
+ty≥«me
+ 
+	gT
+>
+
+66 
+ölöe
+ 
+£rülize_wôh_vîsi⁄
+(
+Archive
+ & 
+¨
+, 
+T
+ & 
+t
+, c⁄° 
+vîsi⁄
+, 
+dëaû
+::
+no_vîsi⁄_èg
+)
+
+68 
+£rülize
+(
+¨
+, 
+t
+, 
+vîsi⁄
+);
+
+71 
+	gãm∂©e
+ <
+˛ass
+ 
+	gArchive
+, 
+ty≥«me
+ 
+	gT
+>
+
+72 
+ölöe
+ 
+£rülize_wôh_vîsi⁄
+(
+Archive
+ & 
+¨
+, 
+T
+ & 
+t
+, c⁄° 
+vîsi⁄
+, 
+dëaû
+::
+has_vîsi⁄_èg
+)
+
+74 
+˙32
+ 
+vî
+(
+vîsi⁄
+);
+
+75 
+	g¨
+ & 
+	gvî
+;
+
+76 
+£rülize_wôh_vîsi⁄
+(
+¨
+, 
+t
+, 
+vî
+.
+gë
+(), 
+dëaû
+::
+no_vîsi⁄_èg
+());
+
+79 
+	gãm∂©e
+ <
+˛ass
+ 
+	gArchive
+, 
+ty≥«me
+ 
+	gT
+>
+
+80 
+ölöe
+ 
+£rülize_adl
+(
+Archive
+ & 
+¨
+, 
+T
+ & 
+t
+)
+
+82 
+£rülize_wôh_vîsi⁄
+(
+¨
+, 
+t
+, 
+gë_vîsi⁄
+<
+T
+>()
+
+83 , 
+ty≥«me
+ 
+boo°
+::
+m∂
+::
+if_c
+<
+has_vîsi⁄
+<
+T
+>::
+vÆue
+
+
+84 , 
+dëaû
+::
+has_vîsi⁄_èg
+, dëaû::
+no_vîsi⁄_èg
+>::
+ty≥
+());
+
+	@stl_adapter.hpp
+
+5 
+	ssized_ad≠ãr
+
+
+7 
+	mãm∂©e
+ <
+˛ass
+ 
+	mC⁄èöî
+, cœs†
+	mAr
+>
+
+8 
+ölöe
+ 
+boﬁ
+ 
+do_ßve
+(
+C⁄èöî
+ c⁄°& 
+c⁄èöî
+, 
+Ar
+ & 
+¨
+)
+
+10 
+˙32
+ 
+size
+(
+c⁄èöî
+.size());
+
+11 
+£rülize_adl
+(
+¨
+, 
+size
+);
+
+12  
+	m¨
+.
+good
+();
+
+15 
+	mãm∂©e
+ <
+˛ass
+ 
+	mAr
+>
+
+16 
+ölöe
+ 
+boﬁ
+ 
+do_lﬂd
+(
+°d
+::
+size_t
+ & 
+out_size
+, 
+Ar
+ & 
+¨
+)
+
+18 
+˙32
+ 
+	msize
+;
+
+19 
+£rülize_adl
+(
+¨
+, 
+size
+);
+
+20 
+	mout_size
+ = 
+size
+.
+gë
+();
+
+21  
+	m¨
+.
+good
+();
+
+27 
+	sPushback
+
+
+29 
+	mãm∂©e
+ <
+˛ass
+ 
+	mC⁄èöî
+, 
+ty≥«me
+ 
+	mVÆueTy≥
+>
+
+30 
+ölöe
+ 
+›î©‹
+()(
+	mC⁄èöî
+ & 
+	mc
+, 
+VÆueTy≥
+ c⁄°& 
+	mv
+) const
+
+31 { 
+	mc
+.
+push_back
+(
+v
+); }
+
+33 
+	sIn£π
+
+
+35 
+	mãm∂©e
+ <
+˛ass
+ 
+	mC⁄èöî
+, 
+ty≥«me
+ 
+	mVÆueTy≥
+>
+
+36 
+ölöe
+ 
+›î©‹
+()(
+	mC⁄èöî
+ & 
+	mc
+, 
+VÆueTy≥
+ c⁄°& 
+	mv
+) const
+
+37 { 
+	mc
+.
+ö£π
+(
+v
+); }
+
+41 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, cœs†
+	gC⁄èöî
+, cœs†
+	gIn£πî
+>
+
+42 
+	sc⁄èöî_ad≠ãr
+
+
+44 
+ölöe
+ 
+boﬁ
+ 
+do_ßve
+(
+C⁄èöî
+ c⁄°& 
+c
+, 
+Ar
+ & 
+¨
+)
+
+46 i‡(!
+	msized_ad≠ãr
+::
+do_ßve
+(
+c
+, 
+¨
+)Ë 
+	mÁl£
+;
+
+47 i‡(
+	mc
+.
+em±y
+()Ë 
+	måue
+;
+
+49 
+BOOST_AUTO
+(
+ô
+, 
+c
+.
+begö
+());
+
+50 ; 
+	mô
+ !
+c
+.
+íd
+(); ++it)
+
+51 i‡(!
+	m¨
+.
+do_ßve
+(*
+ô
+))
+
+52  
+	mÁl£
+;
+
+54  
+	måue
+;
+
+57 
+ölöe
+ 
+boﬁ
+ 
+do_lﬂd
+(
+C⁄èöî
+ & 
+c
+, 
+Ar
+ & 
+¨
+)
+
+59 
+	mc
+.
+˛ór
+();
+
+60 
+	m°d
+::
+size_t
+ 
+size
+ = 0;
+
+61 i‡(!
+	msized_ad≠ãr
+::
+do_lﬂd
+(
+size
+, 
+¨
+)Ë 
+	mÁl£
+;
+
+63 
+ty≥«me
+ 
+	mC⁄èöî
+::
+vÆue_ty≥
+ 
+v
+;
+
+64 
+	m°d
+::
+size_t
+ 
+ui
+ = 0; 
+	mui
+ < 
+	msize
+; ++ui)
+
+66 i‡(!
+	m¨
+.
+do_lﬂd
+(
+v
+))
+
+67  
+	mÁl£
+;
+
+69 
+In£πî
+()(
+	mc
+, 
+	mv
+);
+
+71  
+	måue
+;
+
+77 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gT
+,Åy≥«mê
+	gAŒoc
+>
+
+78 
+	gad≠ãr
+<
+	gAr
+, 
+	g°d
+::
+ve˘‹
+<
+T
+, 
+	gAŒoc
+> >
+
+80 
+	g°d
+::
+	tve˘‹
+<
+	tT
+, 
+	tAŒoc
+> 
+	tVe˘‹
+;
+
+82 
+ölöe
+ 
+boﬁ
+ 
+do_ßve
+(
+Ve˘‹
+ c⁄°& 
+vecT
+, 
+Ar
+ & 
+¨
+)
+
+84 i‡(!
+	gsized_ad≠ãr
+::
+do_ßve
+(
+vecT
+, 
+¨
+)Ë 
+	gÁl£
+;
+
+85 i‡(
+	gvecT
+.
+em±y
+()Ë 
+	gåue
+;
+
+87 i‡(
+	gis_›timize
+<
+	gT
+, 
+	gAr
+>::
+vÆue
+)
+
+88  
+¨
+.
+do_ßve
+((*)&
+vecT
+[0], vecT.
+size
+(Ë* (
+T
+));
+
+90 
+	g°d
+::
+size_t
+ 
+ui
+ = 0; 
+	gui
+ < 
+	gvecT
+.
+size
+(); ++ui)
+
+91 i‡(!
+	g¨
+.
+do_ßve
+(
+vecT
+[
+ui
+]))
+
+92  
+	gÁl£
+;
+
+94  
+	gåue
+;
+
+97 
+ölöe
+ 
+boﬁ
+ 
+do_lﬂd
+(
+Ve˘‹
+ & 
+vecT
+, 
+Ar
+ & 
+¨
+)
+
+99 
+	gvecT
+.
+˛ór
+();
+
+100 
+	g°d
+::
+size_t
+ 
+size
+ = 0;
+
+101 i‡(!
+	gsized_ad≠ãr
+::
+do_lﬂd
+(
+size
+, 
+¨
+)Ë 
+	gÁl£
+;
+
+103 
+	g°d
+::
+size_t
+ 
+cou¡
+ = 
+size
+;
+
+104 
+	gcou¡
+)
+
+106 
+	g°d
+::
+size_t
+ 
+⁄˚
+ = 
+°d
+::
+mö
+<°d::size_t>(
+cou¡
+, 128);
+
+107 
+	gcou¡
+ -
+⁄˚
+;
+
+108 
+	g°d
+::
+size_t
+ 
+°¨t
+ = 
+vecT
+.
+size
+();
+
+109 
+	gvecT
+.
+ªsize
+(
+vecT
+.
+size
+(Ë+ 
+⁄˚
+);
+
+110 i‡(
+	gis_›timize
+<
+	gT
+, 
+	gAr
+>::
+vÆue
+)
+
+112 i‡(!
+¨
+.
+do_lﬂd
+((*)&
+vecT
+[
+°¨t
+], 
+⁄˚
+ * (
+T
+)))
+
+113  
+	gÁl£
+;
+
+116 
+	g°d
+::
+size_t
+ 
+i
+ = 0; 
+	gi
+ < 
+	g⁄˚
+; ++i)
+
+117 i‡(!
+	g¨
+.
+do_lﬂd
+(
+vecT
+[
+°¨t
+ + 
+i
+]))
+
+118  
+	gÁl£
+;
+
+121  
+	gåue
+;
+
+127 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gAŒoc
+>
+
+128 
+	gad≠ãr
+<
+	gAr
+, 
+	g°d
+::
+ve˘‹
+<
+boﬁ
+, 
+	gAŒoc
+> >
+
+130 
+	g°d
+::
+	tve˘‹
+<
+	tboﬁ
+, 
+	tAŒoc
+> 
+	tVe˘‹
+;
+
+132 
+ölöe
+ 
+boﬁ
+ 
+do_ßve
+(
+Ve˘‹
+ c⁄°& 
+vecT
+, 
+Ar
+ & 
+¨
+)
+
+134 i‡(!
+	gsized_ad≠ãr
+::
+do_ßve
+(
+vecT
+, 
+¨
+)Ë 
+	gÁl£
+;
+
+135 i‡(
+	gvecT
+.
+em±y
+()Ë 
+	gåue
+;
+
+137 
+	gbyã
+[1024] = {};
+
+138 
+	g°d
+::
+size_t
+ 
+i
+ = 0; 
+	gi
+ < 
+	gvecT
+.
+size
+(); ++i)
+
+140 i‡(
+	gvecT
+[
+i
+])
+
+141 
+	gbyã
+[(
+i
+ >> 3Ë& ((
+byã
+) - 1)] |= ()(1 << (i & 0x7));
+
+143 i‡(((
+	gi
+ + 1Ë& (8 * (
+	gbyã
+) - 1)) == 0)
+
+145 i‡(!
+¨
+.
+do_ßve
+((*)
+byã
+, (byte)))
+
+146  
+Ál£
+;
+
+148 
+mem£t
+(
+byã
+, 0, (byte));
+
+152 
+	g°d
+::
+size_t
+ 
+avaû
+ = 
+bô_to_byã
+(
+vecT
+.
+size
+(Ë& (8 * (
+byã
+) - 1));
+
+153 i‡(
+	gavaû
+)
+
+154  
+	g¨
+.
+do_ßve
+((*)
+byã
+, 
+avaû
+);
+
+156  
+	gåue
+;
+
+159 
+ölöe
+ 
+boﬁ
+ 
+do_lﬂd
+(
+Ve˘‹
+ & 
+vecT
+, 
+Ar
+ & 
+¨
+)
+
+161 
+	g°d
+::
+size_t
+ 
+bô_c
+;
+
+162 i‡(!
+	gsized_ad≠ãr
+::
+do_lﬂd
+(
+bô_c
+, 
+¨
+)Ë 
+	gÁl£
+;
+
+164 
+	gvecT
+.
+˛ór
+();
+
+165 i‡(!
+	gbô_c
+Ë 
+	gåue
+;
+
+167 
+	gbyã
+[1024] = {};
+
+168 
+	gbô_c
+)
+
+170 
+	g°d
+::
+size_t
+ 
+n
+ = (
+°d
+::
+mö
+<°d::size_t>)(1024 * 8, 
+	gbô_c
+);
+
+171 i‡(!
+	g¨
+.
+do_lﬂd
+((*)
+byã
+, 
+bô_to_byã
+(
+n
+))Ë 
+	gÁl£
+;
+
+172 
+	gbô_c
+ -
+n
+;
+
+174 
+	gvecT
+.
+ª£rve
+(
+vecT
+.
+size
+(Ë+ 
+n
+);
+
+175 
+	g°d
+::
+size_t
+ 
+i
+ = 0; 
+	gi
+ < 
+	gn
+; ++i)
+
+176 
+	gvecT
+.
+push_back
+((
+byã
+[
+i
+ >> 3] & (1 << (i & 0x7))) != 0);
+
+179  
+	gåue
+;
+
+182 
+ölöe
+ 
+	g°d
+::
+size_t
+ 
+bô_to_byã
+(
+°d
+::size_à
+bô_c
+)
+
+184  (
+bô_c
+ >> 3) + ((bit_c & 0x7) ? 1 : 0);
+
+246 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gT
+,Åy≥«mê
+	gTøôs
+,Åy≥«mê
+	gAŒoc
+>
+
+247 
+	gad≠ãr
+<
+	gAr
+, 
+	g°d
+::
+basic_°rög
+<
+T
+, 
+	gTøôs
+, 
+	gAŒoc
+> >
+
+249 
+	g°d
+::
+	tbasic_°rög
+<
+	tT
+, 
+	tTøôs
+, 
+	tAŒoc
+> 
+	tSåög
+;
+
+251 
+ölöe
+ 
+boﬁ
+ 
+do_ßve
+(
+Såög
+ c⁄°& 
+°rögT
+, 
+Ar
+ & 
+¨
+)
+
+253 
+BOOST_STATIC_ASSERT
+((
+boo°
+::
+is_ßme
+<
+T
+, >::
+vÆue
+ || boo°::is_ßme<T, 
+wch¨_t
+>::value));
+
+255 i‡(!
+	gsized_ad≠ãr
+::
+do_ßve
+(
+°rögT
+, 
+¨
+)Ë 
+	gÁl£
+;
+
+256 i‡(
+	g°rögT
+.
+em±y
+()Ë 
+	gåue
+;
+
+257  
+	g¨
+.
+do_ßve
+((*)&
+°rögT
+[0], såögT.
+size
+(Ë* (
+T
+));
+
+260 
+ölöe
+ 
+boﬁ
+ 
+do_lﬂd
+(
+Såög
+ & 
+°rögT
+, 
+Ar
+ & 
+¨
+)
+
+262 
+BOOST_STATIC_ASSERT
+((
+boo°
+::
+is_ßme
+<
+T
+, >::
+vÆue
+ || boo°::is_ßme<T, 
+wch¨_t
+>::value));
+
+264 
+	g°rögT
+.
+˛ór
+();
+
+265 
+	g°d
+::
+size_t
+ 
+size
+ = 0;
+
+266 i‡(!
+	gsized_ad≠ãr
+::
+do_lﬂd
+(
+size
+, 
+¨
+)Ë 
+	gÁl£
+;
+
+268 
+T
+ 
+	gbuf
+[128];
+
+269 
+	gsize
+)
+
+271 
+	g°d
+::
+size_t
+ 
+ls
+ = (
+°d
+::
+mö
+)(
+size
+, (
+	gbuf
+Ë/ (
+	gT
+));
+
+272 i‡(!
+	g¨
+.
+do_lﬂd
+((*)&
+buf
+[0], 
+ls
+ * (
+T
+))Ë 
+	gÁl£
+;
+
+273 
+	gsize
+ -
+ls
+;
+
+274 
+	g°rögT
+.
+≠≥nd
+(&
+buf
+[0], 
+ls
+);
+
+276  
+	gåue
+;
+
+282 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gT
+,Åy≥«mê
+	gAŒoc
+>
+
+283 
+	gad≠ãr
+<
+	gAr
+, 
+	g°d
+::
+li°
+<
+T
+, 
+	gAŒoc
+> >
+
+284 : 
+public
+ 
+c⁄èöî_ad≠ãr
+<
+Ar
+, 
+	g°d
+::
+li°
+<
+T
+, 
+	gAŒoc
+>, 
+	gPushback
+>
+
+289 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gT
+,Åy≥«mê
+	gAŒoc
+>
+
+290 
+	gad≠ãr
+<
+	gAr
+, 
+	g°d
+::
+deque
+<
+T
+, 
+	gAŒoc
+> >
+
+291 : 
+public
+ 
+c⁄èöî_ad≠ãr
+<
+Ar
+, 
+	g°d
+::
+deque
+<
+T
+, 
+	gAŒoc
+>, 
+	gPushback
+>
+
+296 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gT
+,Åy≥«mê
+	gPr
+,Åy≥«mê
+	gAŒoc
+>
+
+297 
+	gad≠ãr
+<
+	gAr
+, 
+	g°d
+::
+£t
+<
+T
+, 
+	gPr
+, 
+	gAŒoc
+> >
+
+298 : 
+public
+ 
+c⁄èöî_ad≠ãr
+<
+Ar
+, 
+	g°d
+::
+£t
+<
+T
+, 
+	gPr
+, 
+	gAŒoc
+>, 
+	gIn£π
+>
+
+303 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gT
+,Åy≥«mê
+	gPr
+,Åy≥«mê
+	gAŒoc
+>
+
+304 
+	gad≠ãr
+<
+	gAr
+, 
+	g°d
+::
+mu…i£t
+<
+T
+, 
+	gPr
+, 
+	gAŒoc
+> >
+
+305 : 
+public
+ 
+c⁄èöî_ad≠ãr
+<
+Ar
+, 
+	g°d
+::
+mu…i£t
+<
+T
+, 
+	gPr
+, 
+	gAŒoc
+>, 
+	gIn£π
+>
+
+310 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gK
+,Åy≥«mê
+	gT
+,Åy≥«mê
+	gPr
+,Åy≥«mê
+	gAŒoc
+>
+
+311 
+	gad≠ãr
+<
+	gAr
+, 
+	g°d
+::
+m≠
+<
+K
+, 
+	gT
+, 
+	gPr
+, 
+	gAŒoc
+> >
+
+312 : 
+public
+ 
+c⁄èöî_ad≠ãr
+<
+Ar
+, 
+	g°d
+::
+m≠
+<
+K
+, 
+	gT
+, 
+	gPr
+, 
+	gAŒoc
+>, 
+	gIn£π
+>
+
+317 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gK
+,Åy≥«mê
+	gT
+,Åy≥«mê
+	gPr
+,Åy≥«mê
+	gAŒoc
+>
+
+318 
+	gad≠ãr
+<
+	gAr
+, 
+	g°d
+::
+mu…im≠
+<
+K
+, 
+	gT
+, 
+	gPr
+, 
+	gAŒoc
+> >
+
+319 : 
+public
+ 
+c⁄èöî_ad≠ãr
+<
+Ar
+, 
+	g°d
+::
+mu…im≠
+<
+K
+, 
+	gT
+, 
+	gPr
+, 
+	gAŒoc
+>, 
+	gIn£π
+>
+
+324 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gT1
+,Åy≥«mê
+	gT2
+>
+
+325 
+	gad≠ãr
+<
+	gAr
+, 
+	g°d
+::
+∑ú
+<
+T1
+, 
+	gT2
+> >
+
+327 
+	g°d
+::
+	t∑ú
+<
+	tT1
+, 
+	tT2
+> 
+	tPaú
+;
+
+329 
+ölöe
+ 
+boﬁ
+ 
+do_ßve
+(
+Paú
+ & 
+∑úT
+, 
+Ar
+ & 
+¨
+)
+
+331  
+	g¨
+.
+do_ßve
+(
+∑úT
+.
+fú°
+Ë&&ár.do_ßve’aúT.
+£c⁄d
+);
+
+334 
+ölöe
+ 
+boﬁ
+ 
+do_lﬂd
+(
+Paú
+ & 
+∑úT
+, 
+Ar
+ & 
+¨
+)
+
+336  
+	g¨
+.
+do_lﬂd
+((
+ty≥«me
+ 
+boo°
+::
+ªmove_cv
+<
+T1
+>::
+ty≥
+&)
+∑úT
+.
+fú°
+)
+
+337 && 
+¨
+.
+do_lﬂd
+((
+ty≥«me
+ 
+boo°
+::
+ªmove_cv
+<
+T2
+>::
+ty≥
+&)
+∑úT
+.
+£c⁄d
+);
+
+341 #i‡
+deföed
+(
+_MSC_VER
+)
+
+344 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gK
+,Åy≥«mê
+	gT
+,Åy≥«mê
+	gTr
+,Åy≥«mê
+	gAŒoc
+>
+
+345 
+	gad≠ãr
+<
+	gAr
+, 
+	g°dext
+::
+hash_m≠
+<
+K
+, 
+	gT
+, 
+	gTr
+, 
+	gAŒoc
+> >
+
+346 : 
+public
+ 
+c⁄èöî_ad≠ãr
+<
+Ar
+, 
+	g°dext
+::
+hash_m≠
+<
+K
+, 
+	gT
+, 
+	gTr
+, 
+	gAŒoc
+>, 
+	gIn£π
+>
+
+353 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gK
+,Åy≥«mê
+	gT
+,Åy≥«mê
+	gH
+,Åy≥«mê
+	gEq
+,Åy≥«mê
+	gAŒoc
+>
+
+354 
+	gad≠ãr
+<
+	gAr
+, 
+	g°d
+::
+un‹dîed_m≠
+<
+K
+, 
+	gT
+, 
+	gH
+, 
+	gEq
+, 
+	gAŒoc
+> >
+
+355 : 
+public
+ 
+c⁄èöî_ad≠ãr
+<
+Ar
+, 
+	g°d
+::
+un‹dîed_m≠
+<
+K
+, 
+	gT
+, 
+	gH
+, 
+	gEq
+, 
+	gAŒoc
+>, 
+	gIn£π
+>
+
+359 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gK
+,Åy≥«mê
+	gT
+,Åy≥«mê
+	gH
+,Åy≥«mê
+	gEq
+,Åy≥«mê
+	gAŒoc
+>
+
+360 
+	gad≠ãr
+<
+	gAr
+, 
+	g°d
+::
+un‹dîed_mu…im≠
+<
+K
+, 
+	gT
+, 
+	gH
+, 
+	gEq
+, 
+	gAŒoc
+> >
+
+361 : 
+public
+ 
+c⁄èöî_ad≠ãr
+<
+Ar
+, 
+	g°d
+::
+un‹dîed_mu…im≠
+<
+K
+, 
+	gT
+, 
+	gH
+, 
+	gEq
+, 
+	gAŒoc
+>, 
+	gIn£π
+>
+
+366 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gT
+,Åy≥«mê
+	gH
+,Åy≥«mê
+	gEq
+,Åy≥«mê
+	gAŒoc
+>
+
+367 
+	gad≠ãr
+<
+	gAr
+, 
+	g°d
+::
+un‹dîed_£t
+<
+T
+, 
+	gH
+, 
+	gEq
+, 
+	gAŒoc
+> >
+
+368 : 
+public
+ 
+c⁄èöî_ad≠ãr
+<
+Ar
+, 
+	g°d
+::
+un‹dîed_£t
+<
+T
+, 
+	gH
+, 
+	gEq
+, 
+	gAŒoc
+>, 
+	gIn£π
+>
+
+372 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+ty≥«me
+ 
+	gT
+,Åy≥«mê
+	gH
+,Åy≥«mê
+	gEq
+,Åy≥«mê
+	gAŒoc
+>
+
+373 
+	gad≠ãr
+<
+	gAr
+, 
+	g°d
+::
+un‹dîed_mu…i£t
+<
+T
+, 
+	gH
+, 
+	gEq
+, 
+	gAŒoc
+> >
+
+374 : 
+public
+ 
+c⁄èöî_ad≠ãr
+<
+Ar
+, 
+	g°d
+::
+un‹dîed_mu…i£t
+<
+T
+, 
+	gH
+, 
+	gEq
+, 
+	gAŒoc
+>, 
+	gIn£π
+>
+
+379 
+	gãm∂©e
+ <
+˛ass
+ 
+	gAr
+, 
+	gty≥«me
+ ... 
+	gCArgs
+>
+
+380 
+	gad≠ãr
+<
+	gAr
+, 
+	g°d
+::
+tu∂e
+<
+CArgs
+...> >
+
+382 
+°d
+::
+	ttu∂e
+<
+	tCArgs
+...> 
+	tTu∂e
+;
+
+384 
+	g¥iv©e
+:
+
+385 
+ãm∂©e
+ <
+I
+, 
+	gty≥«me
+ ... 
+	gArgs
+>
+
+386 
+ölöe
+ 
+ty≥«me
+ 
+	gboo°
+::
+íabÀ_if_c
+<(
+I
+ < ...(
+Args
+)), 
+	gboﬁ
+>::
+ty≥
+
+
+387 
+do_ßve_⁄e
+(
+°d
+::
+tu∂e
+<
+Args
+...> c⁄°& 
+c
+, 
+Ar
+ & 
+¨
+, 
+ödex
+)
+
+389 i‡(!
+	gödex
+Ë 
+	g¨
+.
+do_ßve
+(
+°d
+::
+gë
+<
+I
+>(
+c
+));
+
+390  
+	gdo_ßve_⁄e
+<
+	gI
+ + 1>(
+	gc
+, 
+	g¨
+, --
+	gödex
+);
+
+393 
+	gãm∂©e
+ <
+	gI
+, 
+	gty≥«me
+ ... 
+	gArgs
+>
+
+394 
+ölöe
+ 
+ty≥«me
+ 
+	gboo°
+::
+dißbÀ_if_c
+<(
+I
+ < ...(
+Args
+)), 
+	gboﬁ
+>::
+ty≥
+
+
+395 
+do_ßve_⁄e
+(
+°d
+::
+tu∂e
+<
+Args
+...> c⁄°&, 
+Ar
+ &, )
+
+397  
+	gÁl£
+;
+
+400 
+	gãm∂©e
+ <
+	gI
+, 
+	gty≥«me
+ ... 
+	gArgs
+>
+
+401 
+ölöe
+ 
+ty≥«me
+ 
+	gboo°
+::
+íabÀ_if_c
+<(
+I
+ < ...(
+Args
+)), 
+	gboﬁ
+>::
+ty≥
+
+
+402 
+do_lﬂd_⁄e
+(
+°d
+::
+tu∂e
+<
+Args
+...> & 
+c
+, 
+Ar
+ & 
+¨
+, 
+ödex
+)
+
+404 i‡(!
+	gödex
+Ë 
+	g¨
+.
+do_lﬂd
+(
+°d
+::
+gë
+<
+I
+>(
+c
+));
+
+405  
+	gdo_lﬂd_⁄e
+<
+	gI
+ + 1>(
+	gc
+, 
+	g¨
+, --
+	gödex
+);
+
+408 
+	gãm∂©e
+ <
+	gI
+, 
+	gty≥«me
+ ... 
+	gArgs
+>
+
+409 
+ölöe
+ 
+ty≥«me
+ 
+	gboo°
+::
+dißbÀ_if_c
+<(
+I
+ < ...(
+Args
+)), 
+	gboﬁ
+>::
+ty≥
+
+
+410 
+do_lﬂd_⁄e
+(
+°d
+::
+tu∂e
+<
+Args
+...> &, 
+Ar
+ &, )
+
+412  
+	gÁl£
+;
+
+415 
+	gpublic
+:
+
+416 
+ölöe
+ 
+boﬁ
+ 
+do_ßve
+(
+Tu∂e
+ c⁄°& 
+c
+, 
+Ar
+ & 
+¨
+)
+
+418 
+	gi
+ = 0; i < 
+	g°d
+::
+tu∂e_size
+<
+Tu∂e
+>::
+vÆue
+; ++i)
+
+419 i‡(!
+	gdo_ßve_⁄e
+<0>(
+	gc
+, 
+	g¨
+, 
+	gi
+))
+
+420  
+	gÁl£
+;
+
+422  
+	gåue
+;
+
+425 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+, 
+	gty≥«me
+ ... 
+	gArgs
+>
+
+426 
+ölöe
+ 
+boﬁ
+ 
+do_lﬂd
+(
+°d
+::
+tu∂e
+<
+T
+, 
+Args
+...> & 
+c
+, 
+Ar
+ & 
+¨
+)
+
+428 
+	gi
+ = 0; i < 
+	g°d
+::
+tu∂e_size
+<
+Tu∂e
+>::
+vÆue
+; ++i)
+
+429 i‡(!
+	gdo_lﬂd_⁄e
+<0>(
+	gc
+, 
+	g¨
+, 
+	gi
+))
+
+430  
+	gÁl£
+;
+
+432  
+	gåue
+;
+
+	@text_archive.hpp
+
+1 #i‚de‡
+__BEX_STREAM_SERIALIZATION_TEXT_ARCHIVE__
+
+
+2 
+	#__BEX_STREAM_SERIALIZATION_TEXT_ARCHIVE__
+
+
+	)
+
+4 
+	~"ãxt_ürchive.hµ
+"
+
+5 
+	~"ãxt_ﬂrchive.hµ
+"
+
+10 
+«me•a˚
+ 
+	gBex
+ {Çame•a˚ 
+	g£rüliz©i⁄
+
+
+12 
+˛ass
+ 
+	gãxt_¨chive
+
+
+13 : 
+public
+ 
+ãxt_ürchive
+
+
+14 , 
+public
+ 
+	gãxt_ﬂrchive
+
+
+16 
+ãxt_ürchive
+ 
+	tö_ty≥
+;
+
+17 
+ãxt_ﬂrchive
+ 
+	tout_ty≥
+;
+
+19 
+	gpublic
+:
+
+20 
+ex∂icô
+ 
+ãxt_¨chive
+(
+°d
+::
+°ªambuf
+& 
+sb
+)
+
+21 : 
+ö_ty≥
+(
+sb
+), 
+out_ty≥
+(sb)
+
+25 
+ex∂icô
+ 
+ãxt_¨chive
+(
+°d
+::
+io°ªam
+& 
+ios
+)
+
+26 : 
+ö_ty≥
+(
+ios
+), 
+out_ty≥
+(ios)
+
+30 
+ölöe
+ 
+boﬁ
+ 
+good
+() const
+
+32  
+	gö_ty≥
+::
+good
+(Ë&& 
+out_ty≥
+::good();
+
+35 
+ölöe
+ 
+˛ór
+(
+boﬁ
+ 
+rﬁlback
+ = 
+åue
+)
+
+37 
+ö_ty≥
+::
+˛ór
+(
+rﬁlback
+);
+
+38 
+	gout_ty≥
+::
+˛ór
+(
+rﬁlback
+);
+
+43 
+	g«me•a˚
+ {
+
+44 
+usög
+ 
+	g£rüliz©i⁄
+::
+ãxt_¨chive
+;
+
+	@text_iarchive.hpp
+
+1 #i‚de‡
+__BEX_STREAM_SERIALIZATION_TEXT_IARCHIVE__
+
+
+2 
+	#__BEX_STREAM_SERIALIZATION_TEXT_IARCHIVE__
+
+
+	)
+
+4 
+	~"ba£_£rülizî.hµ
+"
+
+5 
+	~<boo°/Àxiˇl_ˇ°.hµ
+>
+
+10 
+«me•a˚
+ 
+	gBex
+ {Çame•a˚ 
+	g£rüliz©i⁄
+
+
+12 
+˛ass
+ 
+	gãxt_ürchive
+
+
+13 : 
+public
+ 
+ba£_£rülizî
+<
+ãxt_ürchive
+>
+
+14 , 
+public
+ 
+	gãxt_ba£
+
+
+15 , 
+public
+ 
+	göput_¨chive_ba£
+
+
+17 
+‰õnd
+ 
+˛ass
+ 
+	gba£_£rülizî
+<
+	gãxt_ürchive
+>;
+
+19 
+	g°d
+::
+°ªambuf
+& 
+buf_
+;
+
+20 
+	g°d
+::
+°ªamsize
+ 
+acc_
+;
+
+21 
+	gdìp_
+;
+
+23 
+	gpublic
+:
+
+24 
+ex∂icô
+ 
+ãxt_ürchive
+(
+°d
+::
+°ªambuf
+& 
+sb
+)
+
+25 : 
+buf_
+(
+sb
+), 
+acc_
+(0), 
+dìp_
+(0)
+
+29 
+ex∂icô
+ 
+ãxt_ürchive
+(
+°d
+::
+i°ªam
+& 
+is
+)
+
+30 : 
+buf_
+(*
+is
+.
+rdbuf
+()), 
+acc_
+(0), 
+dìp_
+(0)
+
+34 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+35 
+ölöe
+ 
+	gãxt_ürchive
+ & 
+	g›î©‹
+&(
+	gT
+ && 
+	gt
+)
+
+37  (*
+	gthis
+ >> 
+	g°d
+::
+f‹w¨d
+<
+T
+>(
+t
+));
+
+40 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+41 
+ölöe
+ 
+	gãxt_ürchive
+ & 
+	g›î©‹
+>>(
+	gT
+ && 
+	gt
+)
+
+43 
+lﬂd
+(
+°d
+::
+f‹w¨d
+<
+T
+>(
+t
+));
+
+44  (*
+	gthis
+);
+
+47 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+48 
+ölöe
+ 
+boﬁ
+ 
+lﬂd
+(
+T
+ && 
+t
+)
+
+50 i‡(!
+good
+()Ë 
+	gÁl£
+;
+
+52 
+	gdìp
+ = 
+dìp_
+++;
+
+53 i‡(!
+do_lﬂd
+(
+t
+))
+
+55 
+	g°©e_
+ = 
+¨chive_°©e
+::
+îr‹
+;
+
+56 -- 
+	gdìp_
+;
+
+57  
+	gÁl£
+;
+
+61 i‡(!
+	gdìp
+)
+
+62 
+	gacc_
+ = 0;
+
+63 -- 
+	gdìp_
+;
+
+64  
+	gåue
+;
+
+69 
+	gpublic
+:
+
+70 
+usög
+ 
+ba£_£rülizî
+<
+ãxt_ürchive
+>::
+do_lﬂd
+;
+
+72 
+ölöe
+ 
+boﬁ
+ 
+do_lﬂd
+(* 
+buf„r
+, 
+°d
+::
+size_t
+ 
+size
+)
+
+74 
+°d
+::
+°ªamsize
+ 
+ls
+ = 
+buf_
+.
+sgën
+(
+buf„r
+, 
+size
+);
+
+75 
+	gacc_
+ +
+ls
+;
+
+76  (
+	gls
+ =
+size
+);
+
+79 
+ölöe
+ 
+boﬁ
+ 
+do_lﬂd
+(
+ãxt_wøµî
+<> & 
+wøµî
+)
+
+81 & 
+	gch
+ = 
+wøµî
+.
+d©a
+();
+
+82 
+	g°d
+::
+°ªamsize
+ 
+ls
+ = 
+buf_
+.
+sgën
+(&
+ch
+, 1);
+
+83 
+	gacc_
+ +
+ls
+;
+
+84  (
+	gls
+ == 1);
+
+87 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+88 
+ölöe
+ 
+boﬁ
+ 
+do_lﬂd
+(
+ãxt_wøµî
+<
+T
+> & 
+wøµî
+)
+
+90 
+BOOST_STATIC_ASSERT
+–(
+boo°
+::
+is_¨ôhmëic
+<
+T
+>::
+vÆue
+) );
+
+92 
+	gT
+ & 
+	gt
+ = 
+wøµî
+.
+d©a
+();
+
+94 
+	g°d
+::
+i°ªambuf_ôî©‹
+<> 
+öput_fú°
+(&
+buf_
+);
+
+95 
+	g°d
+::
+i°ªambuf_ôî©‹
+<> 
+öput_œ°
+;
+
+96 
+	g°d
+::
+°rög
+ 
+buf„r
+;
+
+97 
+	g°d
+::
+°ªamsize
+ 
+ls
+ = 0;
+
+98 
+	göput_fú°
+ !
+öput_œ°
+)
+
+100 ++
+ls
+;
+
+101 
+	gch
+ = *
+öput_fú°
+++;
+
+102 i‡(
+	gch
+ == ' ')
+
+105 
+	gbuf„r
+ +
+ch
+;
+
+108 i‡(
+	gls
+)
+
+110 
+	gåy
+ {
+
+111 
+	gacc_
+ +
+ls
+;
+
+112 
+	gt
+ = 
+boo°
+::
+Àxiˇl_ˇ°
+<
+T
+>(
+buf„r
+);
+
+113  
+	gåue
+;
+
+114 } 
+ˇtch
+ (...Ë{  
+	gÁl£
+; }
+
+117  
+	gÁl£
+;
+
+123 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+124 
+boﬁ
+ 
+ãxt_lﬂd
+(
+T
+ && 
+t
+ , 
+°d
+::
+i°ªam
+& 
+is
+)
+
+126 
+boo°
+::
+io
+::
+ios_Êags_ßvî
+ 
+ßvî
+(
+is
+);
+
+127 
+	gis
+.
+un£tf
+(
+°d
+::
+ios_ba£
+::
+skùws
+);
+
+128 
+ãxt_ürchive
+ 
+bi
+(
+is
+);
+
+129 
+	gbi
+ & 
+	g°d
+::
+f‹w¨d
+<
+T
+>(
+t
+);
+
+130  
+	gbi
+.
+good
+(Ë? 
+	gåue
+ : (
+bi
+.
+˛ór
+(), 
+	gÁl£
+);
+
+133 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+134 
+boﬁ
+ 
+ãxt_lﬂd
+(
+T
+ && 
+t
+ , 
+°d
+::
+°ªambuf
+& 
+isb
+)
+
+136 
+ãxt_ürchive
+ 
+bi
+(
+isb
+);
+
+137 
+	gbi
+ & 
+	g°d
+::
+f‹w¨d
+<
+T
+>(
+t
+);
+
+138  
+	gbi
+.
+good
+(Ë? 
+	gåue
+ : (
+bi
+.
+˛ór
+(), 
+	gÁl£
+);
+
+141 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+142 
+	g°d
+::
+size_t
+ 
+ãxt_lﬂd
+(
+T
+ && 
+t
+ , c⁄° * 
+buf„r
+, 
+°d
+::size_à
+size
+)
+
+144 
+°©ic_°ªambuf
+ 
+isb
+(
+c⁄°_ˇ°
+<*>(
+buf„r
+), 
+size
+, 
+Ál£
+);
+
+145 
+ãxt_ürchive
+ 
+bi
+(
+isb
+);
+
+146 
+	gbi
+ & 
+	g°d
+::
+f‹w¨d
+<
+T
+>(
+t
+);
+
+147  
+	gbi
+.
+good
+(Ë? (
+	gisb
+.
+ˇ∑côy
+(Ë- isb.
+size
+()Ë: (
+bi
+.
+˛ór
+(), 0);
+
+151 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+, 
+	gty≥«me
+ ... 
+	gArgs
+>
+
+152 
+FORCE_INLINE
+áutÿ
+ãxt_lﬂd_≥rsi°í˚
+(
+T
+ && 
+t
+, 
+Args
+ && ... 
+¨gs
+)
+
+153 -> 
+de˛ty≥
+(
+ãxt_lﬂd
+(
+°d
+::
+f‹w¨d
+<
+T
+>(
+t
+), std::f‹w¨d<
+Args
+>(
+¨gs
+)...))
+
+155 
+°©ic_as£π
+(
+has_£rülize
+<
+T
+>::
+vÆue
+, "TheÖersistence data mustbe has serialize function.");
+
+156 
+°©ic_as£π
+(
+has_vîsi⁄
+<
+T
+>::
+vÆue
+, "TheÖersistence data mustbe has version.");
+
+157  
+ãxt_lﬂd
+(
+°d
+::
+f‹w¨d
+<
+T
+>(
+t
+), std::f‹w¨d<
+Args
+>(
+¨gs
+)...);
+
+162 
+	g«me•a˚
+ {
+
+163 
+usög
+ 
+	g£rüliz©i⁄
+::
+ãxt_ürchive
+;
+
+164 
+usög
+ 
+	g£rüliz©i⁄
+::
+ãxt_lﬂd
+;
+
+165 
+usög
+ 
+	g£rüliz©i⁄
+::
+ãxt_lﬂd_≥rsi°í˚
+;
+
+	@text_oarchive.hpp
+
+1 #i‚de‡
+__BEX_STREAM_SERIALIZATION_TEXT_OARCHIVE__
+
+
+2 
+	#__BEX_STREAM_SERIALIZATION_TEXT_OARCHIVE__
+
+
+	)
+
+4 
+	~"ba£_£rülizî.hµ
+"
+
+5 
+	~<boo°/Àxiˇl_ˇ°.hµ
+>
+
+10 
+«me•a˚
+ 
+	gBex
+ {Çame•a˚ 
+	g£rüliz©i⁄
+
+
+12 
+˛ass
+ 
+	gãxt_ﬂrchive
+
+
+13 : 
+public
+ 
+ba£_£rülizî
+<
+ãxt_ﬂrchive
+>
+
+14 , 
+public
+ 
+	gãxt_ba£
+
+
+15 , 
+public
+ 
+	gouçut_¨chive_ba£
+
+
+17 
+‰õnd
+ 
+˛ass
+ 
+	gba£_£rülizî
+<
+	gãxt_ﬂrchive
+>;
+
+19 
+	g°d
+::
+°ªambuf
+& 
+buf_
+;
+
+20 
+	g°d
+::
+°ªamsize
+ 
+acc_
+;
+
+21 
+	gdìp_
+;
+
+23 
+	gpublic
+:
+
+24 
+ex∂icô
+ 
+ãxt_ﬂrchive
+(
+°d
+::
+°ªambuf
+& 
+sb
+)
+
+25 : 
+buf_
+(
+sb
+), 
+acc_
+(0), 
+dìp_
+(0)
+
+29 
+ex∂icô
+ 
+ãxt_ﬂrchive
+(
+°d
+::
+o°ªam
+& 
+os
+)
+
+30 : 
+buf_
+(*
+os
+.
+rdbuf
+()), 
+acc_
+(0), 
+dìp_
+(0)
+
+34 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+35 
+ölöe
+ 
+	gãxt_ﬂrchive
+ & 
+	g›î©‹
+&(
+T
+ c⁄°& 
+	gt
+)
+
+37  (*
+	gthis
+ << 
+	gt
+);
+
+40 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+41 
+ölöe
+ 
+	gãxt_ﬂrchive
+ & 
+	g›î©‹
+<<(
+T
+ c⁄°& 
+	gt
+)
+
+43 
+ßve
+(
+t
+);
+
+44  (*
+	gthis
+);
+
+47 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+48 
+ölöe
+ 
+boﬁ
+ 
+ßve
+(
+T
+ c⁄°& 
+t
+)
+
+50 i‡(!
+good
+()Ë 
+	gÁl£
+;
+
+52 
+	gdìp
+ = 
+dìp_
+++;
+
+53 i‡(!
+do_ßve
+(
+c⁄°_ˇ°
+<
+T
+&>(
+t
+)))
+
+55 
+	g°©e_
+ = 
+¨chive_°©e
+::
+îr‹
+;
+
+56 -- 
+	gdìp_
+;
+
+57  
+	gÁl£
+;
+
+61 i‡(!
+	gdìp
+)
+
+62 
+	gacc_
+ = 0;
+
+63 -- 
+	gdìp_
+;
+
+64  
+	gåue
+;
+
+69 
+	gpublic
+:
+
+70 
+usög
+ 
+ba£_£rülizî
+<
+ãxt_ﬂrchive
+>::
+do_ßve
+;
+
+72 
+ölöe
+ 
+boﬁ
+ 
+do_ßve
+(c⁄°* 
+buf„r
+, 
+°d
+::
+size_t
+ 
+size
+)
+
+74 
+°d
+::
+°ªamsize
+ 
+ls
+ = 
+buf_
+.
+•uä
+(
+buf„r
+, 
+size
+);
+
+75 
+	gacc_
+ +
+ls
+;
+
+76  (
+	gls
+ =
+size
+);
+
+79 
+ölöe
+ 
+boﬁ
+ 
+do_ßve
+(
+ãxt_wøµî
+<> & 
+wøµî
+)
+
+81 & 
+	gch
+ = 
+wøµî
+.
+d©a
+();
+
+82 
+	g°d
+::
+°ªamsize
+ 
+ls
+ = 
+buf_
+.
+•uä
+(&
+ch
+, 1);
+
+83 
+	gacc_
+ +
+ls
+;
+
+84  (
+	gls
+ == 1);
+
+87 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+88 
+ölöe
+ 
+boﬁ
+ 
+do_ßve
+(
+ãxt_wøµî
+<
+T
+> & 
+wøµî
+)
+
+90 
+BOOST_STATIC_ASSERT
+–(
+boo°
+::
+is_¨ôhmëic
+<
+T
+>::
+vÆue
+) );
+
+92 
+	g°d
+::
+°rög
+ 
+buf„r
+;
+
+94 
+	gåy
+ {
+
+95 
+	gbuf„r
+ = 
+boo°
+::
+Àxiˇl_ˇ°
+<
+°d
+::
+°rög
+>(
+wøµî
+.
+d©a
+()) + " ";
+
+96 } 
+ˇtch
+ (...Ë{  
+	gÁl£
+; }
+
+98 
+	g°d
+::
+°ªamsize
+ 
+ls
+ = 
+buf_
+.
+•uä
+(
+buf„r
+.
+c_°r
+(), buf„r.
+Àngth
+());
+
+99 
+	gacc_
+ +
+ls
+;
+
+100  (
+	gls
+ =
+buf„r
+.
+Àngth
+());
+
+107 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+108 
+boﬁ
+ 
+ãxt_ßve
+(
+T
+ c⁄°& 
+t
+, 
+°d
+::
+o°ªam
+& 
+os
+)
+
+110 
+boo°
+::
+io
+::
+ios_Êags_ßvî
+ 
+ßvî
+(
+os
+);
+
+111 
+	gos
+.
+un£tf
+(
+°d
+::
+ios_ba£
+::
+skùws
+);
+
+112 
+ãxt_ﬂrchive
+ 
+bo
+(
+os
+);
+
+113 
+	gbo
+ & 
+	gt
+;
+
+114  
+	gbo
+.
+good
+(Ë? 
+	gåue
+ : (
+bo
+.
+˛ór
+(), 
+	gÁl£
+);
+
+117 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+118 
+boﬁ
+ 
+ãxt_ßve
+(
+T
+ c⁄°& 
+t
+, 
+°d
+::
+°ªambuf
+& 
+osb
+)
+
+120 
+ãxt_ﬂrchive
+ 
+bo
+(
+osb
+);
+
+121 
+	gbo
+ & 
+	gt
+;
+
+122  
+	gbo
+.
+good
+(Ë? 
+	gåue
+ : (
+bo
+.
+˛ór
+(), 
+	gÁl£
+);
+
+125 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+126 
+	g°d
+::
+size_t
+ 
+ãxt_ßve
+(
+T
+ c⁄°& 
+t
+, * 
+buf„r
+, 
+°d
+::size_à
+size
+)
+
+128 
+°©ic_°ªambuf
+ 
+osb
+(
+buf„r
+, 
+size
+);
+
+129 
+ãxt_ﬂrchive
+ 
+bo
+(
+osb
+);
+
+130 
+	gbo
+ & 
+	gt
+;
+
+131  
+	gbo
+.
+good
+(Ë? 
+	gosb
+.
+size
+(Ë: (
+bo
+.
+˛ór
+(), 0);
+
+135 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+, 
+	gty≥«me
+ ... 
+	gArgs
+>
+
+136 
+FORCE_INLINE
+áutÿ
+ãxt_ßve_≥rsi°í˚
+(
+T
+ c⁄°& 
+t
+, 
+Args
+ && ... 
+¨gs
+Ë-> 
+de˛ty≥
+(
+ãxt_ßve
+—, 
+°d
+::
+f‹w¨d
+<Args>(args)...))
+
+138 
+°©ic_as£π
+(
+has_£rülize
+<
+T
+>::
+vÆue
+, "TheÖersistence data mustbe has serialize function.");
+
+139 
+°©ic_as£π
+(
+has_vîsi⁄
+<
+T
+>::
+vÆue
+, "TheÖersistence data mustbe has version.");
+
+140  
+ãxt_ßve
+(
+t
+, 
+°d
+::
+f‹w¨d
+<
+Args
+>(
+¨gs
+)...);
+
+145 
+	g«me•a˚
+ {
+
+146 
+usög
+ 
+	g£rüliz©i⁄
+::
+ãxt_ﬂrchive
+;
+
+147 
+usög
+ 
+	g£rüliz©i⁄
+::
+ãxt_ßve
+;
+
+148 
+usög
+ 
+	g£rüliz©i⁄
+::
+ãxt_ßve_≥rsi°í˚
+;
+
+	@version_adl.hpp
+
+1 #i‚de‡
+__BEX_STREAM_SERIALIZATION_VERSION_ADL_HPP__
+
+
+2 
+	#__BEX_STREAM_SERIALIZATION_VERSION_ADL_HPP__
+
+
+	)
+
+6 
+	~"£rüliz©i⁄_fwd.h
+"
+
+8 
+«me•a˚
+ 
+	gBex
+ {Çame•a˚ 
+	g£rüliz©i⁄
+
+
+10 ˛as†
+	c£rülize_vîsi⁄_hñ≥r
+
+
+12 
+	sunsig√d_öt_t
+
+
+14 
+	gui_
+;
+
+15 
+unsig√d_öt_t
+(
+ui
+Ë: 
+ui_
+(ui) {}
+
+16 
+›î©‹
+ (Ëc⁄° {  
+ui_
+; }
+
+19 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+20 
+‰õnd
+ 
+unsig√d_öt_t
+ 
+£rülize_vîsi⁄
+(
+T
+*);
+
+23 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+24 
+	g£rülize_vîsi⁄_hñ≥r
+::
+unsig√d_öt_t
+ 
+£rülize_vîsi⁄
+(
+T
+* 
+±
+)
+
+26  
+±
+->
+£rülize_vîsi⁄
+();
+
+29 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+30 
+£rülize_vîsi⁄_adl
+(
+T
+* 
+±
+)
+
+32  
+£rülize_vîsi⁄
+(
+±
+);
+
+	@wrappers.hpp
+
+1 #i‚de‡
+__BEX_SERIALIZATION_WRAPPERS_HPP__
+
+
+2 
+	#__BEX_SERIALIZATION_WRAPPERS_HPP__
+
+
+	)
+
+4 
+	~<boo°/m∂/¥öt.hµ
+>
+
+6 
+«me•a˚
+ 
+	gBex
+ {Çame•a˚ 
+	g£rüliz©i⁄
+
+
+10 
+	sbö¨y_wøµî
+
+
+12 * 
+	gm_d©a
+;
+
+13 
+	g°d
+::
+size_t
+ 
+m_size
+;
+
+15 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+16 
+ex∂icô
+ 
+bö¨y_wøµî
+(
+T
+ & 
+t
+)
+
+17 : 
+m_d©a
+((*)&
+t
+), 
+m_size
+((
+T
+))
+
+19 #i‡!
+deföed
+(
+BEX_SERIALIZATION_USE_POD_EXTEND
+)
+
+20 
+°©ic_as£π
+(
+°d
+::
+is_pod
+<
+T
+>::
+vÆue
+, "ThisÅype must has 'serialize' function, orÅo beá 'pod' struct.");
+
+24 
+ölöe
+ * 
+d©a
+()
+
+26  
+	gm_d©a
+;
+
+29 
+ölöe
+ 
+	g°d
+::
+size_t
+ 
+size
+()
+
+31  
+m_size
+;
+
+37 
+	gãm∂©e
+ <
+ty≥«me
+ 
+	gT
+>
+
+38 
+	sãxt_wøµî
+
+
+40 
+	gT
+ & 
+	gm_d©a
+;
+
+42 
+ex∂icô
+ 
+ãxt_wøµî
+(
+T
+ & 
+d©a
+)
+
+43 : 
+m_d©a
+(
+d©a
+)
+
+47 
+ölöe
+ 
+T
+ & 
+d©a
+()
+
+49  
+m_d©a
+;
+
+	@
+1
+.
+1
+/usr/include
+17
+301
+archive_traits.hpp
+array_adapter.hpp
+base_serializer.hpp
+binary_archive.hpp
+binary_iarchive.hpp
+binary_oarchive.hpp
+boost_container_adapter.hpp
+concept.hpp
+config.h
+serialization_fwd.h
+serialize_adl.hpp
+stl_adapter.hpp
+text_archive.hpp
+text_iarchive.hpp
+text_oarchive.hpp
+version_adl.hpp
+wrappers.hpp

@@ -37,6 +37,9 @@
     <Filter Include="bexio">
       <UniqueIdentifier>{23b346c6-d5bc-42b0-9c24-30ad0699fe8a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="crypto">
+      <UniqueIdentifier>{5bf06489-bead-4462-82ab-c29f20d66ef1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\test\main\TestMain.cpp">
@@ -110,6 +113,9 @@
     </ClCompile>
     <ClCompile Include="..\test\stream\TestTextArchive.cpp">
       <Filter>stream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\crypto\TestRSAStream.cpp">
+      <Filter>crypto</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

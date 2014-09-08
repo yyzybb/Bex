@@ -33,7 +33,7 @@ namespace Bex { namespace stream
             : buf_(&arr[0]), size_(N), put_(&arr[0]), get_(&arr[0])
         {
             BOOST_STATIC_ASSERT_MSG(N > 0, "Buffer cannot empty!");
-            BOOST_ASSERT(buf);
+            BOOST_ASSERT(buf_);
         }
 
         inline char * pptr()
